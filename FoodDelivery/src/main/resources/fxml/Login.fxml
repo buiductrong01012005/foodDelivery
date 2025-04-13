@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox id="login-pane" layoutX="352.0" layoutY="203.0" prefHeight="337.0" prefWidth="320.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20;" styleClass="login">
+            <children>
+                <Label alignment="CENTER" maxWidth="60.0" style="-fx-text-fill: #c57690;" text="Login" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets left="128.0" top="20.0" />
+                    </VBox.margin>
+                </Label>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="2.0" stroke="#c57690" strokeType="INSIDE" style="-fx-fill: #c57690;" width="290.0">
+                    <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                    </VBox.margin>
+                </Rectangle>
+                <Label text="Username" textFill="#c57690">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets left="11.0" top="15.0" />
+                    </VBox.margin>
+                </Label>
+                <HBox maxWidth="290.0" prefHeight="38.0" prefWidth="290.0" style="-fx-background-radius: 20; -fx-border-radius: 20;">
+                    <children>
+                        <Label id="user-icon" alignment="CENTER" maxHeight="20.0" prefHeight="20.0" prefWidth="35.0" text="👤" textAlignment="CENTER" textFill="WHITE">
+                            <font>
+                                <Font size="23.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Label>
+                        <TextField id="user-text" fx:id="usernameField" layoutX="44.0" layoutY="10.0" maxHeight="36.0" maxWidth="290.0" prefHeight="36.0" prefWidth="255.0" />
+                    </children>
+                    <VBox.margin>
+                        <Insets left="11.0" />
+                    </VBox.margin>
+                </HBox>
+                <Label text="Password" textFill="#c57690">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets left="11.0" top="15.0" />
+                    </VBox.margin>
+                </Label>
+                <HBox layoutX="25.0" layoutY="115.0" maxWidth="290.0" prefHeight="38.0" prefWidth="290.0">
+                    <children>
+                        <Label id="pass-icon" alignment="CENTER" maxHeight="35.0" prefHeight="18.0" prefWidth="35.0" text="🔒" textAlignment="CENTER" textFill="WHITE">
+                            <font>
+                                <Font size="23.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Label>
+                        <PasswordField id="pass" fx:id="passwordField" maxHeight="36.0" maxWidth="255.0" prefWidth="255.0">
+                            <HBox.margin>
+                                <Insets left="-1.0" />
+                            </HBox.margin>
+                        </PasswordField>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="11.0" />
+                    </VBox.margin>
+                </HBox>
+                <Label onMouseClicked="#ForgetPass" prefHeight="20.0" prefWidth="154.0" style="-fx-cursor: hand;" text="Forget your password?" textFill="#622e23">
+                    <padding>
+                        <Insets left="15.0" />
+                    </padding>
+                    <font>
+                        <Font name="System Italic" size="13.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets left="150.0" top="5.0" />
+                    </VBox.margin>
+                </Label>
+                <Button id="login-click" mnemonicParsing="false" onAction="#handleLogin" prefHeight="38.0" prefWidth="290.0" style="-fx-cursor: hand;" text="Login">
+                    <font>
+                        <Font name="Arial" size="16.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets left="11.0" top="15.0" />
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+        <Label layoutX="394.0" layoutY="544.0" text="Don't have account yet ?" textFill="#622e23">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+        <Button layoutX="569.0" layoutY="544.0" mnemonicParsing="false" onAction="#goToRegister" style="-fx-background-color: transparent; -fx-cursor: hand;" text="Register" textFill="#c57690" underline="true">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+            <padding>
+                <Insets left="-5.0" />
+            </padding>
+        </Button>
+    </children>
+</AnchorPane>
