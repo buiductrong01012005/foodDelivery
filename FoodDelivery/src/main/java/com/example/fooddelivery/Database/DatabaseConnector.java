@@ -8,7 +8,7 @@ public class DatabaseConnector {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             // nhớ đổi mk
-            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/fooddelivery", "root", "mk workbench");
+            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/fooddelivery", "root", "190305");
             return connect;
 
         } catch (Exception e) {

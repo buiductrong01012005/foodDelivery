@@ -12,6 +12,6 @@ module org.example.fooddelivery {
     requires com.almasb.fxgl.all;
     requires java.sql;
 
-    opens com.example.controller to javafx.fxml;
-    exports com.example.controller;
+    opens com.example.fooddelivery to javafx.fxml;
+    exports com.example.fooddelivery;
 }
