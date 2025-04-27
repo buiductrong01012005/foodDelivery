@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+    <children>
+        <ImageView fitHeight="718.0" fitWidth="1027.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../../images/identify/bgr.png" />
+            </image>
+        </ImageView>
+        <!--      <fx:include source="SideBar.fxml" />-->
+        <AnchorPane id="page1" prefHeight="700.0" prefWidth="1024.0">
+
+            <children>
+                <AnchorPane layoutX="607.0" layoutY="647.0" prefHeight="38.0" prefWidth="90.0">
+                    <children>
+                        <Button id="p1" layoutX="6.0" layoutY="3.0" mnemonicParsing="false"  prefHeight="25.0" prefWidth="0.0" text="1">
+                            <font>
+                                <Font size="14.0" />
+                            </font></Button>
+                        <Button id="p2" layoutX="52.0" layoutY="3.0" mnemonicParsing="false"  prefHeight="25.0" prefWidth="0.0" text="2">
+                            <font>
+                                <Font size="14.0" />
+                            </font></Button>
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutX="301.0" layoutY="90.0" prefHeight="162.0" prefWidth="662.0">
+                    <children>
+                        <Label fx:id="genre1" prefHeight="26.0" prefWidth="130.0" text="Computer" textFill="#b95274">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="detailGenre1" layoutX="622.0" layoutY="60.0" text="➪" textFill="#b95274">
+                            <font>
+                                <Font size="40.0" />
+                            </font>
+                        </Label>
+                        <HBox layoutY="35.0" prefHeight="122.0" prefWidth="606.0" spacing="26.0" styleClass="h1">
+                            <children>
+                                <VBox id="v1" prefHeight="122.0" prefWidth="107.0" styleClass="v1">
+                                    <children>
+                                        <ImageView fx:id="imageView1" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </VBox>
+                                <VBox id="v2" prefHeight="200.0" prefWidth="100.0" styleClass="v1">
+                                    <children>
+                                        <ImageView fx:id="imageView2" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v3" prefHeight="200.0" prefWidth="100.0" styleClass="v1">
+                                    <children>
+                                        <ImageView fx:id="imageView3" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v4" prefHeight="200.0" prefWidth="100.0" styleClass="v1">
+                                    <children>
+                                        <ImageView fx:id="imageView4" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v5" prefHeight="200.0" prefWidth="100.0" styleClass="v1">
+                                    <children>
+                                        <ImageView fx:id="imageView5" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </VBox>
+                                <VBox id="v6" prefHeight="200.0" prefWidth="100.0" styleClass="v1">
+                                    <children>
+                                        <ImageView fx:id="imageView6" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <Rectangle arcHeight="1.0" arcWidth="5.0" fill="DODGERBLUE" height="2.0" layoutX="1.0" layoutY="24.0" stroke="#c57690" strokeType="INSIDE" style="-fx-fill: #c57690;" width="606.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutX="301.0" layoutY="280.0" prefHeight="162.0" prefWidth="662.0">
+                    <children>
+                        <Label fx:id="genre2" prefHeight="26.0" prefWidth="130.0" text="Education" textFill="#b95274">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="detailGenre2" layoutX="622.0" layoutY="60.0" text="➪" textFill="#b95274">
+                            <font>
+                                <Font size="40.0" />
+                            </font>
+                        </Label>
+                        <HBox layoutY="35.0" prefHeight="122.0" prefWidth="606.0" spacing="26.0" styleClass="h2">
+                            <children>
+                                <VBox id="v7" prefHeight="200.0" prefWidth="100.0" styleClass="v2">
+                                    <children>
+                                        <ImageView fx:id="imageView7" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v8" prefHeight="200.0" prefWidth="100.0" styleClass="v2">
+                                    <children>
+                                        <ImageView fx:id="imageView8" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v9" prefHeight="200.0" prefWidth="100.0" styleClass="v2">
+                                    <children>
+                                        <ImageView fx:id="imageView9" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v10" prefHeight="200.0" prefWidth="100.0" styleClass="v2">
+                                    <children>
+                                        <ImageView fx:id="imageView10" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v11" prefHeight="200.0" prefWidth="100.0" styleClass="v2">
+                                    <children>
+                                        <ImageView id="v11" fx:id="imageView11" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v12" prefHeight="200.0" prefWidth="100.0" styleClass="v2">
+                                    <children>
+                                        <ImageView fx:id="imageView12" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <Rectangle arcHeight="1.0" arcWidth="5.0" fill="DODGERBLUE" height="2.0" layoutY="24.0" stroke="#c57690" strokeType="INSIDE" style="-fx-fill: #c57690;" width="606.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutX="301.0" layoutY="466.0" prefHeight="162.0" prefWidth="662.0">
+                    <children>
+                        <Label fx:id="genre3" prefHeight="27.0" prefWidth="196.0" text="Business &amp; Economics" textFill="#b95274">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="detailGenre3" layoutX="622.0" layoutY="60.0" text="➪" textFill="#b95274">
+                            <font>
+                                <Font size="40.0" />
+                            </font>
+                        </Label>
+                        <HBox layoutY="35.0" prefHeight="122.0" prefWidth="606.0" spacing="26.0" styleClass="h3">
+                            <children>
+                                <VBox id="v13" prefHeight="200.0" prefWidth="100.0" styleClass="v3">
+                                    <children>
+                                        <ImageView fx:id="imageView13" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v14" prefHeight="200.0" prefWidth="100.0" styleClass="v3">
+                                    <children>
+                                        <ImageView fx:id="imageView14" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v15" prefHeight="200.0" prefWidth="100.0" styleClass="v3">
+                                    <children>
+                                        <ImageView fx:id="imageView15" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v16" prefHeight="200.0" prefWidth="100.0" styleClass="v3">
+                                    <children>
+                                        <ImageView fx:id="imageView16" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v17" prefHeight="200.0" prefWidth="100.0" styleClass="v3">
+                                    <children>
+                                        <ImageView fx:id="imageView17" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                                <VBox id="v18" prefHeight="200.0" prefWidth="100.0" styleClass="v3">
+                                    <children>
+                                        <ImageView fx:id="imageView18" fitHeight="105.0" fitWidth="75.0" pickOnBounds="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <Rectangle arcHeight="1.0" arcWidth="5.0" fill="DODGERBLUE" height="2.0" layoutX="-1.0" layoutY="24.0" stroke="#c57690" strokeType="INSIDE" style="-fx-fill: #c57690;" width="606.0" />
+                    </children>
+                </AnchorPane>
+                <TextField id="search" fx:id="searchField" layoutX="472.0" layoutY="25.0" onAction="#handleSearch" prefHeight="36.0" prefWidth="322.0" promptText="🔎 Searching ...">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </TextField>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

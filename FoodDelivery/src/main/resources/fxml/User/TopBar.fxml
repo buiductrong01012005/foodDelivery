@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox prefHeight="100.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ShopeeFood" wrappingWidth="114.79098510742188" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets bottom="40.0" left="100.0" right="20.0" top="40.0" />
+         </HBox.margin>
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <ComboBox prefHeight="25.0" prefWidth="81.0" promptText="Hà Nội" HBox.hgrow="ALWAYS">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Hà Nội" />
+               <String fx:value="Hồ Chí Minh" />
+               <String fx:value="Đà Nẵng" />
+               <String fx:value="Hải Phòng" />
+               <String fx:value="Cần Thơ" />
+               <String fx:value="Huế" />
+            </FXCollections>
+         </items>
+         <HBox.margin>
+            <Insets right="10.0" top="42.0" />
+         </HBox.margin>
+      </ComboBox>
+      <Button mnemonicParsing="false" text="Đồ ăn" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets left="20.0" right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Thực phẩm" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Rượu bia" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Hoa" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Siêu thị" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Thuốc" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Thú cưng" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+      <TextField prefHeight="25.0" prefWidth="169.0" promptText="🔍 Tìm kiếm">
+         <HBox.margin>
+            <Insets left="40.0" right="10.0" top="42.0" />
+         </HBox.margin>
+      </TextField>
+      <Button mnemonicParsing="false" text="🛒">
+         <HBox.margin>
+            <Insets top="42.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Đăng nhập">
+         <HBox.margin>
+            <Insets left="40.0" right="10.0" top="42.0" />
+         </HBox.margin>
+      </Button>
+   </children>
+</HBox>
