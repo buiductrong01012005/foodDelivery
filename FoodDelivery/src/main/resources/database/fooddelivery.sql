@@ -1,6 +1,6 @@
 
-CREATE DATABASE IF NOT EXISTS `simple_food_delivery_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `simple_food_delivery_db`;
+--CREATE DATABASE IF NOT EXISTS `simple_food_delivery_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+--USE `simple_food_delivery_db`;
 
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -195,37 +195,6 @@ CREATE TABLE password_resets (
 
     FOREIGN KEY (email) REFERENCES users(email) ON DELETE CASCADE
 );
-
-
-
--- Indexes
-
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_food_categories_name ON food_categories(name);
-CREATE INDEX idx_foods_category_id ON foods(category_id);
-CREATE INDEX idx_foods_name ON foods(name);
-CREATE INDEX idx_foods_price ON foods(price);
-CREATE INDEX idx_foods_availability ON foods(availability_status);
-CREATE INDEX idx_carts_user_id ON carts(user_id);
-CREATE INDEX idx_cart_items_cart_id ON cart_items(cart_id);
-CREATE INDEX idx_cart_items_food_id ON cart_items(food_id);
-CREATE INDEX idx_addresses_user_id ON addresses(user_id);
-CREATE INDEX idx_orders_user_id ON orders(user_id);
-CREATE INDEX idx_orders_status ON orders(order_status);
-CREATE INDEX idx_orders_placed_at ON orders(placed_at);
-CREATE INDEX idx_orders_order_code ON orders(order_code);
-CREATE INDEX idx_order_items_order_id ON order_items(order_id);
-CREATE INDEX idx_order_items_food_id ON order_items(food_id);
-CREATE INDEX idx_food_reviews_order_id ON food_reviews(order_id);
-CREATE INDEX idx_food_reviews_user_id ON food_reviews(user_id);
-CREATE INDEX idx_food_reviews_food_id ON food_reviews(food_id);
-
-CREATE INDEX idx_order_status_history_order_id ON order_status_history(order_id);
-CREATE INDEX idx_order_status_history_changed_at ON order_status_history(changed_at);
-
-CREATE INDEX idx_password_resets_token ON password_resets(token);
-CREATE INDEX idx_password_resets_expires_at ON password_resets(expires_at);
 
 
 
