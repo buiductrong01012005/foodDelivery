@@ -1,4 +1,5 @@
-package com.example.fooddelivery.Service;
+/*package com.example.fooddelivery.Service;
+
 
 import java.security.SecureRandom;
 import java.sql.Connection;
@@ -66,7 +67,7 @@ public class PasswordResetOtpService {
      * @throws PasswordResetException Nếu lỗi lưu OTP hoặc lỗi db khác.
      * @throws SQLException Nếu có lỗi SQL không mong muốn.
      */
-    public void requestPasswordResetOtp(String userEmail) throws PasswordResetException, SQLException {
+    /*public void requestPasswordResetOtp(String userEmail) throws PasswordResetException, SQLException {
         if (userEmail == null || userEmail.trim().isEmpty() || !userEmail.contains("@")) {
             throw new InvalidEmailFormatException("Định dạng email không hợp lệ: " + userEmail);
         }
@@ -102,7 +103,7 @@ public class PasswordResetOtpService {
      * @throws TokenExpiredException Nếu OTP đã hết hạn.
      * @throws SQLException Nếu lỗi truy vấn db.
      */
-    public String validateOtp(String otp) throws TokenNotFoundException, TokenExpiredException, SQLException {
+    /*public String validateOtp(String otp) throws TokenNotFoundException, TokenExpiredException, SQLException {
         if (otp == null || otp.trim().isEmpty() || !otp.matches("\\d{" + OTP_LENGTH + "}")) {
             throw new IllegalArgumentException("Mã OTP không hợp lệ (phải gồm " + OTP_LENGTH + " chữ số).");
         }
@@ -146,7 +147,7 @@ public class PasswordResetOtpService {
      * @throws TokenNotFoundException (Từ validateOtp nếu gọi lại)
      * @throws TokenExpiredException (Từ validateOtp nếu gọi lại)
      */
-    public void resetPasswordWithOtp(String validatedOtp, String newPassword) throws PasswordResetException, SQLException {
+    /*public void resetPasswordWithOtp(String validatedOtp, String newPassword) throws PasswordResetException, SQLException {
         String email = validateOtp(validatedOtp);
 
         if (newPassword == null || newPassword.length() < 6) {
@@ -162,14 +163,14 @@ public class PasswordResetOtpService {
             deleteOtpRecordInternal(conn, validatedOtp);
             conn.commit();
         } catch (UserNotFoundException | SQLException e) {
-            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { /* Log lỗi rollback */ }
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { /* Log lỗi rollback */ /*}
             if (e instanceof UserNotFoundException) throw e;
             else throw new PasswordUpdateException("Lỗi SQL khi đặt lại mật khẩu bằng OTP cho email " + email, e);
         } catch (Exception e) {
-            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { /* Log lỗi rollback */ }
-            throw new PasswordUpdateException("Lỗi không xác định khi đặt lại mật khẩu bằng OTP: " + e.getMessage(), e);
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { /* Log lỗi rollback */ /*}
+            /*throw new PasswordUpdateException("Lỗi không xác định khi đặt lại mật khẩu bằng OTP: " + e.getMessage(), e);
         } finally {
-            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { /* Log lỗi đóng conn */ }
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { /* Log lỗi đóng conn */ /*}
         }
     }
 
@@ -177,7 +178,7 @@ public class PasswordResetOtpService {
     /**
      * Kiểm tra email tồn tại
      */
-    private boolean emailExists(String email) throws SQLException {
+    /*private boolean emailExists(String email) throws SQLException {
         String sql = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
         try (Connection conn = dbConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -191,7 +192,7 @@ public class PasswordResetOtpService {
     /**
      * Tạo mã OTP ngẫu nhiên
      */
-    private String generateOtp(int length) {
+    /*private String generateOtp(int length) {
         StringBuilder otp = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             otp.append(random.nextInt(10));
@@ -202,7 +203,7 @@ public class PasswordResetOtpService {
     /**
      * Lưu/Cập nhật OTP vào cột 'token' trong db
      */
-    private void saveOrUpdateResetToken(String email, String otp, LocalDateTime expiresAt) throws SQLException {
+    /*private void saveOrUpdateResetToken(String email, String otp, LocalDateTime expiresAt) throws SQLException {
         String deleteSql = "DELETE FROM password_resets WHERE email = ?";
         String insertSql = "INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)";
         Connection conn = null;
@@ -223,17 +224,17 @@ public class PasswordResetOtpService {
             }
             conn.commit();
         } catch (SQLException e) {
-            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { /* Log */ }
-            throw e;
-        } finally {
-            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { /* Log */ }
-        }
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { /* Log */ /*}
+            /*throw e;
+        /*} finally {
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); /*} catch (SQLException e) { /* Log */ /*}
+       /* }
     }
 
     /**
      * Gửi email chứa mã OTP qua Gmail SMTP.
      */
-    private void sendOtpEmailViaGmailSmtp(String recipientEmail, String otp) throws EmailSendingException {
+    /*private void sendOtpEmailViaGmailSmtp(String recipientEmail, String otp) throws EmailSendingException {
         final String username = "trangnor85@gmail.com";
         final String password = "iamnvt2005";
 
@@ -287,7 +288,7 @@ public class PasswordResetOtpService {
     /**
      * Băm mật khẩu
      */
-    private String hashPassword(String plainPassword) {
+    /*private String hashPassword(String plainPassword) {
         // (Giữ nguyên logic)
         if (plainPassword == null) throw new IllegalArgumentException("Mật khẩu không được null.");
         return BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
@@ -296,7 +297,7 @@ public class PasswordResetOtpService {
     /**
      * Xóa OTP khỏi DB
      */
-    private void deleteOtpRecordInternal(Connection conn, String otp) throws SQLException {
+   /* private void deleteOtpRecordInternal(Connection conn, String otp) throws SQLException {
         String sql = "DELETE FROM password_resets WHERE token = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, otp);
@@ -307,7 +308,7 @@ public class PasswordResetOtpService {
     /**
      * Cập nhật mật khẩu user (Hàm nội bộ)
      */
-    private void updateUserPasswordInternal(Connection conn, String email, String hashedPassword) throws SQLException, UserNotFoundException {
+    /*private void updateUserPasswordInternal(Connection conn, String email, String hashedPassword) throws SQLException, UserNotFoundException {
         String sql = "UPDATE users SET password_hash = ? WHERE email = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, hashedPassword);
@@ -317,4 +318,4 @@ public class PasswordResetOtpService {
             }
         }
     }
-}
+/*}*/

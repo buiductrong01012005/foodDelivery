@@ -12,6 +12,11 @@ module org.example.fooddelivery {
     requires com.almasb.fxgl.all;
     requires java.sql;
 
+    // Mở package chứa controller cho JavaFX FXML
     opens com.example.fooddelivery to javafx.fxml;
+    opens com.example.fooddelivery.Controller to javafx.fxml;
+
+    // Nếu dùng từ module khác
     exports com.example.fooddelivery;
+    exports com.example.fooddelivery.Controller;
 }

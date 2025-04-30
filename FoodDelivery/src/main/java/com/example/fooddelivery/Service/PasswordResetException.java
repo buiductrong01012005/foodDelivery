@@ -1,4 +1,4 @@
-package com.example.fooddelivery.Service;
+/*package com.example.fooddelivery.Service;
 
 public class PasswordResetException extends Exception {
     public PasswordResetException(String message) {
@@ -58,4 +58,4 @@ public class UserNotFoundException extends PasswordResetException {
     public UserNotFoundException(String message) {
         super(message);
     }
-}
+}*/
