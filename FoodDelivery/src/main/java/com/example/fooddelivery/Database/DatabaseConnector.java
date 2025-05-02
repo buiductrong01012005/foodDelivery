@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseConnector {
 
-    private static final String URL = "jdbc:mysql://localhost/fooddelivery";
+    private static final String URL = "jdbc:mysql://localhost/simple_food_delivery_db";
     private static final String USER = "root";
     private static final String PASSWORD = "190305"; // bạn nhớ đổi nếu cần
 
