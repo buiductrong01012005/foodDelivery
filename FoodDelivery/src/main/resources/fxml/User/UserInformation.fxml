@@ -149,7 +149,7 @@
                            <Insets left="10.0" />
                         </GridPane.margin>
                      </Label>
-                     <Label prefHeight="27.0" prefWidth="302.0" text="Địa chỉ giao hàng:" textAlignment="CENTER" GridPane.rowIndex="4">
+                     <Label prefHeight="27.0" prefWidth="302.0" text="Địa chỉ:" textAlignment="CENTER" GridPane.rowIndex="4">
                         <font>
                            <Font name="System Bold" size="15.0" />
                         </font>
