@@ -50,6 +50,22 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Hiển thị giao diện ForgetPassword.fxml
+     */
+    public static void showForgetPasswordView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/ForgetPassword.fxml"));
+            Scene scene = new Scene(loader.load());
+            primaryStage.setTitle("Food Delivery - ForgetPassword");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            System.err.println("Không thể load ForgetPassword.fxml: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

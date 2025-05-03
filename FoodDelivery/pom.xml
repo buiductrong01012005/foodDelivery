@@ -20,9 +20,9 @@
       <version>0.4</version>
     </dependency>
     <dependency>
-      <groupId>com.sun.mail</groupId>
-      <artifactId>jakarta.mail</artifactId>
-      <version>2.0.1</version>
+      <groupId>com.mailjet</groupId>
+      <artifactId>mailjet-client</artifactId>
+      <version>5.2.5</version>
     </dependency>
     <dependency>
       <groupId>com.mysql</groupId>

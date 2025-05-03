@@ -67,7 +67,7 @@ public class LoginController {
      */
     @FXML
     private void ForgetPass(MouseEvent event) {
-        showAlert("Quên mật khẩu", "Chức năng quên mật khẩu sẽ được triển khai sau.");
+        Main.showForgetPasswordView();
     }
 
     /**
