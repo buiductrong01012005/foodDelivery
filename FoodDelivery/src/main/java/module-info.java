@@ -11,6 +11,8 @@ module org.example.fooddelivery {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires jbcrypt; // Cho BCrypt
+    requires jakarta.mail;
 
     // Mở package chứa controller cho JavaFX FXML
     opens com.example.fooddelivery to javafx.fxml;
