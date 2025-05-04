@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.fooddelivery.Controller.FoodItemController"
+      spacing="10" alignment="CENTER" prefWidth="178" prefHeight="171">
+    <ImageView fx:id="imgFood" fitWidth="178" fitHeight="117" preserveRatio="true" />
+    <Label fx:id="lblFoodName" text="Tên món ăn" />
+    <Button fx:id="btnAddCart" text="Thêm vào giỏ hàng" />
+</VBox>

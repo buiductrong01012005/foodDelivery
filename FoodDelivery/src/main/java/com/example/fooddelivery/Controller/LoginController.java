@@ -3,12 +3,17 @@ package com.example.fooddelivery.Controller;
 import com.example.fooddelivery.Main;
 import com.example.fooddelivery.Database.DatabaseConnector;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,6 +57,8 @@ public class LoginController {
                 String fullName = rs.getString("full_name");
                 showAlert("Đăng nhập thành công", "Chào mừng, " + fullName + "!");
                 // TODO: Chuyển đến trang chính hoặc dashboard
+                openHomePage(); // 👉 Mở giao diện UserHome.fxml
+
             } else {
                 showAlert("Đăng nhập thất bại", "Email hoặc mật khẩu không đúng.");
             }
@@ -87,5 +94,25 @@ public class LoginController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    /**
+     * Mở giao diện chính sau khi đăng nhập thành công.
+     */
+    private void openHomePage() {
+        try {
+            // ⚠️ Đường dẫn này phải đúng vị trí của UserHome.fxml trong resources
+            // Ví dụ nếu nằm trong resources/view/UserHome.fxml => "/view/UserHome.fxml"
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/User/UserHome.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Trang chủ - ShopeeFood");
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Lỗi giao diện", "Không thể mở giao diện trang chủ.");
+            e.printStackTrace();
+        }
     }
 }
