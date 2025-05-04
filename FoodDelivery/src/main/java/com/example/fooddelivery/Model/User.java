@@ -1,6 +1,7 @@
 package com.example.fooddelivery.Model;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public class User {
     private  int user_id;
@@ -96,6 +97,20 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+    /**
+     * Tính toán tuổi của người dùng dựa trên ngày sinh.
+     * @return Tuổi của người dùng, hoặc 0 nếu ngày sinh không có.
+     */
+    public int getAge() {
+        if (this.date_of_birth != null) {
+            // Sử dụng java.time.Period để tính khoảng thời gian
+            return Period.between(this.date_of_birth, LocalDate.now()).getYears();
+        }
+        return 0; // Trả về 0 nếu không có ngày sinh
+    }
+
+
 
     @Override
     public String toString() {
