@@ -361,6 +361,19 @@ INSERT INTO `order_status_history` (`history_id`, `order_id`, `status`, `changed
 (16, 6, 'Delivered', '2024-05-18 13:30:00', 'Đã giao thành công');
 
 
+USE simple_food_delivery_db;
+show tables;
+SELECT * FROM carts;
+SELECT * FROM food_categories;
+SELECT * FROM food_reviews;
+SELECT * FROM foods;
+SELECT * FROM order_items;
+SELECT * FROM order_status_history;
+select * FROM orders;
+select * from password_resets;
+select * from users;
+
+
 -- Bảng: password_resets (Ví dụ 1 yêu cầu reset)
 
 INSERT INTO `password_resets` (`email`, `token`, `expires_at`) VALUES
