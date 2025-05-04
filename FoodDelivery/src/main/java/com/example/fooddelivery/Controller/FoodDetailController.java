@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class FoodDetailController {
 
@@ -20,15 +21,28 @@ public class FoodDetailController {
     @FXML private TextArea txtDescription;
     @FXML private TextField txtQuantity;
     @FXML private Button btnAddCart;
-    @FXML private Button btnPlus, btnMinus;
+    @FXML private Button btnPlus;
+    @FXML private Button btnMinus;
 
     private Food food;
-    private int userId = 1; // giả định user đang đăng nhập có id = 1
+    private final int userId = 1; // giả định user đang đăng nhập
 
     public void setFood(Food food) {
         this.food = food;
 
-        // Hiển thị dữ liệu món ăn
+        // Kiểm tra null cho các thành phần UI
+        Objects.requireNonNull(txtName, "txtName is null");
+        Objects.requireNonNull(txtStore, "txtStore is null");
+        Objects.requireNonNull(txtAddress, "txtAddress is null");
+        Objects.requireNonNull(txtStatus, "txtStatus is null");
+        Objects.requireNonNull(txtPrice, "txtPrice is null");
+        Objects.requireNonNull(txtDescription, "txtDescription is null");
+        Objects.requireNonNull(txtQuantity, "txtQuantity is null");
+        Objects.requireNonNull(btnAddCart, "btnAddCart is null");
+        Objects.requireNonNull(btnPlus, "btnPlus is null");
+        Objects.requireNonNull(btnMinus, "btnMinus is null");
+
+        // Hiển thị dữ liệu
         txtName.setText(food.getName());
         txtStore.setText("ShopeeFood Store");
         txtAddress.setText("Hà Nội");
@@ -43,25 +57,25 @@ public class FoodDetailController {
             System.out.println("Không thể load ảnh: " + e.getMessage());
         }
 
-        // Nút tăng số lượng
+        // Tăng số lượng
         btnPlus.setOnAction(e -> {
-            int current = Integer.parseInt(txtQuantity.getText());
+            int current = parseQuantity();
             txtQuantity.setText(String.valueOf(current + 1));
         });
 
-        // Nút giảm số lượng
+        // Giảm số lượng
         btnMinus.setOnAction(e -> {
-            int current = Integer.parseInt(txtQuantity.getText());
-            if (current > 1) txtQuantity.setText(String.valueOf(current - 1));
+            int current = parseQuantity();
+            if (current > 1) {
+                txtQuantity.setText(String.valueOf(current - 1));
+            }
         });
 
-        // Nút thêm vào giỏ
+        // Thêm vào giỏ hàng
         btnAddCart.setOnAction(e -> {
-            int quantity = 1;
-            try {
-                quantity = Integer.parseInt(txtQuantity.getText());
-            } catch (NumberFormatException ex) {
-                System.out.println("Số lượng không hợp lệ");
+            int quantity = parseQuantity();
+            if (quantity <= 0) {
+                showAlert(Alert.AlertType.ERROR, "Số lượng không hợp lệ");
                 return;
             }
 
@@ -75,18 +89,27 @@ public class FoodDetailController {
                     stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
                     stmt.executeUpdate();
 
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setHeaderText(null);
-                    alert.setContentText("Đã thêm vào giỏ hàng thành công!");
-                    alert.showAndWait();
+                    showAlert(Alert.AlertType.INFORMATION, "Đã thêm vào giỏ hàng thành công!");
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Lỗi!");
-                alert.setContentText("Không thể thêm vào giỏ hàng.");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Không thể thêm vào giỏ hàng.");
             }
         });
+    }
+
+    private int parseQuantity() {
+        try {
+            return Integer.parseInt(txtQuantity.getText().trim());
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String content) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

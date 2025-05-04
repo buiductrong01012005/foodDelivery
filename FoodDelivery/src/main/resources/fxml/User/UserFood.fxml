@@ -52,8 +52,8 @@
                         <!-- Nút thêm giỏ hàng và số lượng -->
                         <Text layoutX="758.0" layoutY="375.0" text="Số lượng" />
                         <TextField fx:id="txtQuantity" layoutX="820.0" layoutY="358.0" prefHeight="25.0" prefWidth="55.0" text="1" />
-                        <Button layoutX="887.0" layoutY="358.0" text="-" />
-                        <Button layoutX="908.0" layoutY="358.0" text="+" />
+                        <Button fx:id="btnMinus" layoutX="887.0" layoutY="358.0" text="-" />
+                        <Button fx:id="btnPlus" layoutX="908.0" layoutY="358.0" text="+" />
                         <Button fx:id="btnAddCart" layoutX="961.0" layoutY="358.0" text="Thêm vào giỏ hàng" />
 
                         <!-- Mô tả -->

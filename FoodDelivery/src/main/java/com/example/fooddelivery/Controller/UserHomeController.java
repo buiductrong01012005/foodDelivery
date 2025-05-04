@@ -1,11 +1,14 @@
 package com.example.fooddelivery.Controller;
 
-import com.example.fooddelivery.Dao.FoodDao;
 import com.example.fooddelivery.Model.Food;
+import com.example.fooddelivery.Dao.FoodDao;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.Node;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,7 +16,7 @@ import java.util.List;
 public class UserHomeController {
 
     @FXML
-    private GridPane gridPane; // ánh xạ với fx:id trong UserHome.fxml
+    private GridPane gridPane;
 
     public void initialize() {
         List<Food> foods = FoodDao.getAllFoods();
@@ -22,12 +25,13 @@ public class UserHomeController {
         for (Food food : foods) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/User/FoodItem.fxml"));
-                VBox foodBox = loader.load();
+                Node foodNode = loader.load();
 
                 FoodItemController controller = loader.getController();
-                controller.setData(food);
 
-                gridPane.add(foodBox, col, row);
+                controller.setData(food, f -> openFoodDetail(f)); // truyền callback
+
+                gridPane.add(foodNode, col, row);
                 col++;
                 if (col == 5) {
                     col = 0;
@@ -37,6 +41,25 @@ public class UserHomeController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void openFoodDetail(Food food) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/User/UserFood.fxml"));
+            Parent root = loader.load();
+
+            FoodDetailController controller = loader.getController();
+            controller.setFood(food);
+
+            Stage stage = new Stage();
+            stage.setTitle("Chi tiết món ăn");
+            stage.setScene(new Scene(root));
+            stage.initOwner(gridPane.getScene().getWindow()); // để đảm bảo hiển thị trên top
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
