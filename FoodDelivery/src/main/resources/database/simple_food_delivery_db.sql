@@ -368,6 +368,11 @@ SELECT * FROM food_categories;
 SELECT * FROM food_reviews;
 SELECT * FROM foods;
 SELECT * FROM order_items;
+SELECT * FROM order_status_history;
+select * FROM orders;
+select * from password_resets;
+select * from users;
+
 
 -- Bảng: password_resets (Ví dụ 1 yêu cầu reset)
 
