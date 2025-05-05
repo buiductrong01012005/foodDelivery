@@ -55,9 +55,15 @@ public class LoginController {
 
             if (rs.next()) {
                 String fullName = rs.getString("full_name");
+                String userRole = rs.getString("role");
                 showAlert("Đăng nhập thành công", "Chào mừng, " + fullName + "!");
-                // TODO: Chuyển đến trang chính hoặc dashboard
-                openHomePage(); // 👉 Mở giao diện UserHome.fxml
+                if ("Customer".equals(userRole)) {
+                    // TODO: Chuyển đến trang chính hoặc dashboard
+                    openHomePage(); // 👉 Mở giao diện UserHome.fxml
+                } else if ("Admin".equals(userRole)) {
+                    Main.showAdminContainerView();
+                }
+
 
             } else {
                 showAlert("Đăng nhập thất bại", "Email hoặc mật khẩu không đúng.");
