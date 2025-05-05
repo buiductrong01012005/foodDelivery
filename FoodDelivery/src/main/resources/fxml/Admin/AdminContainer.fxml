@@ -1,187 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>      <!-- Thêm import Image -->
-<?import javafx.scene.image.ImageView?>  <!-- Thêm import ImageView -->
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
+<BorderPane prefHeight="800.0" prefWidth="1200.0"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.fooddelivery.Controller.AdminContainerController">
 
-<BorderPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.AdminController">
     <left>
-        <!-- === Nội dung Sidebar được gộp vào đây === -->
-        <AnchorPane prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #ADD8E6;"> <!-- Màu nền Sidebar -->
+        <!-- Sidebar -->
+        <AnchorPane prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #ADD8E6;">
             <children>
-                <!-- Logo (Ví dụ) -->
-                <ImageView fx:id="sidebarLogo" fitHeight="120.0" fitWidth="120.0" layoutX="90.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
-                    <!-- <image><Image url="@../images/admin_logo.png" /></image> -->
-                </ImageView>
-                <!-- VBox chứa các nút điều hướng Sidebar -->
-                <VBox layoutX="40.0" layoutY="180.0" prefWidth="220.0" spacing="15.0"> <!-- Điều chỉnh layoutY, spacing -->
+                <ImageView fx:id="sidebarLogo"
+                           fitHeight="120.0" fitWidth="120.0"
+                           layoutX="90.0" layoutY="32.0"
+                           pickOnBounds="true" preserveRatio="true" />
+                <VBox layoutX="40.0" layoutY="180.0"
+                      prefWidth="220.0" spacing="15.0">
                     <children>
-                        <!-- Nút Dashboard -->
-                        <Button fx:id="dashboardBtn" mnemonicParsing="false" onAction="#showDashboard" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button" text="Tổng quát">
-                            <font><Font size="18.0"/></font>
-                            <!-- Có thể thêm icon: <graphic><ImageView><Image url="..."/></ImageView></graphic> -->
+                        <Button fx:id="dashboardBtn" text="Tổng quát" onAction="#showDashboard" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
+                            <font><Font size="18.0" /></font>
                         </Button>
-                        <!-- Nút Food -->
-                        <Button fx:id="foodBtn" mnemonicParsing="false" onAction="#showManageFood" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button" text="Đồ ăn">
-                            <font><Font size="18.0"/></font>
+                        <Button fx:id="foodBtn" text="Đồ ăn" onAction="#showManageFood" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
+                            <font><Font size="18.0" /></font>
                         </Button>
-                        <!-- Nút Order -->
-                        <Button fx:id="orderBtn" mnemonicParsing="false" onAction="#showManageOrders" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button" text="Đơn hàng">
-                            <font><Font size="18.0"/></font>
+                        <Button fx:id="orderBtn" text="Đơn hàng" onAction="#showManageOrders" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
+                            <font><Font size="18.0" /></font>
                         </Button>
-                        <!-- Nút User -->
-                        <Button fx:id="userBtn" mnemonicParsing="false" onAction="#showManageUsers" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button" text="Người dùng">
-                            <font><Font size="18.0"/></font>
+                        <Button fx:id="userBtn" text="Người dùng" onAction="#showManageUsers" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
+                            <font><Font size="18.0" /></font>
                         </Button>
-                        <!-- Nút Info -->
-                        <Button fx:id="inforBtn" mnemonicParsing="false" onAction="#showAdminInfo" prefHeight="40.0" prefWidth="220.0" styleClass="sidebar-button" text="Thông tin">
-                            <font><Font size="18.0"/></font>
-                        </Button>
-                        <!-- Nút Logout -->
-                        <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="220.0" styleClass="sidebar-button" text="Đăng xuất">
-                            <font><Font size="18.0"/></font>
+                        <!-- Nút Thông tin đã bị xóa -->
+                        <Button fx:id="logOutBtn" text="Đăng xuất" onAction="#handleLogout" prefHeight="40.0" prefWidth="220.0" styleClass="sidebar-button">
+                            <font><Font size="18.0" /></font>
                         </Button>
                     </children>
                 </VBox>
             </children>
         </AnchorPane>
-        <!-- === Kết thúc Nội dung Sidebar === -->
     </left>
 
     <center>
-        <!-- Vùng hiển thị nội dung động (StackPane) -->
+        <!-- Content Area -->
         <StackPane fx:id="contentStackPane" prefHeight="800.0" prefWidth="900.0">
             <children>
-
-                <!-- === Nội dung Màn hình Dashboard === -->
-                <AnchorPane fx:id="dashboardPane" prefHeight="800.0" prefWidth="900.0" visible="true" managed="true">
-                    <padding><Insets left="20.0" top="20.0" right="20.0" bottom="20.0"/></padding>
-                    <children>
-                        <!-- Nội dung thống kê và các bảng tóm tắt của Dashboard -->
-                        <GridPane layoutX="23.0" layoutY="56.0" prefWidth="854.0" hgap="10" vgap="5">
-                            <!-- ... các cột, dòng, label thống kê ... -->
-                            <children>
-                                <Label text="Doanh thu hôm nay" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                <Label fx:id="dailyRevenueLabel" text="0 VND" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                <Label text="Doanh thu tháng này" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                <Label fx:id="monthlyRevenueLabel" text="0 VND" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <Label text="Số lượng món ăn" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                                <Label fx:id="totalFoodLabel" text="0" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                <Label text="Số lượng món ăn còn" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                                <Label fx:id="availableFoodLabel" text="0" style="-fx-font-weight: bold;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                            </children>
-                        </GridPane>
-                        <Label layoutX="23.0" layoutY="180.0" text="Người dùng gần đây" />
-                        <TableView fx:id="userTableDashboard" layoutX="23.0" layoutY="205.0" prefHeight="250.0" prefWidth="854.0">
-                            <columns>
-                                <TableColumn fx:id="userIdColDashboard" prefWidth="50.0" text="ID" />
-                                <TableColumn fx:id="userNameColDashboard" prefWidth="200.0" text="Tên" />
-                                <TableColumn fx:id="userEmailColDashboard" prefWidth="300.0" text="Email" />
-                                <TableColumn fx:id="userRoleColDashboard" prefWidth="150.0" text="Vai trò" />
-                                <TableColumn fx:id="userPhoneColDashboard" prefWidth="154.0" text="Điện thoại" />
-                            </columns>
-                            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-                            <placeholder><Label text="Không có dữ liệu người dùng."/></placeholder>
-                        </TableView>
-                        <Label layoutX="23.0" layoutY="475.0" text="Món ăn sắp hết hàng" />
-                        <TableView fx:id="foodTableDashboard" layoutX="23.0" layoutY="500.0" prefHeight="250.0" prefWidth="854.0">
-                            <columns>
-                                <TableColumn fx:id="foodIdColDashboard" prefWidth="75.0" text="ID" />
-                                <TableColumn fx:id="foodNameColDashboard" prefWidth="450.0" text="Tên" />
-                                <TableColumn fx:id="foodStatusColDashboard" prefWidth="329.0" text="Tình trạng" />
-                            </columns>
-                            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-                            <placeholder><Label text="Không có món ăn sắp hết hàng."/></placeholder>
-                        </TableView>
-                        <!-- Nút chi tiết (nếu cần) -->
-                        <!-- <Button fx:id="userDetailButtonDashboard" onAction="#handleUserDetailsAction" ... /> -->
-                        <!-- <Button fx:id="foodDetailButtonDashboard" onAction="#handleFoodDetailsAction" ... /> -->
-                    </children>
-                </AnchorPane>
-
-                <!-- === Nội dung Màn hình Quản lý User === -->
-                <AnchorPane fx:id="manageUserPane" prefHeight="800.0" prefWidth="900.0" visible="false" managed="false">
-                    <padding><Insets left="20.0" top="20.0" right="20.0" bottom="20.0"/></padding>
-                    <children>
-                        <!-- Nội dung của AdminManageUserContent.fxml -->
-                        <Label layoutX="23.0" layoutY="20.0" text="Quản Lý Người Dùng"><font><Font name="System Bold" size="20.0" /></font></Label>
-                        <HBox layoutX="23.0" layoutY="60.0" spacing="10.0" alignment="CENTER_LEFT">
-                            <Label text="Tìm kiếm:"><font><Font name="System Bold" size="14.0" /></font></Label>
-                            <TextField fx:id="searchUserField" prefWidth="300.0" promptText="Nhập ID, Tên, Email, SĐT..." onAction="#onSearchUserKeywordInput" />
-                            <Button text="Tìm" onAction="#onSearchUserKeywordInput"/>
-                        </HBox>
-                        <TableView fx:id="userTableManage" layoutX="23.0" layoutY="110.0" prefHeight="600.0" prefWidth="854.0">
-                            <columns>
-                                <TableColumn fx:id="userIdColManage" prefWidth="50.0" text="ID" />
-                                <TableColumn fx:id="userNameColManage" prefWidth="150.0" text="Tên" />
-                                <TableColumn fx:id="userAgeColManage" prefWidth="75.0" text="Tuổi" />
-                                <TableColumn fx:id="userPhoneColManage" prefWidth="120.0" text="Số điện thoại" />
-                                <TableColumn fx:id="userEmailColManage" prefWidth="150.0" text="Email" />
-                                <TableColumn fx:id="userAddressColManage" prefWidth="179.0" text="Địa chỉ" />
-                                <TableColumn fx:id="userGenderColManage" prefWidth="70.0" text="Giới tính" />
-                                <TableColumn fx:id="userRoleColManage" prefWidth="60.0" text="Vai trò" />
-                            </columns>
-                            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-                            <placeholder><Label text="Không có dữ liệu người dùng."/></placeholder>
-                        </TableView>
-                        <HBox layoutX="620.0" layoutY="730.0" spacing="10.0">
-                            <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#onAddUserButtonClick" text="Thêm mới" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"><font><Font name="System Bold" size="14.0" /></font></Button>
-                            <Button fx:id="editUserButton" mnemonicParsing="false" onAction="#onEditUserButtonClick" text="Chỉnh sửa" style="-fx-background-color: #2196F3; -fx-text-fill: white;"><font><Font name="System Bold" size="14.0" /></font></Button>
-                            <Button fx:id="deleteUserButton" mnemonicParsing="false" onAction="#onDeleteUserButtonClick" text="Xoá" style="-fx-background-color: #f44336; -fx-text-fill: white;"><font><Font name="System Bold" size="14.0" /></font></Button>
-                        </HBox>
-                    </children>
-                </AnchorPane>
-
-                <!-- === Nội dung Màn hình Quản lý Food === -->
-                <AnchorPane fx:id="manageFoodPane" prefHeight="800.0" prefWidth="900.0" visible="false" managed="false">
-                    <padding><Insets left="20.0" top="20.0" right="20.0" bottom="20.0"/></padding>
-                    <children>
-                        <!-- Nội dung của AdminManageFoodContent.fxml -->
-                        <Label layoutX="23.0" layoutY="20.0" text="Quản Lý Món Ăn"><font><Font name="System Bold" size="20.0" /></font></Label>
-                        <HBox layoutX="23.0" layoutY="60.0" spacing="10.0" alignment="CENTER_LEFT">
-                            <Label text="Tìm kiếm:"><font><Font name="System Bold" size="14.0" /></font></Label>
-                            <TextField fx:id="searchFoodField" prefWidth="300.0" promptText="Nhập tên món ăn..." onAction="#onSearchFoodKeywordInput" />
-                            <Button text="Tìm" onAction="#onSearchFoodKeywordInput"/>
-                            <Button fx:id="addFoodButton" layoutX="730.0" mnemonicParsing="false" text="+ Thêm món" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"><font><Font name="System Bold" size="14.0" /></font></Button>
-                        </HBox>
-                        <TableView fx:id="foodTableManage" layoutX="23.0" layoutY="110.0" prefHeight="600.0" prefWidth="854.0">
-                            <columns>
-                                <TableColumn fx:id="foodIdColManage" prefWidth="75.0" text="ID" />
-                                <TableColumn fx:id="foodNameColManage" prefWidth="350.0" text="Tên Món" />
-                                <TableColumn fx:id="foodCategoryColManage" prefWidth="150.0" text="Loại" />
-                                <TableColumn fx:id="foodPriceColManage" prefWidth="100.0" text="Giá" />
-                                <TableColumn fx:id="foodStatusColManage" prefWidth="179.0" text="Tình trạng" />
-                            </columns>
-                            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-                            <placeholder><Label text="Không có dữ liệu món ăn."/></placeholder>
-                        </TableView>
-                        <HBox layoutX="680.0" layoutY="730.0" spacing="10.0">
-                            <Button fx:id="editFoodButton" mnemonicParsing="false" onAction="#onEditFoodButtonClick" text="Chỉnh sửa" style="-fx-background-color: #2196F3; -fx-text-fill: white;"><font><Font name="System Bold" size="14.0" /></font></Button>
-                            <Button fx:id="deleteFoodButton" mnemonicParsing="false" onAction="#onDeleteFoodButtonClick" text="Xoá" style="-fx-background-color: #f44336; -fx-text-fill: white;"><font><Font name="System Bold" size="14.0" /></font></Button>
-                        </HBox>
-                    </children>
-                </AnchorPane>
-
-                <!-- Thêm các AnchorPane cho Order, Info nếu cần -->
-                <!-- <AnchorPane fx:id="manageOrderPane" ... visible="false" managed="false">...</AnchorPane> -->
-                <!-- <AnchorPane fx:id="adminInfoPane" ... visible="false" managed="false">...</AnchorPane> -->
-
+                <!-- Include Child Views -->
+                <fx:include fx:id="dashboardView" source="AdminDashboard.fxml" managed="false" visible="false"/>
+                <fx:include fx:id="manageUsersView" source="AdminManageUser.fxml" managed="false" visible="false"/>
+                <fx:include fx:id="manageFoodView" source="AdminManageFood.fxml" managed="false" visible="false"/>
+                <fx:include fx:id="userInfoView" source="AdminInformation.fxml" managed="false" visible="false"/>
             </children>
         </StackPane>
     </center>

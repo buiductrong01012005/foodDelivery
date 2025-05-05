@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane fx:id="manageUserPaneRoot"
+            prefHeight="800.0"
+            prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.fooddelivery.Controller.AdminManageUsersController">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <children>
+        <!-- Title -->
+        <Label layoutX="23.0" layoutY="20.0" text="Quản Lý Người Dùng">
+            <font><Font name="System Bold" size="20.0" /></font>
+        </Label>
+
+        <!-- Search Box -->
+        <HBox alignment="CENTER_LEFT" spacing="10.0"
+              layoutX="23.0" layoutY="60.0">
+            <children>
+                <Label text="Tìm kiếm:">
+                    <font><Font name="System Bold" size="14.0" /></font>
+                </Label>
+                <TextField fx:id="searchUserField"
+                           prefWidth="300.0"
+                           promptText="Nhập ID, Tên, Email, SĐT..."
+                           onAction="#onSearchUserKeywordInput" />
+                <Button text="Tìm" onAction="#onSearchUserKeywordInput" />
+            </children>
+        </HBox>
+
+        <!-- User Table -->
+        <TableView fx:id="userTableManage"
+                   layoutX="23.0" layoutY="110.0"
+                   prefHeight="600.0" prefWidth="854.0">
+            <columns>
+                <TableColumn fx:id="userIdColManage" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="userNameColManage" prefWidth="150.0" text="Tên" />
+                <TableColumn fx:id="userAgeColManage" prefWidth="75.0" text="Tuổi" />
+                <TableColumn fx:id="userPhoneColManage" prefWidth="120.0" text="Số điện thoại" />
+                <TableColumn fx:id="userEmailColManage" prefWidth="150.0" text="Email" />
+                <TableColumn fx:id="userAddressColManage" prefWidth="179.0" text="Địa chỉ" />
+                <TableColumn fx:id="userGenderColManage" prefWidth="70.0" text="Giới tính" />
+                <TableColumn fx:id="userRoleColManage" prefWidth="60.0" text="Vai trò" />
+            </columns>
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+            <placeholder><Label text="Không có dữ liệu người dùng." /></placeholder>
+        </TableView>
+
+        <!-- Action Buttons -->
+        <HBox spacing="10.0"
+              layoutX="520.0" layoutY="730.0"> <!-- Điều chỉnh layoutX nếu cần -->
+            <children>
+                <Button fx:id="addUserButton"
+                        mnemonicParsing="false"
+                        onAction="#onAddUserButtonClick"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                        text="Nâng cấp Admin">
+                    <font><Font name="System Bold" size="14.0" /></font>
+                </Button>
+                <Button fx:id="detailsUserButton"
+                        mnemonicParsing="false"
+                        onAction="#onUserDetailsButtonClick"
+                        style="-fx-background-color: #6c757d; -fx-text-fill: white;"
+                        text="Chi tiết">
+                    <font><Font name="System Bold" size="14.0" /></font>
+                </Button>
+                <Button fx:id="editUserButton"
+                        mnemonicParsing="false"
+                        onAction="#onEditUserButtonClick"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white;"
+                        text="Chỉnh sửa">
+                    <font><Font name="System Bold" size="14.0" /></font>
+                </Button>
+                <Button fx:id="deleteUserButton"
+                        mnemonicParsing="false"
+                        onAction="#onDeleteUserButtonClick"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white;"
+                        text="Xoá">
+                    <font><Font name="System Bold" size="14.0" /></font>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

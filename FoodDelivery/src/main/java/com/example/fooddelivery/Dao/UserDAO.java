@@ -143,6 +143,7 @@ public class UserDAO {
         }
     }
 
+    
     private static void showAlert(String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -150,4 +151,8 @@ public class UserDAO {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+//    public static boolean updateUser(User userToSave) {
+//
+//    }
 }
