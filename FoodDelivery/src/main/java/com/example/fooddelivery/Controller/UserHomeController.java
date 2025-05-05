@@ -1,7 +1,7 @@
 package com.example.fooddelivery.Controller;
 
 import com.example.fooddelivery.Model.Food;
-import com.example.fooddelivery.Dao.FoodDao;
+import com.example.fooddelivery.Dao.FoodDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +19,7 @@ public class UserHomeController {
     private GridPane gridPane;
 
     public void initialize() {
-        List<Food> foods = FoodDao.getAllFoods();
+        List<Food> foods = FoodDAO.getAllFoods();
 
         int col = 0, row = 0;
         for (Food food : foods) {

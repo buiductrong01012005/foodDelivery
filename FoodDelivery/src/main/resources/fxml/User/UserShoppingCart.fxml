@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -31,75 +30,42 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sản phẩm" wrappingWidth="99.74542236328125">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Text>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sản phẩm" wrappingWidth="99.74542236328125" />
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Giá" GridPane.columnIndex="1">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
                 </Text>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Số lượng" GridPane.columnIndex="2">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
                 </Text>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Đơn 1" GridPane.rowIndex="1">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Text>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Đơn 2" GridPane.rowIndex="2">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Text>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Đơn 1" GridPane.rowIndex="1" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Đơn 2" GridPane.rowIndex="2" />
                 <Button mnemonicParsing="false" text="Xoá" GridPane.columnIndex="4" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
                 </Button>
                 <Button mnemonicParsing="false" text="Xoá" GridPane.columnIndex="4" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
                 </Button>
                 <Button mnemonicParsing="false" text="Cập nhật" GridPane.columnIndex="3" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="40.0" />
                     </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
                 </Button>
                 <TextField minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="57.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                 <TextField minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="167.0" text="Tiếp tục mua sắm" GridPane.rowIndex="3">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Button>
-                <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="83.0" text="Đặt hàng" GridPane.columnIndex="4" GridPane.rowIndex="3">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Button>
+                <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="167.0" text="Tiếp tục mua sắm" GridPane.rowIndex="3" />
+                <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="83.0" text="Đặt hàng" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                 <Button mnemonicParsing="false" text="Cập nhật" GridPane.columnIndex="3" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="40.0" />
                     </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
                 </Button>
             </children>
         </GridPane>
@@ -116,18 +82,9 @@
                 <RowConstraints maxHeight="24.666656494140625" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <CheckBox mnemonicParsing="false" text="Giao tiêu chuẩn" GridPane.rowIndex="1">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></CheckBox>
-                <CheckBox mnemonicParsing="false" text="Giao nhanh" GridPane.rowIndex="2">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></CheckBox>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hình thức thanh toán">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Text>
+                <CheckBox mnemonicParsing="false" text="Giao tiêu chuẩn" GridPane.rowIndex="1" />
+                <CheckBox mnemonicParsing="false" text="Giao nhanh" GridPane.rowIndex="2" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hình thức thanh toán" />
             </children>
         </GridPane>
         <GridPane layoutX="948.0" layoutY="367.0" prefHeight="86.0" prefWidth="167.0">
@@ -141,21 +98,12 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tạm tính:">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Text>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tổng cộng:" GridPane.rowIndex="2">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Text>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Phí vận chuyển:" GridPane.rowIndex="1">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font></Text>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tạm tính:" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tổng cộng:" GridPane.rowIndex="2" />
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Phí vận chuyển:" GridPane.rowIndex="1" />
             </children>
         </GridPane>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a6a6a6" height="2.0" layoutX="329.0" layoutY="468.0" stroke="BLACK" strokeType="INSIDE" width="594.0" />
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a6a6a636" height="2.0" layoutX="329.0" layoutY="468.0" stroke="BLACK" strokeType="INSIDE" width="594.0" />
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a6a6a636" height="2.0" layoutX="329.0" layoutY="188.0" stroke="BLACK" strokeType="INSIDE" width="594.0" />
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a6a6a636" height="281.0" layoutX="328.0" layoutY="188.0" stroke="BLACK" strokeType="INSIDE" width="2.0" />
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a6a6a636" height="281.0" layoutX="921.0" layoutY="188.0" stroke="BLACK" strokeType="INSIDE" width="2.0" />
