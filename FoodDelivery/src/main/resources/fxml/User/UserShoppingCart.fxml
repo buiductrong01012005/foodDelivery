@@ -56,10 +56,15 @@
                 <Text fx:id="txtShipping" text="0 VNĐ" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <Text text="Tổng cộng:" GridPane.rowIndex="2"/>
                 <Text fx:id="txtTotal" text="0 VNĐ" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <!-- Nút Thanh toán -->
+                <Button fx:id="btnCheckout" text="🛒 Thanh toán" GridPane.rowIndex="3" GridPane.columnSpan="2"
+                        maxWidth="Infinity" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;"/>
             </children>
         </GridPane>
 
         <!-- Các đường viền giao diện -->
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a6a6a636" height="2.0" layoutX="329.0" layoutY="468.0" stroke="BLACK" />
+
     </children>
 </AnchorPane>
