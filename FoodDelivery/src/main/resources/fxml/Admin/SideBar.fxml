@@ -16,12 +16,12 @@
                <children>
                   <Button id="home" fx:id="homeBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Tổng quát">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                   </Button>
                   <Button id="profile" fx:id="personalBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Đồ ăn">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                      <VBox.margin>
                         <Insets top="15.0" />
@@ -29,7 +29,7 @@
                   </Button>
                   <Button id="history" fx:id="historyBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Đơn hàng">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                      <VBox.margin>
                         <Insets top="15.0" />
@@ -37,7 +37,7 @@
                   </Button>
                   <Button id="logout" fx:id="logoutBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Người dùng">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                      <VBox.margin>
                         <Insets top="15.0" />
@@ -45,7 +45,7 @@
                   </Button>
                   <Button id="home" fx:id="homeBtn1" mnemonicParsing="false" prefHeight="40.0" prefWidth="220.0" text="Thông tin ">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                      <VBox.margin>
                         <Insets top="15.0" />
@@ -53,7 +53,7 @@
                   </Button>
                   <Button id="home" fx:id="homeBtn11" mnemonicParsing="false" prefHeight="40.0" prefWidth="220.0" text="Đăng xuất">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                      <VBox.margin>
                         <Insets top="15.0" />
