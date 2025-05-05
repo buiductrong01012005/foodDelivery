@@ -1,45 +1,63 @@
 package com.example.fooddelivery.Dao;
 
-import com.example.fooddelivery.Database.DatabaseConnector;
-import com.example.fooddelivery.Model.Food;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-public class FoodDao {
+import com.example.fooddelivery.Model.Food;
+import com.example.fooddelivery.Database.DatabaseConnector;
 
-    public static List<Food> getAllFoods() {
-        List<Food> foodList = new ArrayList<>();
+public class FoodDAO {
+    private DatabaseConnector dbConnector;
 
-        String sql = "SELECT * FROM foods WHERE availability_status = 'available'";
+    public FoodDAO(DatabaseConnector dbConnector) {
+        this.dbConnector = dbConnector;
+    }
 
-        try (Connection conn = DatabaseConnector.connectDB();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+    public static ObservableList<Food> getAllFoods() {
+        ObservableList<Food> foodList = FXCollections.observableArrayList();
+
+        try (Connection conn = DatabaseConnector.connectDB()) {
+            if (conn == null) {
+                showAlert("Lỗi kết nối", "Không thể kết nối tới CSDL.");
+                return foodList;
+            }
+
+            String query = "SELECT * FROM foods";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Food food = new Food(
-                        rs.getInt("food_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("price"),
-                        rs.getString("availability_status"),
-                        rs.getString("image_url"),
-                        rs.getInt("created_by"),
-                        rs.getInt("updated_by"),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
-                        rs.getTimestamp("updated_at").toLocalDateTime()
-                );
+                int id = rs.getInt("food_id");
+                int category_id = rs.getInt("category_id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                double price = rs.getDouble("price");
+                String availability_status = rs.getString("availability_status");
+                String image_url = rs.getString("image_url");
+                int created_by = rs.getInt("created_by");
+                int updated_by = rs.getInt("updated_by");
+                LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
+                LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
+
+                Food food = new Food(id,category_id, name, description, price, availability_status, image_url, created_by, updated_by, created_at, updated_at);
                 foodList.add(food);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            showAlert("Lỗi truy vấn", "Không thể truy vấn dữ liệu người dùng:\n" + e.getMessage());
         }
 
         return foodList;
+    }
+
+    private static void showAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
