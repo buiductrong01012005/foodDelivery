@@ -38,6 +38,17 @@ public class AdminController implements Initializable {
     @FXML private Button inforBtn;
     @FXML private Button logOutBtn;
 
+    // ---Dashboard Components ---
+    @FXML private TableView<User> userTableDashboard;
+    @FXML private TableColumn<User, Integer> userIdColDashboard;
+    @FXML private TableColumn<User, String> userNameColDashboard;
+    @FXML private TableColumn<User, Integer> userAgeColDashboard;
+    @FXML private TableColumn<User, String> userPhoneColDashboard;
+    @FXML private TableColumn<User, String> userEmailColDashboard;
+    @FXML private TableColumn<User, String> userAddressColDashboard;
+    @FXML private TableColumn<User, String> userGenderColDashboard;
+    @FXML private TableColumn<User, String> userRoleColDashboard;
+
     // --- Manage User Components ---
     @FXML private TextField searchUserField;
     @FXML private TableView<User> userTableManage;
@@ -61,16 +72,17 @@ public class AdminController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Initializing AdminController...");
-        // Không cần khởi tạo DB Connector nếu DAO dùng static connect
 
         // Cấu hình các cột cho bảng quản lý người dùng
-        configureUserTableColumns();
+        configureUserTableDashboardColumns();
+        configureUserTableManageColumns();
 
-        // Tải dữ liệu và hiển thị màn hình USER MANAGE mặc định
-        showManageUsers(null);
+        // Tải dữ liệu và hiển thị màn hình Dashboard mặc định
+        showDashboard(null);
 
         System.out.println("AdminController initialized. Default view: Manage Users.");
     }
+
 
     // --- Phương thức chuyển đổi Pane (Giữ nguyên) ---
     private void showPane(AnchorPane paneToShow) {
@@ -95,7 +107,7 @@ public class AdminController implements Initializable {
     private void showDashboard(ActionEvent event) {
         System.out.println("INFO: Switching to Dashboard view...");
         showPane(dashboardPane);
-        // TODO: Load dashboard data if needed
+        loadAndDisplayUserDashboardData();
     }
 
     @FXML
@@ -131,9 +143,60 @@ public class AdminController implements Initializable {
         Main.showLoginView();
     }
 
-    // --- Các phương thức cấu hình và load data cho màn hình Quản lý User ---
+    // --- Các phương thức cấu hình và load data cho màn hình Quản lý User, DashBoard ---
 
-    private void configureUserTableColumns() {
+    private void configureUserTableDashboardColumns() {
+        if (userTableDashboard == null) {
+            System.err.println("ERROR: userTableDashboard is null during column configuration!");
+            return;
+        }
+        System.out.println("INFO: Configuring columns for userTableManage...");
+        setupColumnFactory(userIdColDashboard, "user_id");
+        setupColumnFactory(userNameColDashboard, "full_name");
+        setupColumnFactory(userEmailColDashboard, "email");
+        setupColumnFactory(userRoleColDashboard, "role");
+        setupColumnFactory(userPhoneColDashboard, "phone_number");
+
+        userTableDashboard.setPlaceholder(new Label("Đang tải dữ liệu..."));
+    }
+
+    private void loadAndDisplayUserDashboardData() {
+        System.out.println("INFO: Loading user data...");
+        if (userTableDashboard == null) { return; }
+        userTableDashboard.setPlaceholder(new Label("Đang tải dữ liệu..."));
+        userTableDashboard.getItems().clear();
+
+        // Tải trên luồng nền
+        new Thread(() -> {
+            ObservableList<User> users = FXCollections.observableArrayList();
+            boolean loadError = false;
+            String errorMessage = "Lỗi không xác định.";
+            try {
+                users = UserDAO.getAllUsers();
+                this.allUsersList = users != null ? users : FXCollections.observableArrayList();
+            } catch (Exception e) {
+                loadError = true;
+                errorMessage = "Lỗi không mong muốn khi tải người dùng.";
+                System.err.println("ERROR: " + errorMessage); e.printStackTrace();
+            }
+            final ObservableList<User> finalUsers = this.allUsersList;
+            final boolean finalLoadError = loadError;
+            final String finalErrorMessage = errorMessage;
+            Platform.runLater(() -> {
+                if (userTableDashboard != null) {
+                    if (!finalLoadError) {
+                        userTableDashboard.setItems(finalUsers);
+                        userTableDashboard.setPlaceholder(new Label(finalUsers.isEmpty() ? "Không có người dùng nào." : ""));
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Lỗi Tải Dữ Liệu", finalErrorMessage);
+                        userTableDashboard.setPlaceholder(new Label("Lỗi tải dữ liệu."));
+                    }
+                }
+            });
+        }).start();
+    }
+
+    private void configureUserTableManageColumns() {
         if (userTableManage == null) {
             System.err.println("ERROR: userTableManage is null during column configuration!");
             return;
@@ -379,6 +442,7 @@ public class AdminController implements Initializable {
         }
         return selectedUser;
     }
+
 
     // --- Hàm showAlert tiện ích ---
     private void showAlert(Alert.AlertType alertType, String title, String content) {
