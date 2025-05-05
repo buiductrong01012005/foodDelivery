@@ -69,6 +69,7 @@
                               <AnchorPane id="avt" prefHeight="240.0" prefWidth="163.0">
                                   <children>
                                       <ImageView fx:id="userImage" fitHeight="240.0" fitWidth="179.0" layoutX="43.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           <Button layoutX="45.0" layoutY="107.0" mnemonicParsing="false" text="+ Add picture" visible="false" />
                                   </children>
                               </AnchorPane>
                               <Label fx:id="userNameLabel" text="userName">

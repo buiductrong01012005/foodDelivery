@@ -1,44 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<ScrollPane fx:controller="com.example.fooddelivery.Controller.UserHomeController"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fitToWidth="true" fitToHeight="true"
-            prefHeight="800.0" prefWidth="1200.0">
+<ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.UserHomeController">
 
    <content>
-      <AnchorPane prefHeight="800.0" prefWidth="1200.0" pickOnBounds="false">
+      <AnchorPane pickOnBounds="false" prefHeight="800.0" prefWidth="1200.0">
 
          <!-- Sidebar -->
-         <fx:include source="SideBar.fxml"/>
+         <fx:include source="SideBar.fxml" />
 
-         <VBox layoutX="318.0" layoutY="50.0" spacing="20" prefWidth="850.0">
+         <VBox layoutX="318.0" layoutY="50.0" prefHeight="52.0" prefWidth="467.0" spacing="20">
 
             <!-- Tiêu đề -->
-            <Label text="ShopeeFood" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+            <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="UETFood" />
 
             <!-- Khu vực hiển thị món ăn -->
             <GridPane fx:id="gridPane" hgap="20" vgap="20">
                <columnConstraints>
-                  <ColumnConstraints prefWidth="160"/>
-                  <ColumnConstraints prefWidth="160"/>
-                  <ColumnConstraints prefWidth="160"/>
-                  <ColumnConstraints prefWidth="160"/>
-                  <ColumnConstraints prefWidth="160"/>
+                  <ColumnConstraints prefWidth="160" />
+                  <ColumnConstraints prefWidth="160" />
+                  <ColumnConstraints prefWidth="160" />
+                  <ColumnConstraints prefWidth="160" />
+                  <ColumnConstraints prefWidth="160" />
                </columnConstraints>
             </GridPane>
 
          </VBox>
+         <TextField layoutX="827.0" layoutY="63.0" prefHeight="25.0" prefWidth="206.0" promptText="🔍 Tìm kiếm món ăn" />
 
       </AnchorPane>
    </content>
