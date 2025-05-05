@@ -13,7 +13,21 @@ public class User {
     private String gender;
     private String profile_picture_url;
     private String role;
+    private String address;
 
+    /**
+     * Constructor khong gom dia chi.
+     *
+     * @param user_id id.
+     * @param full_name ten day du.
+     * @param email email.
+     * @param password_hash mat khau.
+     * @param date_of_birth sinh nhat.
+     * @param phone_number sdt.
+     * @param gender gioi tinh.
+     * @param profile_picture_url link anh.
+     * @param role vai tro.
+     */
     public User(int user_id, String full_name, String email, String password_hash, LocalDate date_of_birth, String phone_number, String gender, String profile_picture_url, String role) {
         this.user_id = user_id;
         this.full_name = full_name;
@@ -24,6 +38,21 @@ public class User {
         this.gender = gender;
         this.profile_picture_url = profile_picture_url;
         this.role = role;
+        this.address = "";
+    }
+
+    public User(int user_id, String full_name, String email, String password_hash, LocalDate date_of_birth, String phone_number, String gender, String profile_picture_url, String role, String address) {
+        this.user_id = user_id;
+        this.full_name = full_name;
+        this.email = email;
+        this.password_hash = password_hash;
+        this.date_of_birth = date_of_birth;
+        this.phone_number = phone_number;
+        this.gender = gender;
+        this.profile_picture_url = profile_picture_url;
+        this.role = role;
+        this.address = "";
+        this.address = (address != null) ? address : "";
     }
 
     public int getUser_id() {
@@ -96,6 +125,14 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     /**

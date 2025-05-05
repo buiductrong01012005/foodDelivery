@@ -23,7 +23,9 @@ public class UserDAO {
                 return userList;
             }
 
-            String query = "SELECT * FROM users";
+            String query = "SELECT u.*, a.street_address, a.ward, a.district, a.city " +
+                    "FROM users u " +
+                    "LEFT JOIN addresses a ON u.user_id = a.user_id AND a.is_default = 1";
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
 
@@ -39,7 +41,16 @@ public class UserDAO {
                 String profile = rs.getString("profile_picture_url");
                 String role = rs.getString("role");
 
-                User user = new User(id, name, email, pass, dob, phone, gender, profile, role);
+                // Lấy thông tin địa chỉ từ JOIN (có thể là NULL nếu không có địa chỉ mặc định)
+                String street = rs.getString("street_address");
+                String ward = rs.getString("ward");
+                String district = rs.getString("district");
+                String city = rs.getString("city");
+
+                // <<< ĐỊNH DẠNG ĐỊA CHỈ THÀNH CHUỖI >>>
+                String formattedAddress = formatAddress(street, ward, district, city);
+
+                User user = new User(id, name, email, pass, dob, phone, gender, profile, role, formattedAddress);
                 userList.add(user);
             }
 
@@ -48,6 +59,32 @@ public class UserDAO {
         }
 
         return userList;
+    }
+
+    private static String formatAddress(String street, String ward, String district, String city) {
+        StringBuilder addressBuilder = new StringBuilder();
+        boolean firstPart = true;
+
+        if (street != null && !street.trim().isEmpty()) {
+            addressBuilder.append(street.trim());
+            firstPart = false;
+        }
+        if (ward != null && !ward.trim().isEmpty()) {
+            if (!firstPart) addressBuilder.append(", ");
+            addressBuilder.append(ward.trim());
+            firstPart = false;
+        }
+        if (district != null && !district.trim().isEmpty()) {
+            if (!firstPart) addressBuilder.append(", ");
+            addressBuilder.append(district.trim());
+            firstPart = false;
+        }
+        if (city != null && !city.trim().isEmpty()) {
+            if (!firstPart) addressBuilder.append(", ");
+            addressBuilder.append(city.trim());
+        }
+
+        return addressBuilder.length() > 0 ? addressBuilder.toString() : "N/A"; // Trả về N/A nếu không có phần nào
     }
 
     public static boolean updateUserRole(int userId, String newRole) throws SQLException {
