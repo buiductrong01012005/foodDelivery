@@ -6,14 +6,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="171" prefWidth="178" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.FoodItemController">
+<VBox alignment="CENTER" prefHeight="171" prefWidth="178" spacing="10" style="-fx-background-color: #fffdf6;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.FoodItemController">
     <ImageView fx:id="imgFood" fitHeight="117" fitWidth="178" preserveRatio="true" />
     <Label fx:id="lblFoodName" text="Tên món ăn">
       <font>
          <Font name="System Bold" size="12.0" />
       </font></Label>
-    <Button fx:id="btnAddCart" text="Thêm vào giỏ hàng">
+    <Button fx:id="btnAddCart" style="-fx-background-color: #ffd166; -fx-background-radius: 8;" text="Thêm vào giỏ hàng">
       <font>
-         <Font name="System Bold" size="12.0" />
+         <Font name="System Bold" size="13.0" />
       </font></Button>
 </VBox>

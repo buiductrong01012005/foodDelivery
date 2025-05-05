@@ -17,7 +17,7 @@
     <content>
         <VBox prefHeight="800.0" prefWidth="1200.0">
             <children>
-                <AnchorPane prefHeight="700.0" prefWidth="1200.0">
+                <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #FFFDF6;">
                     <children>
 
                         <!-- Ảnh món ăn -->
@@ -37,31 +37,31 @@
                                 <RowConstraints prefHeight="30.0" />
                             </rowConstraints>
                             <children>
-                                <Text text="Tên món ăn" GridPane.rowIndex="0">
+                                <Text text="Tên món ăn:" GridPane.rowIndex="0">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font></Text>
                                 <Text fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                                <Text text="Tên quán" GridPane.rowIndex="1">
+                                <Text text="Tên quán:" GridPane.rowIndex="1">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font></Text>
                                 <Text fx:id="txtStore" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                                <Text text="Địa chỉ" GridPane.rowIndex="2">
+                                <Text text="Địa chỉ:" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font></Text>
                                 <Text fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                                <Text text="Tình trạng" GridPane.rowIndex="3">
+                                <Text text="Tình trạng:" GridPane.rowIndex="3">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font></Text>
                                 <Text fx:id="txtStatus" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                                <Text text="Giá tiền" GridPane.rowIndex="4">
+                                <Text text="Giá tiền:" GridPane.rowIndex="4">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font></Text>
@@ -75,15 +75,15 @@
                         <Font name="System Bold" size="13.0" />
                      </font></Text>
                         <TextField fx:id="txtQuantity" layoutX="820.0" layoutY="358.0" prefHeight="25.0" prefWidth="55.0" text="1" />
-                        <Button fx:id="btnMinus" layoutX="887.0" layoutY="358.0" text="-">
+                        <Button fx:id="btnMinus" layoutX="887.0" layoutY="358.0" prefHeight="27.0" prefWidth="27.0" style="-fx-background-color: #ffd166; -fx-background-radius: 8;" text="-">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font></Button>
-                        <Button fx:id="btnPlus" layoutX="908.0" layoutY="358.0" text="+">
+                        <Button fx:id="btnPlus" layoutX="917.0" layoutY="358.0" prefHeight="27.0" prefWidth="27.0" style="-fx-background-color: #ffd166; -fx-background-radius: 8;" text="+">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font></Button>
-                        <Button fx:id="btnAddCart" layoutX="961.0" layoutY="358.0" text="Thêm vào giỏ hàng">
+                        <Button fx:id="btnAddCart" layoutX="961.0" layoutY="358.0" style="-fx-background-color: #ffd166; -fx-background-radius: 8;" text="Thêm vào giỏ hàng">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font></Button>

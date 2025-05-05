@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -20,10 +21,10 @@
             <Image url="@../../images/identify/bgr.png" />
         </image>
     </ImageView>
-    <AnchorPane id="backperson" layoutY="1.0" prefHeight="500.0" prefWidth="1200.0">
+    <AnchorPane id="backperson" layoutY="1.0" prefHeight="500.0" prefWidth="1200.0" style="-fx-background-color: #FFFDF6;">
         <children>
             <fx:include source="SideBar.fxml" />
-            <Button id="edit" fx:id="editButton" layoutX="887.0" layoutY="633.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="97.0" styleClass="edit" text="Chỉnh sửa">
+            <Button id="edit" fx:id="editButton" layoutX="887.0" layoutY="633.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="97.0" style="-fx-background-radius: 12; -fx-background-color: #FFD166;" styleClass="edit" text="Chỉnh sửa" textFill="#1e1e1e">
                 <font>
                     <Font name="System Bold" size="16.0" />
                 </font></Button>
@@ -40,12 +41,12 @@
                 <children>
                     <HBox prefHeight="36.0" prefWidth="307.0">
                         <children>
-                            <Rectangle arcWidth="5.0" height="26.0" stroke="#c1c1c1" strokeType="INSIDE" width="4.0">
+                            <Rectangle arcWidth="5.0" fill="#ffd166" height="39.0" smooth="false" stroke="#c1c1c1" strokeType="INSIDE" width="4.0">
                                 <HBox.margin>
-                                    <Insets left="30.0" top="23.0" />
+                                    <Insets left="30.0" top="17.0" />
                                 </HBox.margin>
                             </Rectangle>
-                            <Label prefHeight="27.0" prefWidth="302.0" text="Thông tin cá nhân" textAlignment="CENTER">
+                            <Label prefHeight="27.0" prefWidth="302.0" text="Thông tin cá nhân" textAlignment="CENTER" textFill="#1e1e1e">
                                 <font>
                                     <Font name="System Bold" size="22.0" />
                                 </font>
@@ -72,7 +73,7 @@
                            <Button layoutX="45.0" layoutY="107.0" mnemonicParsing="false" text="+ Add picture" visible="false" />
                                   </children>
                               </AnchorPane>
-                              <Label fx:id="userNameLabel" text="userName">
+                              <Label fx:id="userNameLabel" text="userName" textFill="#1e1e1e">
                                   <font>
                                       <Font size="16.0" />
                                   </font>
@@ -82,7 +83,7 @@
                               </Label>
                               <HBox prefHeight="32.0" prefWidth="148.0">
                                   <children>
-                                      <Label text="ID:" underline="true">
+                                      <Label text="ID:" textFill="#1e1e1e" underline="true">
                                           <font>
                                               <Font size="16.0" />
                                           </font>
@@ -90,7 +91,7 @@
                                               <Insets left="40.0" />
                                           </HBox.margin>
                                       </Label>
-                                      <Label fx:id="userIdLabel" text="userID">
+                                      <Label fx:id="userIdLabel" text="userID" textFill="#1e1e1e">
                                           <font>
                                               <Font size="16.0" />
                                           </font>
@@ -105,10 +106,10 @@
                               <Insets left="30.0" top="20.0" />
                           </HBox.margin>
                       </VBox>
-               <GridPane prefHeight="313.0" prefWidth="491.0">
+               <GridPane prefHeight="313.0" prefWidth="409.0">
                  <columnConstraints>
-                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="239.0" minWidth="10.0" prefWidth="138.3333740234375" />
-                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.33331298828125" minWidth="10.0" prefWidth="351.6666259765625" />
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="239.0" minWidth="10.0" prefWidth="121.66666666666666" />
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.33331298828125" minWidth="10.0" prefWidth="287.0" />
                  </columnConstraints>
                  <rowConstraints>
                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -118,7 +119,7 @@
                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                  </rowConstraints>
                   <children>
-                     <Label prefHeight="27.0" prefWidth="302.0" text="Họ và tên:" textAlignment="CENTER">
+                     <Label prefHeight="27.0" prefWidth="302.0" text="Họ và tên:" textAlignment="CENTER" textFill="#1e1e1e">
                         <font>
                            <Font name="System Bold" size="15.0" />
                         </font>
@@ -126,7 +127,7 @@
                            <Insets left="10.0" />
                         </GridPane.margin>
                      </Label>
-                     <Label prefHeight="27.0" prefWidth="302.0" text="Tuổi:" textAlignment="CENTER" GridPane.rowIndex="1">
+                     <Label prefHeight="27.0" prefWidth="302.0" text="Tuổi:" textAlignment="CENTER" textFill="#1e1e1e" GridPane.rowIndex="1">
                         <font>
                            <Font name="System Bold" size="15.0" />
                         </font>
@@ -134,7 +135,7 @@
                            <Insets left="10.0" />
                         </GridPane.margin>
                      </Label>
-                     <Label prefHeight="27.0" prefWidth="302.0" text="Email:" textAlignment="CENTER" GridPane.rowIndex="2">
+                     <Label prefHeight="27.0" prefWidth="302.0" text="Email:" textAlignment="CENTER" textFill="#1e1e1e" GridPane.rowIndex="2">
                         <font>
                            <Font name="System Bold" size="15.0" />
                         </font>
@@ -142,7 +143,7 @@
                            <Insets left="10.0" />
                         </GridPane.margin>
                      </Label>
-                     <Label prefHeight="27.0" prefWidth="302.0" text="Số điện thoại:" textAlignment="CENTER" GridPane.rowIndex="3">
+                     <Label prefHeight="27.0" prefWidth="302.0" text="Số điện thoại:" textAlignment="CENTER" textFill="#1e1e1e" GridPane.rowIndex="3">
                         <font>
                            <Font name="System Bold" size="15.0" />
                         </font>
@@ -150,7 +151,7 @@
                            <Insets left="10.0" />
                         </GridPane.margin>
                      </Label>
-                     <Label prefHeight="27.0" prefWidth="302.0" text="Địa chỉ:" textAlignment="CENTER" GridPane.rowIndex="4">
+                     <Label prefHeight="27.0" prefWidth="302.0" text="Địa chỉ:" textAlignment="CENTER" textFill="#1e1e1e" GridPane.rowIndex="4">
                         <font>
                            <Font name="System Bold" size="15.0" />
                         </font>
@@ -158,11 +159,16 @@
                            <Insets left="10.0" />
                         </GridPane.margin>
                      </Label>
+                     <TextField GridPane.columnIndex="1" />
+                     <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                     <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   </children>
                </GridPane>
                   </children>
               </HBox>
-         <Button id="edit" fx:id="editButton1" layoutX="985.0" layoutY="633.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="65.0" styleClass="edit" text="Lưu">
+         <Button id="edit" fx:id="editButton1" layoutX="985.0" layoutY="633.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="65.0" style="-fx-background-radius: 12; -fx-background-color: #FFD166;" styleClass="edit" text="Lưu" textFill="#1e1e1e">
             <font>
                <Font name="System Bold" size="16.0" />
             </font>
