@@ -9,44 +9,44 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:controller="com.example.fooddelivery.Controller.SidebarController"
-        layoutX="-2.0" layoutY="-2.0" prefHeight="800.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+            layoutX="-2.0" layoutY="-2.0" prefHeight="800.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane id="back" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #ADD8E6;;">
-         <children>
-              <VBox layoutX="40.0" layoutY="188.0" prefHeight="234.0" prefWidth="220.0" spacing="3.0">
-                  <children>
-                      <Button id="home" fx:id="homeBtn1" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Trang chủ">
-                          <font>
-                              <Font size="18.0" />
-                          </font>
-                      </Button>
-                      <Button id="profile" fx:id="personalBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Giỏ hàng">
-                          <font>
-                              <Font size="18.0" />
-                          </font>
-                          <VBox.margin>
-                              <Insets top="15.0" />
-                          </VBox.margin>
-                      </Button>
-                      <Button id="history" fx:id="historyBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Thông tin">
-                          <font>
-                              <Font size="18.0" />
-                          </font>
-                          <VBox.margin>
-                              <Insets top="15.0" />
-                          </VBox.margin>
-                      </Button>
-                      <Button id="logout" fx:id="logoutBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Đăng xuất">
-                          <font>
-                              <Font size="18.0" />
-                          </font>
-                          <VBox.margin>
-                              <Insets top="15.0" />
-                          </VBox.margin>
-                      </Button>
-                  </children>
-              </VBox>
-         </children></AnchorPane>
+            <children>
+                <VBox layoutX="40.0" layoutY="188.0" prefHeight="234.0" prefWidth="220.0" spacing="3.0">
+                    <children>
+                        <Button id="home" fx:id="homeBtn1" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Trang chủ">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Button>
+                        <Button id="profile" fx:id="personalBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Giỏ hàng">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="15.0" />
+                            </VBox.margin>
+                        </Button>
+                        <Button id="history" fx:id="historyBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Thông tin">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="15.0" />
+                            </VBox.margin>
+                        </Button>
+                        <Button id="logout" fx:id="logoutBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Đăng xuất">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="15.0" />
+                            </VBox.margin>
+                        </Button>
+                    </children>
+                </VBox>
+            </children></AnchorPane>
         <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="90.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../../images/identify/logo.png" />

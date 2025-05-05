@@ -10,6 +10,7 @@ import javafx.scene.text.Text;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -25,24 +26,22 @@ public class FoodDetailController {
     @FXML private Button btnMinus;
 
     private Food food;
-    private final int userId = 1; // giả định user đang đăng nhập
+    private final int userId = 1; // Giả định user đăng nhập
 
     public void setFood(Food food) {
         this.food = food;
 
-        // Kiểm tra null cho các thành phần UI
-        Objects.requireNonNull(txtName, "txtName is null");
-        Objects.requireNonNull(txtStore, "txtStore is null");
-        Objects.requireNonNull(txtAddress, "txtAddress is null");
-        Objects.requireNonNull(txtStatus, "txtStatus is null");
-        Objects.requireNonNull(txtPrice, "txtPrice is null");
-        Objects.requireNonNull(txtDescription, "txtDescription is null");
-        Objects.requireNonNull(txtQuantity, "txtQuantity is null");
-        Objects.requireNonNull(btnAddCart, "btnAddCart is null");
-        Objects.requireNonNull(btnPlus, "btnPlus is null");
-        Objects.requireNonNull(btnMinus, "btnMinus is null");
+        Objects.requireNonNull(txtName);
+        Objects.requireNonNull(txtStore);
+        Objects.requireNonNull(txtAddress);
+        Objects.requireNonNull(txtStatus);
+        Objects.requireNonNull(txtPrice);
+        Objects.requireNonNull(txtDescription);
+        Objects.requireNonNull(txtQuantity);
+        Objects.requireNonNull(btnAddCart);
+        Objects.requireNonNull(btnPlus);
+        Objects.requireNonNull(btnMinus);
 
-        // Hiển thị dữ liệu
         txtName.setText(food.getName());
         txtStore.setText("ShopeeFood Store");
         txtAddress.setText("Hà Nội");
@@ -57,13 +56,11 @@ public class FoodDetailController {
             System.out.println("Không thể load ảnh: " + e.getMessage());
         }
 
-        // Tăng số lượng
         btnPlus.setOnAction(e -> {
             int current = parseQuantity();
             txtQuantity.setText(String.valueOf(current + 1));
         });
 
-        // Giảm số lượng
         btnMinus.setOnAction(e -> {
             int current = parseQuantity();
             if (current > 1) {
@@ -71,7 +68,6 @@ public class FoodDetailController {
             }
         });
 
-        // Thêm vào giỏ hàng
         btnAddCart.setOnAction(e -> {
             int quantity = parseQuantity();
             if (quantity <= 0) {
@@ -81,15 +77,26 @@ public class FoodDetailController {
 
             try (Connection conn = DatabaseConnector.connectDB()) {
                 if (conn != null) {
-                    String sql = "INSERT INTO cart_items (user_id, food_id, quantity, created_at) VALUES (?, ?, ?, ?)";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setInt(1, userId);
-                    stmt.setInt(2, food.getFood_id());
-                    stmt.setInt(3, quantity);
-                    stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-                    stmt.executeUpdate();
+                    // Lấy cart_id theo userId
+                    String getCartSQL = "SELECT cart_id FROM carts WHERE user_id = ?";
+                    PreparedStatement cartStmt = conn.prepareStatement(getCartSQL);
+                    cartStmt.setInt(1, userId);
+                    ResultSet rs = cartStmt.executeQuery();
 
-                    showAlert(Alert.AlertType.INFORMATION, "Đã thêm vào giỏ hàng thành công!");
+                    if (rs.next()) {
+                        int cartId = rs.getInt("cart_id");
+                        String sql = "INSERT INTO cart_items (cart_id, food_id, quantity, added_at) VALUES (?, ?, ?, ?)";
+                        PreparedStatement stmt = conn.prepareStatement(sql);
+                        stmt.setInt(1, cartId);
+                        stmt.setInt(2, food.getFood_id());
+                        stmt.setInt(3, quantity);
+                        stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+                        stmt.executeUpdate();
+
+                        showAlert(Alert.AlertType.INFORMATION, "Đã thêm vào giỏ hàng thành công!");
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Không tìm thấy giỏ hàng của người dùng.");
+                    }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
