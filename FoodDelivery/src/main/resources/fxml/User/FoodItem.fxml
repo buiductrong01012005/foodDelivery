@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.fooddelivery.Controller.FoodItemController"
-      spacing="10" alignment="CENTER" prefWidth="178" prefHeight="171">
-    <ImageView fx:id="imgFood" fitWidth="178" fitHeight="117" preserveRatio="true" />
-    <Label fx:id="lblFoodName" text="Tên món ăn" />
-    <Button fx:id="btnAddCart" text="Thêm vào giỏ hàng" />
+<VBox alignment="CENTER" prefHeight="171" prefWidth="178" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.FoodItemController">
+    <ImageView fx:id="imgFood" fitHeight="117" fitWidth="178" preserveRatio="true" />
+    <Label fx:id="lblFoodName" text="Tên món ăn">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font></Label>
+    <Button fx:id="btnAddCart" text="Thêm vào giỏ hàng">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font></Button>
 </VBox>
