@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="userInfoPaneRoot"
-            prefHeight="800.0"
-            prefWidth="900.0"
-            style="-fx-background-color: #f8f9fa;"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.fooddelivery.Controller.InforController">
+<AnchorPane fx:id="userInfoPaneRoot" prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: #fffdf6;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.InforController">
 
     <padding>
         <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
@@ -20,35 +24,24 @@
 
     <children>
         <!-- Title -->
-        <Label fx:id="infoPaneTitleLabel"
-               layoutX="14.0" layoutY="14.0"
-               style="-fx-font-size: 20px; -fx-font-weight: bold;"
-               text="Thông Tin Cá Nhân"
-               AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label fx:id="infoPaneTitleLabel" layoutX="14.0" layoutY="14.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Thông Tin Cá Nhân" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <padding><Insets bottom="10.0" /></padding>
         </Label>
 
         <!-- Main Content Area -->
-        <HBox spacing="40.0"
-              layoutX="14.0" layoutY="60.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+        <HBox layoutX="14.0" layoutY="60.0" spacing="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
             <children>
                 <!-- Profile Picture Area -->
                 <VBox alignment="TOP_CENTER" spacing="10.0">
                     <Label text="Ảnh đại diện">
                         <font><Font name="System Bold" size="16.0" /></font>
                     </Label>
-                    <ImageView fx:id="userImageViewInfo"
-                               fitHeight="180.0" fitWidth="180.0"
-                               pickOnBounds="true" preserveRatio="true" />
-                    <Button fx:id="changeImageButton"
-                            text="Đổi ảnh"
-                            managed="false" visible="false"
-                            onAction="#onChangeImageButtonClick"/>
+                    <ImageView fx:id="userImageViewInfo" fitHeight="180.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true" />
+                    <Button fx:id="changeImageButton" managed="false" onAction="#onChangeImageButtonClick" text="Đổi ảnh" visible="false" />
                 </VBox>
 
                 <!-- Information Grid -->
-                <GridPane hgap="15.0" vgap="15.0" HBox.hgrow="ALWAYS">
+                <GridPane hgap="15.0" prefHeight="364.0" prefWidth="567.0" vgap="15.0" HBox.hgrow="ALWAYS">
                     <columnConstraints>
                         <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="150.0" />
                         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="400.0" />
@@ -64,78 +57,98 @@
                     </rowConstraints>
                     <children>
                         <!-- Full Name -->
-                        <Label text="Họ và tên:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                        <Label fx:id="fullNameLabelInfo" text="[Chưa tải]" managed="true" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="0"><font><Font size="14.0" /></font></Label>
+                        <Label text="Họ và tên:" GridPane.halignment="RIGHT" GridPane.rowIndex="0">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                        <Label fx:id="fullNameLabelInfo" managed="true" text="[Chưa tải]" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="0"><font><Font size="14.0" /></font></Label>
                         <TextField fx:id="fullNameFieldInfo" managed="false" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                         <!-- Date of Birth -->
-                        <Label text="Ngày sinh:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                        <Label fx:id="dobLabelInfo" text="[Chưa tải]" managed="true" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="1"><font><Font size="14.0" /></font></Label>
-                        <DatePicker fx:id="dobPickerInfo" managed="false" visible="false" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Ngày sinh:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                        <Label fx:id="dobLabelInfo" managed="true" text="[Chưa tải]" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="1"><font><Font size="14.0" /></font></Label>
+                        <DatePicker fx:id="dobPickerInfo" managed="false" prefWidth="400.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                         <!-- Gender -->
-                        <Label text="Giới tính:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                        <Label fx:id="genderLabelInfo" text="[Chưa tải]" managed="true" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="2"><font><Font size="14.0" /></font></Label>
-                        <ComboBox fx:id="genderComboBoxInfo" managed="false" visible="false" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Giới tính:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                        <Label fx:id="genderLabelInfo" managed="true" text="[Chưa tải]" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="2"><font><Font size="14.0" /></font></Label>
+                        <ComboBox fx:id="genderComboBoxInfo" managed="false" prefWidth="400.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                         <!-- Email -->
-                        <Label text="Email:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                        <Label fx:id="emailLabelInfo" text="[Chưa tải]" managed="true" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="3"><font><Font size="14.0" /></font></Label>
+                        <Label text="Email:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                        <Label fx:id="emailLabelInfo" managed="true" text="[Chưa tải]" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="3"><font><Font size="14.0" /></font></Label>
                         <TextField fx:id="emailFieldInfo" editable="false" managed="false" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
                         <!-- Phone Number -->
-                        <Label text="Số điện thoại:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                        <Label fx:id="phoneLabelInfo" text="[Chưa tải]" managed="true" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="4"><font><Font size="14.0" /></font></Label>
+                        <Label text="Số điện thoại:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                        <Label fx:id="phoneLabelInfo" managed="true" text="[Chưa tải]" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="4"><font><Font size="14.0" /></font></Label>
                         <TextField fx:id="phoneFieldInfo" managed="false" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                         <!-- Role -->
-                        <Label text="Vai trò:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                        <Label fx:id="roleLabelInfo" text="[Chưa tải]" managed="true" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="5"><font><Font size="14.0" /></font></Label>
-                        <ComboBox fx:id="roleComboBoxInfo" managed="false" visible="false" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label text="Vai trò:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
+                        <Label fx:id="roleLabelInfo" managed="true" text="[Chưa tải]" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="5"><font><Font size="14.0" /></font></Label>
+                        <ComboBox fx:id="roleComboBoxInfo" managed="false" prefWidth="400.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
                         <!-- Address -->
                         <Label text="Địa chỉ:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="TOP">
-                            <GridPane.margin><Insets top="5.0" /></GridPane.margin>
+                            <GridPane.margin><Insets left="10.0" /></GridPane.margin>
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
                         </Label>
-                        <Label fx:id="addressLabelInfo" text="[Chưa tải]" managed="true" visible="true" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"><font><Font size="14.0" /></font></Label>
-                        <TextArea fx:id="addressAreaInfo" managed="false" visible="false" wrapText="true" prefHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <Label fx:id="addressLabelInfo" managed="true" text="[Chưa tải]" visible="true" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"><font><Font size="14.0" /></font></Label>
+                        <TextArea fx:id="addressAreaInfo" managed="false" prefHeight="50.0" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                     </children>
                 </GridPane>
             </children>
         </HBox>
 
         <!-- Action Buttons Area -->
-        <HBox spacing="10.0" alignment="CENTER_RIGHT"
-              AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="0.0">
             <children>
                 <!-- Button to edit Admin's own info (visibility managed by Controller) -->
-                <Button fx:id="editAdminInfoButton"
-                        mnemonicParsing="false"
-                        onAction="#onEditAdminInfoButtonClick"
-                        prefHeight="40.0" prefWidth="120.0"
-                        style="-fx-background-color: #0d6efd; -fx-text-fill: white; -fx-background-radius: 5;"
-                        text="Chỉnh sửa TT"
-                        managed="false" visible="false"> <!-- Initially hidden -->
+                <Button fx:id="editAdminInfoButton" managed="false" mnemonicParsing="false" onAction="#onEditAdminInfoButtonClick" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #0d6efd; -fx-text-fill: white; -fx-background-radius: 5;" text="Chỉnh sửa TT" visible="false"> <!-- Initially hidden -->
                     <font><Font name="System Bold" size="14.0" /></font>
                 </Button>
 
                 <!-- Buttons for Save/Cancel in Edit mode (visibility managed by Controller) -->
-                <Button fx:id="saveInfoButton"
-                        mnemonicParsing="false"
-                        onAction="#onSaveInfoButtonClick"
-                        prefHeight="40.0" prefWidth="100.0"
-                        style="-fx-background-color: #198754; -fx-text-fill: white; -fx-background-radius: 5;"
-                        text="Lưu"
-                        managed="false" visible="false">
+                <Button fx:id="saveInfoButton" managed="false" mnemonicParsing="false" onAction="#onSaveInfoButtonClick" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #198754; -fx-text-fill: white; -fx-background-radius: 5;" text="Lưu" visible="false">
                     <font><Font name="System Bold" size="14.0" /></font>
                 </Button>
-                <Button fx:id="cancelInfoButton"
-                        mnemonicParsing="false"
-                        onAction="#onCancelInfoButtonClick"
-                        prefHeight="40.0" prefWidth="100.0"
-                        style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 5;"
-                        text="Hủy"
-                        managed="false" visible="false">
+                <Button fx:id="cancelInfoButton" managed="false" mnemonicParsing="false" onAction="#onCancelInfoButtonClick" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 5;" text="Hủy" visible="false">
                     <font><Font name="System Bold" size="14.0" /></font>
                 </Button>
             </children>

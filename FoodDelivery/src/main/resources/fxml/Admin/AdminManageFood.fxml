@@ -1,53 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="manageFoodPaneRoot"
-            prefHeight="800.0"
-            prefWidth="900.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.fooddelivery.Controller.AdminManageFoodController">
+<AnchorPane fx:id="manageFoodPaneRoot" prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: #fffdf6;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.AdminManageFoodController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
     <children>
         <!-- Title -->
-        <Label text="Quản Lý Món Ăn"
-               layoutX="20.0" layoutY="20.0"
-               AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <Label layoutX="20.0" layoutY="20.0" text="Quản Lý Món Ăn" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
             <font><Font name="System Bold" size="20.0" /></font>
         </Label>
 
         <!-- Search and Add Food Controls -->
-        <AnchorPane layoutX="20.0" layoutY="60.0"
-                    AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="60.0" AnchorPane.rightAnchor="20.0">
+        <AnchorPane layoutX="20.0" layoutY="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
             <children>
                 <!-- Search elements -->
                 <HBox alignment="CENTER_LEFT" spacing="10.0" AnchorPane.leftAnchor="0.0">
                     <children>
-                        <Label text="Tìm kiếm:">
-                            <font><Font name="System Bold" size="14.0" /></font>
-                        </Label>
-                        <TextField fx:id="searchFoodField"
-                                   prefWidth="300.0"
-                                   promptText="Nhập tên món ăn..."
-                                   onAction="#onSearchFoodKeywordInput" />
-                        <Button text="Tìm" onAction="#onSearchFoodKeywordInput" />
+                        <TextField fx:id="searchFoodField" onAction="#onSearchFoodKeywordInput" prefWidth="300.0" promptText="Nhập tên món ăn...">
+                     <HBox.margin>
+                        <Insets left="73.0" />
+                     </HBox.margin></TextField>
+                        <Button onAction="#onSearchFoodKeywordInput" style="-fx-background-radius: 8; -fx-background-color: #ffd166;" text="Tìm kiếm">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Button>
                     </children>
                 </HBox>
                 <!-- Add button -->
-                <Button fx:id="addFoodButton"
-                        mnemonicParsing="false"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
-                        text="+ Thêm món"
-                        onAction="#onAddFoodButtonClick"
-                        AnchorPane.rightAnchor="0.0">
+                <Button fx:id="addFoodButton" mnemonicParsing="false" onAction="#onAddFoodButtonClick" style="-fx-background-radius: 8; -fx-background-color: #ffd166;" text="+ Thêm món" AnchorPane.rightAnchor="0.0">
                     <font><Font name="System Bold" size="14.0" /></font>
                 </Button>
             </children>
@@ -55,9 +47,7 @@
 
 
         <!-- Food Table -->
-        <TableView fx:id="foodTableManage"
-                   layoutX="20.0" layoutY="110.0"
-                   AnchorPane.topAnchor="110.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="70.0">
+        <TableView fx:id="foodTableManage" layoutX="20.0" layoutY="110.0" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="110.0">
             <columns>
                 <TableColumn fx:id="foodIdColManage" prefWidth="75.0" text="ID" />
                 <TableColumn fx:id="foodNameColManage" prefWidth="350.0" text="Tên Món" />
@@ -70,24 +60,22 @@
         </TableView>
 
         <!-- Action Buttons (Edit/Delete) -->
-        <HBox spacing="10.0" alignment="CENTER_RIGHT"
-              AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
+        <HBox alignment="CENTER_RIGHT" layoutX="687.0" layoutY="746.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="40.33333333333337">
             <children>
-                <Button fx:id="editFoodButton"
-                        mnemonicParsing="false"
-                        onAction="#onEditFoodButtonClick"
-                        style="-fx-background-color: #2196F3; -fx-text-fill: white;"
-                        text="Chỉnh sửa">
+                <Button fx:id="editFoodButton" mnemonicParsing="false" onAction="#onEditFoodButtonClick" prefHeight="40.0" prefWidth="97.0" style="-fx-background-radius: 12; -fx-background-color: #ffd166;" text="Chỉnh sửa">
                     <font><Font name="System Bold" size="14.0" /></font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
                 </Button>
-                <Button fx:id="deleteFoodButton"
-                        mnemonicParsing="false"
-                        onAction="#onDeleteFoodButtonClick"
-                        style="-fx-background-color: #f44336; -fx-text-fill: white;"
-                        text="Xoá">
+                <Button fx:id="deleteFoodButton" mnemonicParsing="false" onAction="#onDeleteFoodButtonClick" prefHeight="40.0" prefWidth="65.0" style="-fx-background-radius: 12; -fx-background-color: #ffd166;" text="Xoá">
                     <font><Font name="System Bold" size="14.0" /></font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
                 </Button>
             </children>
         </HBox>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffd166" height="39.0" layoutX="30.0" layoutY="36.0" stroke="BLACK" strokeType="INSIDE" width="4.0" />
     </children>
 </AnchorPane>

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="dashboardPaneRoot"
-            prefHeight="800.0"
-            prefWidth="900.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.fooddelivery.Controller.AdminDashboardController">
+<AnchorPane fx:id="dashboardPaneRoot" prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: #FFFDF6;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.AdminDashboardController">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -19,9 +18,7 @@
 
     <children>
         <!-- Revenue and Stats Grid -->
-        <GridPane hgap="10" vgap="5"
-                  layoutX="23.0" layoutY="56.0"
-                  prefWidth="854.0">
+        <GridPane hgap="10" layoutX="23.0" layoutY="56.0" prefWidth="854.0" vgap="5">
             <columnConstraints>
                 <ColumnConstraints />
                 <ColumnConstraints />
@@ -33,25 +30,38 @@
                 <RowConstraints />
             </rowConstraints>
             <children>
-                <Label text="Doanh thu hôm nay" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Label fx:id="dailyRevenueLabel" text="0 VND" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label text="Doanh thu hôm nay" GridPane.columnIndex="0" GridPane.rowIndex="0">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Label>
+                <Label fx:id="dailyRevenueLabel" style="-fx-font-weight: bold;" text="0 VND" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-                <Label text="Doanh thu tháng này" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                <Label fx:id="monthlyRevenueLabel" text="0 VND" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label text="Doanh thu tháng này" GridPane.columnIndex="1" GridPane.rowIndex="0">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Label>
+                <Label fx:id="monthlyRevenueLabel" style="-fx-font-weight: bold;" text="0 VND" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <Label text="Số lượng món ăn" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                <Label fx:id="totalFoodLabel" text="0" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Label text="Số lượng món ăn" GridPane.columnIndex="2" GridPane.rowIndex="0">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Label>
+                <Label fx:id="totalFoodLabel" style="-fx-font-weight: bold;" text="0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-                <Label text="Số lượng món ăn còn" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                <Label fx:id="availableFoodLabel" text="0" style="-fx-font-weight: bold;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                <Label text="Số lượng món ăn còn" GridPane.columnIndex="3" GridPane.rowIndex="0">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Label>
+                <Label fx:id="availableFoodLabel" style="-fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             </children>
         </GridPane>
 
         <!-- Recent Users Table -->
-        <Label text="Người dùng gần đây" layoutX="23.0" layoutY="180.0" />
-        <TableView fx:id="userTableDashboard"
-                   layoutX="23.0" layoutY="205.0"
-                   prefHeight="250.0" prefWidth="854.0">
+        <Label layoutX="23.0" layoutY="180.0" text="Người dùng gần đây">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Label>
+        <TableView fx:id="userTableDashboard" layoutX="23.0" layoutY="205.0" prefHeight="250.0" prefWidth="854.0">
             <columns>
                 <TableColumn fx:id="userIdColDashboard" prefWidth="50.0" text="ID" />
                 <TableColumn fx:id="userNameColDashboard" prefWidth="200.0" text="Tên" />
@@ -64,10 +74,11 @@
         </TableView>
 
         <!-- Low Stock Food Table -->
-        <Label text="Món ăn sắp hết hàng" layoutX="23.0" layoutY="475.0" />
-        <TableView fx:id="foodTableDashboard"
-                   layoutX="23.0" layoutY="500.0"
-                   prefHeight="250.0" prefWidth="854.0">
+        <Label layoutX="23.0" layoutY="475.0" text="Món ăn sắp hết hàng">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Label>
+        <TableView fx:id="foodTableDashboard" layoutX="23.0" layoutY="500.0" prefHeight="250.0" prefWidth="854.0">
             <columns>
                 <TableColumn fx:id="foodIdColDashboard" prefWidth="75.0" text="ID" />
                 <TableColumn fx:id="foodNameColDashboard" prefWidth="450.0" text="Tên" />

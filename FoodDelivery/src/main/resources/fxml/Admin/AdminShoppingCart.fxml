@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #fffdf6;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <fx:include source="SideBar.fxml" />
       <TableView layoutX="369.0" layoutY="143.0" prefHeight="535.0" prefWidth="749.0">
@@ -29,12 +29,12 @@
          </font>
       </Label>
       <TextField layoutX="394.0" layoutY="96.0" />
-      <Button layoutX="976.0" layoutY="706.0" mnemonicParsing="false" text="Chỉnh sửa">
+      <Button layoutX="976.0" layoutY="706.0" mnemonicParsing="false" style="-fx-background-radius: 8; -fx-background-color: #ffd166;" text="Chỉnh sửa">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Button layoutX="1074.0" layoutY="706.0" mnemonicParsing="false" text="Xoá">
+      <Button layoutX="1074.0" layoutY="706.0" mnemonicParsing="false" style="-fx-background-radius: 8; -fx-background-color: #ffd166;" text="Xoá">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

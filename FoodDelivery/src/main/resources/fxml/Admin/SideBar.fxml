@@ -10,24 +10,16 @@
 
 <AnchorPane layoutX="-2.0" layoutY="-2.0" prefHeight="800.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane id="back" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #ADD8E6;;">
+      <AnchorPane id="back" prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #FFF9E5;">
          <children>
-            <VBox layoutX="40.0" layoutY="167.0" prefHeight="343.0" prefWidth="220.0" spacing="3.0">
+            <VBox layoutX="40.0" layoutY="188.0" prefHeight="343.0" prefWidth="220.0" spacing="3.0">
                <children>
-                  <Button id="home" fx:id="homeBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Tổng quát">
+                  <Button id="home" fx:id="homeBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" text="Tổng quát">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Button>
-                  <Button id="profile" fx:id="personalBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Đồ ăn">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="15.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button id="history" fx:id="historyBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Đơn hàng">
+                  <Button id="profile" fx:id="personalBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" text="Đồ ăn">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -35,7 +27,7 @@
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Button>
-                  <Button id="logout" fx:id="logoutBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" text="Người dùng">
+                  <Button id="history" fx:id="historyBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" text="Đơn hàng">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -43,7 +35,7 @@
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Button>
-                  <Button id="home" fx:id="homeBtn1" mnemonicParsing="false" prefHeight="40.0" prefWidth="220.0" text="Thông tin ">
+                  <Button id="logout" fx:id="logoutBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" text="Người dùng">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -51,7 +43,15 @@
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Button>
-                  <Button id="home" fx:id="homeBtn11" mnemonicParsing="false" prefHeight="40.0" prefWidth="220.0" text="Đăng xuất">
+                  <Button id="home" fx:id="homeBtn1" mnemonicParsing="false" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" text="Thông tin ">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button id="home" fx:id="homeBtn11" mnemonicParsing="false" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" text="Đăng xuất">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -61,31 +61,11 @@
                   </Button>
                </children>
             </VBox>
+            <ImageView fx:id="sidebarLogo" fitHeight="185.0" fitWidth="185.0" layoutX="57.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/Logo.png" />
+               </image>
+            </ImageView>
          </children></AnchorPane>
-      <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="90.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/identify/logo.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="22.0" fitWidth="34.0" layoutX="45.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/identify/home2.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="22.0" fitWidth="34.0" layoutX="45.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/identify/pr5.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="22.0" fitWidth="34.0" layoutX="45.0" layoutY="318.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/identify/history.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="22.0" fitWidth="34.0" layoutX="45.0" layoutY="378.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/identify/out2.png" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

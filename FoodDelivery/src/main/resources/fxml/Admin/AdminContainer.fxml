@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="800.0" prefWidth="1200.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.fooddelivery.Controller.AdminContainerController">
+<BorderPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.AdminContainerController">
 
     <left>
         <!-- Sidebar -->
-        <AnchorPane prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #ADD8E6;">
+        <AnchorPane prefHeight="800.0" prefWidth="300.0" style="-fx-background-color: #FFF9E5;">
             <children>
-                <ImageView fx:id="sidebarLogo"
-                           fitHeight="120.0" fitWidth="120.0"
-                           layoutX="90.0" layoutY="32.0"
-                           pickOnBounds="true" preserveRatio="true" />
-                <VBox layoutX="40.0" layoutY="180.0"
-                      prefWidth="220.0" spacing="15.0">
+                <ImageView fx:id="sidebarLogo" fitHeight="186.0" fitWidth="185.0" layoutX="57.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../images/Logo.png" />
+                    </image>
+                </ImageView>
+                <VBox layoutX="40.0" layoutY="180.0" prefWidth="220.0" spacing="15.0">
                     <children>
-                        <Button fx:id="dashboardBtn" text="Tổng quát" onAction="#showDashboard" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
-                            <font><Font size="18.0" /></font>
+                        <Button fx:id="dashboardBtn" onAction="#showDashboard" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" styleClass="sidebar-button" text="Tổng quát">
+                            <font><Font name="System Bold" size="18.0" /></font>
                         </Button>
-                        <Button fx:id="foodBtn" text="Đồ ăn" onAction="#showManageFood" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
-                            <font><Font size="18.0" /></font>
+                        <Button fx:id="foodBtn" onAction="#showManageFood" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" styleClass="sidebar-button" text="Đồ ăn">
+                            <font><Font name="System Bold" size="18.0" /></font>
                         </Button>
-                        <Button fx:id="orderBtn" text="Đơn hàng" onAction="#showManageOrders" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
-                            <font><Font size="18.0" /></font>
+                        <Button fx:id="orderBtn" onAction="#showManageOrders" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" styleClass="sidebar-button" text="Đơn hàng">
+                            <font><Font name="System Bold" size="18.0" /></font>
                         </Button>
-                        <Button fx:id="userBtn" text="Người dùng" onAction="#showManageUsers" prefHeight="42.0" prefWidth="220.0" styleClass="sidebar-button">
-                            <font><Font size="18.0" /></font>
+                        <Button fx:id="userBtn" onAction="#showManageUsers" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" styleClass="sidebar-button" text="Người dùng">
+                            <font><Font name="System Bold" size="18.0" /></font>
                         </Button>
                         <!-- Nút Thông tin đã bị xóa -->
-                        <Button fx:id="logOutBtn" text="Đăng xuất" onAction="#handleLogout" prefHeight="40.0" prefWidth="220.0" styleClass="sidebar-button">
-                            <font><Font size="18.0" /></font>
+                        <Button fx:id="logOutBtn" onAction="#handleLogout" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" styleClass="sidebar-button" text="Đăng xuất">
+                            <font><Font name="System Bold" size="18.0" /></font>
                         </Button>
                     </children>
                 </VBox>
@@ -49,10 +49,10 @@
         <StackPane fx:id="contentStackPane" prefHeight="800.0" prefWidth="900.0">
             <children>
                 <!-- Include Child Views -->
-                <fx:include fx:id="dashboardView" source="AdminDashboard.fxml" managed="false" visible="false"/>
-                <fx:include fx:id="manageUsersView" source="AdminManageUser.fxml" managed="false" visible="false"/>
-                <fx:include fx:id="manageFoodView" source="AdminManageFood.fxml" managed="false" visible="false"/>
-                <fx:include fx:id="userInfoView" source="AdminInformation.fxml" managed="false" visible="false"/>
+                <fx:include fx:id="dashboardView" managed="false" source="AdminDashboard.fxml" visible="true" />
+                <fx:include fx:id="manageUsersView" managed="false" source="AdminManageUser.fxml" visible="false" />
+                <fx:include fx:id="manageFoodView" managed="false" source="AdminManageFood.fxml" visible="false" />
+                <fx:include fx:id="userInfoView" managed="false" source="AdminInformation.fxml" visible="false" />
             </children>
         </StackPane>
     </center>

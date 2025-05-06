@@ -4,25 +4,27 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <ScrollPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0">
             <children>
-                <AnchorPane prefHeight="700.0" prefWidth="1200.0">
+                <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #fffdf6;">
                     <children>
                         <ImageView fitHeight="270.0" fitWidth="306.0" layoutX="394.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true" />
-                        <GridPane layoutX="758.0" layoutY="113.0" prefHeight="205.0" prefWidth="129.0">
+                        <GridPane layoutX="758.0" layoutY="113.0" prefHeight="205.0" prefWidth="310.0">
                             <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="10.0" prefWidth="129.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="43.33331298828125" minWidth="0.0" prefWidth="0.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="10.0" prefWidth="104.66666666666667" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="192.0" minWidth="0.0" prefWidth="192.0" />
                             </columnConstraints>
                             <rowConstraints>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -32,21 +34,64 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tên món ăn" wrappingWidth="72.982421875" />
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tên quán" wrappingWidth="72.982421875" GridPane.rowIndex="1" />
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Địa chỉ" wrappingWidth="72.982421875" GridPane.rowIndex="2" />
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tình trạng" wrappingWidth="72.982421875" GridPane.rowIndex="3" />
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Giá tiền" wrappingWidth="72.982421875" GridPane.rowIndex="4" />
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tên món ăn:" wrappingWidth="80.982421875">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Text>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tên quán:" wrappingWidth="72.982421875" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Text>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Địa chỉ:" wrappingWidth="72.982421875" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Text>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tình trạng:" wrappingWidth="72.982421875" GridPane.rowIndex="3">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Text>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Giá tiền:" wrappingWidth="72.982421875" GridPane.rowIndex="4">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Text>
+                        <TextField GridPane.columnIndex="1" />
+                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
                             </children>
                         </GridPane>
                         <TextArea layoutX="485.0" layoutY="483.0" prefHeight="110.0" prefWidth="425.0" />
-                        <Text layoutX="485.0" layoutY="472.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mô tả món ăn:" />
-                        <Text layoutX="485.0" layoutY="638.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đánh giá" />
+                        <Text layoutX="485.0" layoutY="472.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mô tả món ăn:">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Text>
+                        <Text layoutX="485.0" layoutY="638.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đánh giá">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Text>
                         <fx:include source="SideBar.fxml" />
-                  <Label layoutX="492.0" layoutY="349.0" text="Tên:" />
-                  <Label layoutX="495.0" layoutY="367.0" text="ID:" />
-                  <Button layoutX="870.0" layoutY="707.0" mnemonicParsing="false" text="Chỉnh sửa" />
-                  <Button layoutX="946.0" layoutY="707.0" mnemonicParsing="false" text="Lưu" />
+                  <Label layoutX="492.0" layoutY="349.0" text="Tên:">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Label>
+                  <Label layoutX="495.0" layoutY="367.0" text="ID:">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Label>
+                  <Button layoutX="887.0" layoutY="707.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="97.0" style="-fx-background-radius: 12; -fx-background-color: #ffd166;" text="Chỉnh sửa">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Button>
+                  <Button layoutX="985.0" layoutY="707.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="65.0" style="-fx-background-radius: 12; -fx-background-color: #ffd166;" text="Lưu">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Button>
+                  <Button layoutX="502.0" layoutY="194.0" mnemonicParsing="false" text="+ Add picture" visible="false">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Button>
                     </children>
                 </AnchorPane>
 
