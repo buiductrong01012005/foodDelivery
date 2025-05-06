@@ -34,7 +34,7 @@
             </GridPane>
 
          </VBox>
-         <TextField layoutX="827.0" layoutY="63.0" prefHeight="25.0" prefWidth="206.0" promptText="🔍 Tìm kiếm món ăn" />
+         <TextField fx:id="searchField" layoutX="827.0" layoutY="63.0" prefHeight="25.0" prefWidth="206.0" promptText="🔍 Tìm kiếm món ăn" />
          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffd166" height="39.0" layoutX="310.0" layoutY="46.0" stroke="BLACK" strokeType="INSIDE" width="4.0" />
 
       </AnchorPane>

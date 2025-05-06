@@ -15,11 +15,16 @@ module org.example.fooddelivery {
     requires com.mailjet.api;
     requires org.json;
 
-    // Mở package chứa controller cho JavaFX FXML
+    // ✅ Thêm dòng này để sử dụng thư viện Gson
+    requires com.google.gson;
+
+    // ✅ Mở package chứa Model để Gson có thể truy cập bằng reflection
+    opens com.example.fooddelivery.Model to com.google.gson;
+
+    // Mở package chứa Controller cho JavaFX FXML
     opens com.example.fooddelivery to javafx.fxml;
     opens com.example.fooddelivery.Controller to javafx.fxml;
 
-    // Nếu dùng từ module khác
     exports com.example.fooddelivery;
     exports com.example.fooddelivery.Controller;
 }
