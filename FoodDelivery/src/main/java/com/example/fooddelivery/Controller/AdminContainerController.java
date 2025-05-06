@@ -26,14 +26,14 @@ public class AdminContainerController implements Initializable {
     @FXML private AnchorPane userInfoView;     // fx:id của include cho UserInfoView.fxml
 
     // --- Khai báo @FXML cho các Controller con (Tên = fx:id + "Controller") ---
-    @FXML private AdminDashboardController dashboardViewController; // Đã đổi tên
-    @FXML private AdminManageUsersController manageUsersViewController; // Đã đổi tên
-    @FXML private AdminManageFoodController manageFoodViewController;   // Đã đổi tên
-    @FXML private InforController userInfoViewController; // Đã đổi tên (cho userInfoView)
+    @FXML private AdminDashboardController dashboardViewController;
+    @FXML private AdminManageUsersController manageUsersViewController;
+    @FXML private AdminManageFoodController manageFoodViewController;
+    @FXML private InforController userInfoViewController;
 
     // --- Khai báo @FXML cho các nút Sidebar ---
     @FXML private Button dashboardBtn, foodBtn, orderBtn, userBtn, logOutBtn;
-    // Nút inforBtn đã bị xóa khỏi FXML và controller này
+
 
     // --- Thông tin chung ---
     private User currentAdminUser;
@@ -52,12 +52,12 @@ public class AdminContainerController implements Initializable {
         if (manageFoodViewController != null) {
             manageFoodViewController.setAdminContainerController(this); // Nếu cần
         }
-        if (dashboardViewController != null) {
-            // dashboardViewController.setAdminContainerController(this); // Nếu cần
-        }
+//        if (dashboardViewController != null) {
+//            dashboardViewController.setAdminContainerController(this); // Nếu cần
+//        }
 
-        // Hiển thị Dashboard mặc định khi khởi tạo
         showPane(dashboardView);
+
         // Controller con sẽ tự load data khi được hiển thị lần đầu qua showPane
     }
 
@@ -95,13 +95,15 @@ public class AdminContainerController implements Initializable {
         if (paneToShow.getId() != null) {
             switch (paneToShow.getId()) {
                 case "dashboardView":
-                    if (dashboardViewController != null) dashboardViewController.loadDataIfNeeded();
+                    if (dashboardViewController != null) {
+                        dashboardViewController.loadDashboardData();
+                    }
                     break;
                 case "manageUsersView":
                     if (manageUsersViewController != null) manageUsersViewController.loadDataIfNeeded();
                     break;
                 case "manageFoodView":
-                    if (manageFoodViewController != null) manageFoodViewController.loadDataIfNeeded();
+                    if (manageFoodViewController != null) manageFoodViewController.loadAndDisplayFoodData();
                     break;
                 // Không cần load gì cho userInfoView ở đây, nó được load khi có request
             }
@@ -115,7 +117,6 @@ public class AdminContainerController implements Initializable {
         showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Chức năng Quản lý Đơn hàng đang được phát triển.");
     }
     @FXML void showManageUsers(ActionEvent event) { showPane(manageUsersView); }
-    // Hàm showAdminInfo đã bị xóa
 
     @FXML
     void handleLogout(ActionEvent event) {

@@ -12,8 +12,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<ScrollPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.AdminManageUsersController">
-   <content>
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fooddelivery.Controller.AdminManageUsersController">
       <AnchorPane fx:id="manageUserPaneRoot" prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: #fffdf6;">
       
           <padding>
@@ -91,5 +90,4 @@
               </HBox>
           </children>
       </AnchorPane>
-   </content>
-</ScrollPane>
+</AnchorPane>

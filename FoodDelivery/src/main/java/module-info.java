@@ -19,11 +19,12 @@ module org.example.fooddelivery {
     requires com.google.gson;
 
     // ✅ Mở package chứa Model để Gson có thể truy cập bằng reflection
-    opens com.example.fooddelivery.Model to com.google.gson;
+    opens com.example.fooddelivery.Model to com.google.gson, javafx.base;
 
     // Mở package chứa Controller cho JavaFX FXML
     opens com.example.fooddelivery to javafx.fxml;
     opens com.example.fooddelivery.Controller to javafx.fxml;
+
 
     exports com.example.fooddelivery;
     exports com.example.fooddelivery.Controller;

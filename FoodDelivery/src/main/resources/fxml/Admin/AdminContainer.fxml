@@ -34,7 +34,7 @@
                         <Button fx:id="userBtn" onAction="#showManageUsers" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" styleClass="sidebar-button" text="Người dùng">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Button>
-                        <!-- Nút Thông tin đã bị xóa -->
+
                         <Button fx:id="logOutBtn" onAction="#handleLogout" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #FFB347;" styleClass="sidebar-button" text="Đăng xuất">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Button>

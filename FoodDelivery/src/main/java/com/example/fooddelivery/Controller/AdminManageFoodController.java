@@ -1,7 +1,7 @@
 package com.example.fooddelivery.Controller;
 
-import com.example.fooddelivery.Dao.FoodDAO; // <<< BẠN CẦN TẠO DAO NÀY
-import com.example.fooddelivery.Model.Food;  // <<< Import Model Food đã có
+import com.example.fooddelivery.Dao.FoodDAO; // Import FoodDAO
+import com.example.fooddelivery.Model.Food; // Import Food Model
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,262 +10,284 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 
-// import java.math.BigDecimal; // Không dùng BigDecimal nữa, dùng double
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
+// import java.util.logging.Level; // Không dùng Logger
+// import java.util.logging.Logger; // Không dùng Logger
 import java.util.stream.Collectors;
 
+/**
+ * Controller quản lý giao diện và logic cho màn hình Quản lý Món ăn (AdminManageFoodContent.fxml).
+ * Phiên bản không sử dụng Logger, thay bằng System.out/err.
+ */
 public class AdminManageFoodController implements Initializable {
 
-    @FXML private AnchorPane manageFoodPaneRoot;
+    // private static final Logger LOGGER = Logger.getLogger(AdminManageFoodController.class.getName()); // Bỏ Logger
+
+    // --- FXML Components from AdminManageFoodContent.fxml ---
     @FXML private TextField searchFoodField;
+    @FXML private TableView<Food> foodTableManage;
+    @FXML private TableColumn<Food, Integer> foodIdColManage;
+    @FXML private TableColumn<Food, String> foodNameColManage;
+    @FXML private TableColumn<Food, String> foodCategoryColManage;
+    @FXML private TableColumn<Food, Double> foodPriceColManage;
+    @FXML private TableColumn<Food, String> foodStatusColManage;
     @FXML private Button addFoodButton;
-    @FXML private TableView<Food> foodTableManage; // <<< Đã đổi thành TableView<Food>
-    @FXML private TableColumn<Food, Integer> foodIdColManage; // <<< Đổi thành Integer (tương ứng int)
-    @FXML private TableColumn<Food, String> foodNameColManage; // <<< Kiểu String
-    @FXML private TableColumn<Food, Integer> foodCategoryColManage; // <<< Đổi thành Integer (cho category_id) - **Hoặc String nếu bạn muốn hiển thị tên loại**
-    @FXML private TableColumn<Food, Double> foodPriceColManage; // <<< Đổi thành Double (tương ứng double)
-    @FXML private TableColumn<Food, String> foodStatusColManage; // <<< Kiểu String
     @FXML private Button editFoodButton;
     @FXML private Button deleteFoodButton;
 
-    private AdminContainerController adminContainerController;
-    // Khởi tạo danh sách với kiểu Food cụ thể
-    private ObservableList<Food> allFoodList = FXCollections.observableArrayList(); // <<< Đã đổi thành ObservableList<Food>
-    private boolean initialDataLoaded = false;
+    // --- Data ---
+    private ObservableList<Food> allFoodsList = FXCollections.observableArrayList(); // Danh sách đầy đủ để lọc
+    private Object adminContainerController;
+
+    // Không cần DatabaseConnector ở đây nếu DAO dùng static connectDB()
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("AdminManageFoodController initialized.");
+        System.out.println("Initializing AdminManageFoodController..."); // Thay Logger
+
+        // Configure table columns
         configureFoodTableColumns();
-    }
 
-    public void setAdminContainerController(AdminContainerController controller) { this.adminContainerController = controller; }
-
-    public void loadDataIfNeeded() {
-        if (!initialDataLoaded) {
-            System.out.println("AdminManageFoodController: Loading initial food data...");
-            loadAndDisplayFoodData();
-            initialDataLoaded = true;
-        } else {
-            System.out.println("AdminManageFoodController: Data already loaded. Applying filter.");
-            filterFoodData(searchFoodField.getText());
-        }
-    }
-
-    public void refreshFoodTable() {
-        System.out.println("AdminManageFoodController: Refreshing food data...");
+        // Load initial food data
         loadAndDisplayFoodData();
+
+        // Setup listener for search field (optional: trigger on text change)
+        if (searchFoodField != null) {
+            searchFoodField.textProperty().addListener((obs, oldVal, newVal) -> filterFoodData(newVal));
+        }
     }
 
+    /**
+     * Cấu hình CellValueFactory cho các cột trong bảng foodTableManage.
+     */
     private void configureFoodTableColumns() {
-        System.out.println("AdminManageFoodController: Configuring table...");
-        if (foodTableManage == null) { /*...*/ return;}
-
-        // Sử dụng tên thuộc tính khớp với tên biến/getter trong Food.java
-        setupColumnFactory(foodIdColManage, "food_id"); // Khớp với getFood_id() -> food_id
-        setupColumnFactory(foodNameColManage, "name");    // Khớp với getName() -> name
-        setupColumnFactory(foodCategoryColManage, "category_id"); // Khớp với getCategory_id() -> category_id
-        // Nếu bạn muốn hiển thị tên Category thay vì ID, bạn cần sửa Model Food hoặc xử lý trong DAO/Controller
-        setupColumnFactory(foodPriceColManage, "price");   // Khớp với getPrice() -> price
-        setupColumnFactory(foodStatusColManage, "availability_status"); // Khớp với getAvailability_status() -> availability_status
-
-        foodTableManage.setPlaceholder(new Label("Chưa tải dữ liệu món ăn..."));
-
-        // Định dạng cột giá tiền (dùng kiểu Double)
-        if (foodPriceColManage != null) {
-            foodPriceColManage.setCellFactory(tc -> new TableCell<Food, Double>() {
-                @Override
-                protected void updateItem(Double price, boolean empty) {
-                    super.updateItem(price, empty);
-                    if (empty || price == null) {
-                        setText(null);
-                    } else {
-                        // Định dạng tiền tệ Việt Nam cho double
-                        setText(String.format("%,.0f đ", price));
-                    }
-                }
-            });
+        if (foodTableManage == null) {
+            System.err.println("ERROR: foodTableManage is null! Check FXML fx:id."); // Thay Logger
+            return;
         }
-
-        // Định dạng cột Category ID (ví dụ hiển thị "Loại: 1", "Loại: 2")
-        // Hoặc bạn có thể tạo CellFactory phức tạp hơn để tra cứu tên loại từ ID
-        if (foodCategoryColManage != null) {
-            foodCategoryColManage.setCellFactory(tc -> new TableCell<Food, Integer>() {
-                @Override
-                protected void updateItem(Integer categoryId, boolean empty) {
-                    super.updateItem(categoryId, empty);
-                    if (empty || categoryId == null || categoryId == 0) { // Giả sử 0 là không hợp lệ
-                        setText(null);
-                    } else {
-                        // Tạm thời chỉ hiển thị ID
-                        setText(String.valueOf(categoryId));
-                        // TODO: Thay bằng tra cứu tên Category từ ID nếu cần
-                        // setText(CategoryDAO.getCategoryNameById(categoryId));
-                    }
-                }
-            });
-        }
+        System.out.println("INFO: Configuring columns for foodTableManage..."); // Thay Logger
+        setupColumnFactory(foodIdColManage, "food_id");
+        setupColumnFactory(foodNameColManage, "name");
+        setupColumnFactory(foodCategoryColManage, "category_name");
+        setupColumnFactory(foodPriceColManage, "price");
+        setupColumnFactory(foodStatusColManage, "availability_status");
+        foodTableManage.setPlaceholder(new Label("Đang tải dữ liệu món ăn..."));
     }
 
-    // Helper setup cột (giữ nguyên)
+    /**
+     * Hàm helper thiết lập CellValueFactory an toàn.
+     */
     private <S, T> void setupColumnFactory(TableColumn<S, T> column, String propertyName) {
-        if (column != null && propertyName != null && !propertyName.isEmpty()) {
+        if (column != null) {
             column.setCellValueFactory(new PropertyValueFactory<>(propertyName));
-        } else { /*...*/ }
+        } else {
+            System.err.println("WARN: TableColumn for property '" + propertyName + "' is null. Check FXML fx:id."); // Thay Logger
+        }
     }
 
-    private void loadAndDisplayFoodData() {
-        if (foodTableManage == null) return;
-        foodTableManage.setPlaceholder(new Label("Đang tải món ăn..."));
+    /**
+     * Tải dữ liệu món ăn từ DAO và hiển thị lên foodTableManage.
+     * Thực hiện trên luồng nền.
+     */
+    void loadAndDisplayFoodData() {
+        System.out.println("INFO: Initiating food data loading..."); // Thay Logger
+        if (foodTableManage == null) {
+            System.err.println("ERROR: foodTableManage is null. Cannot load data."); // Thay Logger
+            return;
+        }
+        foodTableManage.setPlaceholder(new Label("Đang tải dữ liệu..."));
+        // Xóa dữ liệu cũ trước khi bắt đầu tải trên luồng nền để tránh nhấp nháy
+        foodTableManage.getItems().clear();
 
-        // *** BẠN CẦN TẠO FoodDAO với phương thức getAllFoods() trả về ObservableList<Food> ***
         new Thread(() -> {
-            try {
-                // Gọi FoodDAO để lấy dữ liệu
-                ObservableList<Food> foods = FoodDAO.getAllFoods(); // <<< GỌI DAO
-                Platform.runLater(() -> {
-                    // Cập nhật danh sách chính
-                    this.allFoodList.setAll(foods != null ? foods : FXCollections.observableArrayList());
-                    System.out.println("AdminManageFoodController: Food data fetched (" + allFoodList.size() + " items).");
-                    // Áp dụng bộ lọc (nếu có)
-                    filterFoodData(searchFoodField.getText());
-                    // Set items cho TableView - Đã đúng kiểu Food
-                    foodTableManage.setItems(this.allFoodList); // <<< SẼ HOẠT ĐỘNG
-                    foodTableManage.setPlaceholder(new Label(allFoodList.isEmpty() ? "Không có món ăn nào." : ""));
-                });
-            } catch (Exception e) {
-                System.err.println("AdminManageFoodController Error loading food: " + e.getMessage());
-                e.printStackTrace();
-                Platform.runLater(() -> {
-                    if (foodTableManage != null) foodTableManage.setPlaceholder(new Label("Lỗi tải dữ liệu món ăn."));
-                });
-            }
-        }).start();
+            ObservableList<Food> foods = FXCollections.observableArrayList();
+            boolean loadError = false;
+            String errorMessage = "Lỗi không xác định khi tải dữ liệu món ăn.";
 
-        // Tạm thời để tránh lỗi (xóa đi khi có FoodDAO)
-        /*
-         Platform.runLater(() -> {
-             this.allFoodList.clear();
-             foodTableManage.setItems(this.allFoodList); // Bây giờ set được list rỗng
-             foodTableManage.setPlaceholder(new Label("Chức năng đang phát triển (Cần FoodDAO)."));
-         });
-         */
+            try {
+                foods = FoodDAO.getAllFoods();
+                this.allFoodsList = foods != null ? foods : FXCollections.observableArrayList();
+                System.out.println("INFO: DAO returned " + this.allFoodsList.size() + " foods."); // Thay Logger
+
+            } catch (Exception e) {
+                loadError = true;
+                errorMessage = "Đã xảy ra lỗi không mong muốn khi tải dữ liệu món ăn.";
+                System.err.println("ERROR: Unexpected error loading food data: " + e.getMessage()); // Thay Logger
+                e.printStackTrace();
+            }
+
+            final ObservableList<Food> finalFoods = this.allFoodsList;
+            final boolean finalLoadError = loadError;
+            final String finalErrorMessage = errorMessage;
+
+            // Cập nhật TableView trên luồng JavaFX
+            Platform.runLater(() -> {
+                if (foodTableManage != null) {
+                    if (!finalLoadError) {
+                        foodTableManage.setItems(finalFoods);
+                        foodTableManage.setPlaceholder(new Label(finalFoods.isEmpty() ? "Không có món ăn nào." : ""));
+                        System.out.println("INFO: Food table updated."); // Thay Logger
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Lỗi Tải Dữ Liệu", finalErrorMessage);
+                        // Không cần clear items lần nữa vì đã clear ở đầu
+                        foodTableManage.setPlaceholder(new Label("Lỗi tải dữ liệu món ăn."));
+                    }
+                } else {
+                    System.err.println("ERROR: foodTableManage became null before displaying data?"); // Thay Logger
+                }
+            });
+
+        }).start();
     }
 
+
+    /**
+     * Xử lý sự kiện cho nút Tìm kiếm (onAction của TextField hoặc Button).
+     */
     @FXML
     private void onSearchFoodKeywordInput(ActionEvent event) {
         filterFoodData(searchFoodField.getText());
     }
 
+    /**
+     * Lọc dữ liệu trên bảng foodTableManage dựa trên allFoodsList.
+     */
     private void filterFoodData(String keyword) {
-        if (foodTableManage == null) return;
-        if (allFoodList.isEmpty() && (keyword == null || keyword.isEmpty())) {
-            foodTableManage.setItems(allFoodList);
-            foodTableManage.setPlaceholder(new Label("Không có món ăn nào."));
+        if (allFoodsList == null) {
+            System.out.println("WARN: allFoodsList is null, cannot filter."); // Thay Logger
             return;
-        }
+        };
+        System.out.println("INFO: Filtering food with keyword: " + keyword); // Thay Logger
 
         ObservableList<Food> filteredList;
-        String lowerCaseKeyword = (keyword == null) ? "" : keyword.toLowerCase().trim();
-        if (lowerCaseKeyword.isEmpty()) {
-            filteredList = allFoodList;
+        if (keyword == null || keyword.trim().isEmpty()) {
+            filteredList = allFoodsList;
         } else {
-            System.out.println("AdminManageFoodController: Filtering food with keyword: " + lowerCaseKeyword);
-            filteredList = allFoodList.stream()
-                    .filter(food -> foodMatchesKeyword(food, lowerCaseKeyword)) // Dùng hàm lọc
+            String lowerCaseKeyword = keyword.toLowerCase().trim();
+            filteredList = allFoodsList.stream()
+                    .filter(food -> food != null && food.getName() != null &&
+                            food.getName().toLowerCase().contains(lowerCaseKeyword))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
-        foodTableManage.setItems(filteredList); // Cập nhật bảng
-        foodTableManage.setPlaceholder(new Label(filteredList.isEmpty() ? "Không tìm thấy kết quả phù hợp." : ""));
-    }
 
-    // Hàm lọc dựa trên Model Food hiện tại
-    private boolean foodMatchesKeyword(Food food, String lowerCaseKeyword) {
-        if (food == null) return false;
-        // Lọc theo tên (name) và mô tả (description) - ví dụ
-        return (food.getName() != null && food.getName().toLowerCase().contains(lowerCaseKeyword)) ||
-                (food.getDescription() != null && food.getDescription().toLowerCase().contains(lowerCaseKeyword)) ||
-                (String.valueOf(food.getFood_id()).contains(lowerCaseKeyword)); // Thêm tìm theo ID
-        // Thêm các trường khác nếu muốn: food.getCategory_id(), food.getAvailability_status()
+        if (foodTableManage != null) {
+            foodTableManage.setItems(filteredList);
+            foodTableManage.setPlaceholder(new Label(filteredList.isEmpty() ? "Không tìm thấy món ăn phù hợp." : ""));
+        } else {
+            System.err.println("ERROR: foodTableManage is null when trying to display search results."); // Thay Logger
+        }
     }
 
 
+    /**
+     * Xử lý sự kiện cho nút "Thêm mới" món ăn.
+     */
     @FXML
     private void onAddFoodButtonClick(ActionEvent event) {
-        System.out.println("AdminManageFoodController: Add Food button clicked.");
-        // TODO: Mở dialog/form thêm món ăn mới, sau đó gọi refreshFoodTable()
-        showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Chức năng thêm món ăn đang được phát triển.");
+        System.out.println("INFO: Add new food button clicked."); // Thay Logger
+        // TODO: Mở cửa sổ/dialog để nhập thông tin món ăn mới
+        showAlert(Alert.AlertType.INFORMATION,"Chức năng","Mở form thêm món ăn mới.");
+        // Sau khi thêm thành công: loadAndDisplayFoodData();
     }
 
+    /**
+     * Xử lý sự kiện cho nút "Chỉnh sửa" món ăn.
+     */
     @FXML
     private void onEditFoodButtonClick(ActionEvent event) {
-        Food selectedFood = getSelectedFood(); // Lấy đối tượng Food
+        Food selectedFood = getSelectedFood();
         if (selectedFood == null) return;
-        System.out.println("AdminManageFoodController: Edit Food button clicked for ID: " + selectedFood.getFood_id());
-        // TODO: Mở dialog/form sửa món ăn với thông tin của selectedFood, sau đó gọi refreshFoodTable()
-        showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Chức năng sửa món ăn đang được phát triển.");
+
+        System.out.println("INFO: Edit food button clicked for food ID: " + selectedFood.getFood_id()); // Thay Logger
+        // TODO: Mở cửa sổ/dialog để sửa thông tin món ăn đã chọn
+        showAlert(Alert.AlertType.INFORMATION,"Chức năng","Mở form sửa món ăn: " + selectedFood.getName());
+        // Sau khi sửa thành công: loadAndDisplayFoodData();
     }
 
+    /**
+     * Xử lý sự kiện cho nút "Xoá" món ăn.
+     */
     @FXML
     private void onDeleteFoodButtonClick(ActionEvent event) {
-        Food selectedFood = getSelectedFood(); // Lấy đối tượng Food
+        Food selectedFood = getSelectedFood();
         if (selectedFood == null) return;
-        System.out.println("AdminManageFoodController: Delete Food button clicked for ID: " + selectedFood.getFood_id());
 
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
-                "Bạn có chắc muốn xóa món '" + selectedFood.getName() + "' không?",
-                ButtonType.YES, ButtonType.NO);
+        System.out.println("INFO: Delete food button clicked for food ID: " + selectedFood.getFood_id()); // Thay Logger
+
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Xác nhận xóa");
-        confirmation.setHeaderText("Xóa món ăn");
-        confirmation.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.YES) {
-                // TODO: Gọi FoodDAO.deleteFood(selectedFood.getFood_id()) trong Thread
-                deleteFoodAsync(selectedFood.getFood_id(), selectedFood.getName()); // Gọi hàm xóa async
-            }
+        confirmation.setHeaderText("Xóa món ăn: " + selectedFood.getName());
+        confirmation.setContentText("Bạn có chắc muốn xóa món ăn này không?");
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            new Thread(() -> {
+                boolean deleted = false;
+                String message = "Lỗi không xác định khi xóa món ăn.";
+                try {
+                    deleted = FoodDAO.deleteFood(selectedFood.getFood_id()); // Giả sử DAO có hàm này
+                    if (deleted) {
+                        message = "Đã xóa món ăn '" + selectedFood.getName() + "' thành công.";
+                    } else {
+                        message = "Không thể xóa món ăn.";
+                    }
+                } catch (SQLException e) {
+                    message = "Lỗi SQL khi xóa món ăn: " + e.getMessage();
+                    System.err.println("ERROR: Lỗi SQL khi xóa food ID " + selectedFood.getFood_id()+ ": " + e.getMessage()); // Thay Logger
+                    e.printStackTrace();
+                    deleted = false;
+                } catch (Exception e) {
+                    message = "Lỗi không mong muốn khi xóa món ăn.";
+                    System.err.println("ERROR: Lỗi không xác định khi xóa food ID " + selectedFood.getFood_id()+ ": " + e.getMessage()); // Thay Logger
+                    e.printStackTrace();
+                    deleted = false;
+                }
+
+                final boolean finalDeleted = deleted;
+                final String finalMessage = message;
+                Platform.runLater(() -> {
+                    showAlert(finalDeleted ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR,
+                            finalDeleted ? "Thành công" : "Thất bại",
+                            finalMessage);
+                    if (finalDeleted) {
+                        loadAndDisplayFoodData(); // Load lại dữ liệu
+                    }
+                });
+            }).start();
+        }
+    }
+
+    /**
+     * Hàm helper lấy món ăn đang được chọn trong bảng foodTableManage.
+     */
+    private Food getSelectedFood() {
+        if (foodTableManage == null) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi Giao Diện", "Bảng món ăn chưa được khởi tạo.");
+            return null;
+        }
+        Food selectedFood = foodTableManage.getSelectionModel().getSelectedItem();
+        if (selectedFood == null) {
+            showAlert(Alert.AlertType.WARNING, "Chưa chọn", "Vui lòng chọn một món ăn trong bảng trước.");
+        }
+        return selectedFood;
+    }
+
+    /** Hàm showAlert tiện ích */
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(content);
+            alert.showAndWait();
         });
     }
 
-    // Hàm xóa món ăn bất đồng bộ (ví dụ)
-    private void deleteFoodAsync(int foodId, String foodName) {
-        new Thread(() -> {
-            boolean deleted = false;
-            String message;
-            try {
-                // deleted = FoodDAO.deleteFood(foodId); // <<< GỌI DAO
-                System.out.println("Placeholder: Simulating delete for food ID " + foodId); // Xóa dòng này khi có DAO
-                deleted = true; // Giả lập thành công để test
-                message = deleted ? "Đã xóa món '" + foodName + "'." : "Xóa món ăn thất bại.";
-            } catch (Exception e) { // Bắt Exception chung hoặc SQLException cụ thể
-                message = "Lỗi khi xóa món ăn: " + e.getMessage();
-                deleted = false;
-                e.printStackTrace();
-            }
-            final boolean finalDeleted = deleted;
-            final String finalMessage = message;
-            Platform.runLater(() -> {
-                showAlert(finalDeleted ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR, finalDeleted ? "Thành công" : "Thất bại", finalMessage);
-                if (finalDeleted) {
-                    refreshFoodTable(); // Load lại bảng nếu xóa thành công
-                }
-            });
-        }).start();
+    public void setAdminContainerController(AdminContainerController adminContainerController) {
+        this.adminContainerController = adminContainerController;
     }
-
-
-    // Helper lấy món ăn được chọn
-    private Food getSelectedFood() {
-        if (foodTableManage == null || foodTableManage.getSelectionModel() == null) { /*...*/ return null; }
-        Food selected = foodTableManage.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            showAlert(Alert.AlertType.WARNING, "Chưa chọn", "Vui lòng chọn một món ăn trong bảng.");
-        }
-        return selected;
-    }
-
-    // Hàm showAlert (giữ nguyên)
-    private void showAlert(Alert.AlertType alertType, String title, String content) { /*...*/ }
-    private void showAlertInternal(Alert.AlertType alertType, String title, String content) { /*...*/ }
 }

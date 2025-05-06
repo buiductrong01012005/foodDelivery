@@ -1,176 +1,240 @@
 package com.example.fooddelivery.Controller;
 
+import com.example.fooddelivery.Dao.FoodDAO; // Cần FoodDAO
 import com.example.fooddelivery.Dao.UserDAO;
-// import com.example.fooddelivery.Dao.FoodDAO; // Cần khi có DAO
-// import com.example.fooddelivery.Dao.OrderDAO; // Cần khi có DAO
+import com.example.fooddelivery.Model.Food; // Cần Model Food
 import com.example.fooddelivery.Model.User;
-// import com.example.fooddelivery.Model.Food;
 import javafx.application.Platform;
-import javafx.collections.FXCollections; // Thêm nếu cần tạo list rỗng
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-// Import thêm cho LocalDate, YearMonth nếu dùng thống kê
-// import java.time.LocalDate;
-// import java.time.YearMonth;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class AdminDashboardController implements Initializable {
 
-    @FXML private AnchorPane dashboardPaneRoot;
+    private static final Logger LOGGER = Logger.getLogger(AdminDashboardController.class.getName());
 
-    // --- Khai báo @FXML cho các controls trong DashboardView.fxml ---
+    // --- FXML Components from AdminDashboardContent.fxml ---
     @FXML private Label dailyRevenueLabel;
     @FXML private Label monthlyRevenueLabel;
     @FXML private Label totalFoodLabel;
     @FXML private Label availableFoodLabel;
-
     @FXML private TableView<User> userTableDashboard;
     @FXML private TableColumn<User, Integer> userIdColDashboard;
     @FXML private TableColumn<User, String> userNameColDashboard;
     @FXML private TableColumn<User, String> userEmailColDashboard;
     @FXML private TableColumn<User, String> userRoleColDashboard;
     @FXML private TableColumn<User, String> userPhoneColDashboard;
-    // @FXML private TableColumn<User, Integer> userAgeColDashboard; // Bỏ cột này nếu không có trong FXML
+    @FXML private TableView<Food> foodTableDashboard;
+    @FXML private TableColumn<Food, Integer> foodIdColDashboard;
+    @FXML private TableColumn<Food, String> foodNameColDashboard;
+    @FXML private TableColumn<Food, String> foodStatusColDashboard;
 
-    @FXML private TableView<?> foodTableDashboard; // Sử dụng wildcard '?' nếu chưa có Model Food
-    @FXML private TableColumn<?, ?> foodIdColDashboard;
-    @FXML private TableColumn<?, ?> foodNameColDashboard;
-    @FXML private TableColumn<?, ?> foodStatusColDashboard;
-
-    // private AdminContainerController adminContainerController; // Thêm nếu cần gọi ngược lại container
-    private boolean initialDataLoaded = false;
+    // Data lists specific to this dashboard
+    private ObservableList<User> recentUsersList = FXCollections.observableArrayList();
+    private ObservableList<Food> lowStockFoodsList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("AdminDashboardController initialized.");
-        configureTables();
-        // Dữ liệu sẽ được load bởi loadDataIfNeeded khi pane hiển thị
+        LOGGER.info("Initializing AdminDashboardController...");
+
+        // Configure table columns
+        configureUserTable();
+        configureFoodTable();
+
+        // Load data asynchronously
+        loadDashboardData();
     }
 
-    // Inject container nếu cần
-    // public void setAdminContainerController(AdminContainerController controller) { this.adminContainerController = controller; }
-
-    private void configureTables() {
-        System.out.println("AdminDashboardController: Configuring tables...");
-        if (userTableDashboard != null) {
-            // Sử dụng PropertyValueFactory để liên kết cột với thuộc tính của User Model
-            setupColumnFactory(userIdColDashboard, "user_id"); // Tên thuộc tính trong User.java
-            setupColumnFactory(userNameColDashboard, "full_name");
-            setupColumnFactory(userEmailColDashboard, "email");
-            setupColumnFactory(userRoleColDashboard, "role");
-            setupColumnFactory(userPhoneColDashboard, "phone_number");
-            // setupColumnFactory(userAgeColDashboard, "age"); // Nếu có cột tuổi và hàm getAge() trong User
-            userTableDashboard.setPlaceholder(new Label("Chưa có dữ liệu..."));
-        } else {
-            System.err.println("AdminDashboardController Error: userTableDashboard is null!");
-        }
-
-        if (foodTableDashboard != null) {
-            // TODO: Cấu hình cột cho bảng food khi có Model Food
-            // Ví dụ: setupColumnFactory(foodIdColDashboard, "foodId");
-            //        setupColumnFactory(foodNameColDashboard, "name");
-            //        setupColumnFactory(foodStatusColDashboard, "status");
-            foodTableDashboard.setPlaceholder(new Label("Chưa có dữ liệu..."));
-        } else {
-            System.err.println("AdminDashboardController Error: foodTableDashboard is null!");
-        }
+    /**
+     * Cấu hình cột cho bảng User trên Dashboard.
+     */
+    private void configureUserTable() {
+        if (userTableDashboard == null) return;
+        setupColumnFactory(userIdColDashboard, "user_id");
+        setupColumnFactory(userNameColDashboard, "full_name");
+        setupColumnFactory(userEmailColDashboard, "email");
+        setupColumnFactory(userRoleColDashboard, "role");
+        setupColumnFactory(userPhoneColDashboard, "phone_number");
+        userTableDashboard.setPlaceholder(new Label("Đang tải người dùng..."));
     }
 
-    // Helper setup cột
+    /**
+     * Cấu hình cột cho bảng Food trên Dashboard.
+     */
+    private void configureFoodTable() {
+        if (foodTableDashboard == null) return;
+        setupColumnFactory(foodIdColDashboard, "food_id");
+        setupColumnFactory(foodNameColDashboard, "name");
+        setupColumnFactory(foodStatusColDashboard, "availability_status");
+        foodTableDashboard.setPlaceholder(new Label("Đang tải món ăn..."));
+    }
+
+    /**
+     * Hàm helper thiết lập CellValueFactory an toàn.
+     */
     private <S, T> void setupColumnFactory(TableColumn<S, T> column, String propertyName) {
-        if (column != null && propertyName != null && !propertyName.isEmpty()) {
+        if (column != null) {
             column.setCellValueFactory(new PropertyValueFactory<>(propertyName));
         } else {
-            System.err.println("WARN (AdminDashboard): Invalid column or propertyName for setupColumnFactory. Column: " + column + ", Property: " + propertyName);
+            LOGGER.warning("TableColumn for property '" + propertyName + "' is null. Check FXML fx:id.");
         }
     }
 
-    // Được gọi bởi AdminContainerController
-    public void loadDataIfNeeded() {
-        if (!initialDataLoaded) {
-            System.out.println("AdminDashboardController: Loading initial data...");
-            refreshData(); // Gọi hàm tải/làm mới dữ liệu
-            initialDataLoaded = true;
-        } else {
-            System.out.println("AdminDashboardController: Data already loaded. Maybe refresh?");
-            // Tùy chọn: Gọi refreshData() ở đây nếu muốn cập nhật mỗi khi quay lại tab
-            // refreshData();
-        }
-    }
-
-    // Hàm tải/làm mới tất cả dữ liệu cho dashboard
-    public void refreshData() {
-        System.out.println("AdminDashboardController: Refreshing all dashboard data...");
-        loadUserDashboardData();
-        loadFoodDashboardData();
-        loadStatsData();
-    }
-
-    // Tải dữ liệu User cho bảng dashboard
-    private void loadUserDashboardData() {
-        if (userTableDashboard == null) return;
-        userTableDashboard.setPlaceholder(new Label("Đang tải người dùng..."));
+    /**
+     * Tải tất cả dữ liệu cần thiết cho Dashboard trên luồng nền.
+     */
+    void loadDashboardData() {
         new Thread(() -> {
-            try {
-                // Lấy danh sách user (có thể giới hạn số lượng bằng SQL nếu cần)
-                ObservableList<User> users = UserDAO.getAllUsers(); // Tạm lấy hết
-                // TODO: Giới hạn số lượng users hiển thị trên dashboard nếu cần
-                // ví dụ: users = FXCollections.observableArrayList(users.subList(0, Math.min(users.size(), 10)));
+            LOGGER.info("Background: Loading dashboard data...");
+            ObservableList<User> users = FXCollections.observableArrayList();
+            ObservableList<Food> foods = FXCollections.observableArrayList();
+            // Giả sử có các biến để lưu thống kê
+            String dailyRev = "[Lỗi]";
+            String monthlyRev = "[Lỗi]";
+            long totalFoods = 0;
+            long availableFoods = 0;
+            boolean userError = false;
+            boolean foodError = false;
 
-                Platform.runLater(() -> {
-                    if (userTableDashboard != null) {
-                        userTableDashboard.setItems(users);
-                        userTableDashboard.setPlaceholder(new Label(users == null || users.isEmpty() ? "Không có người dùng." : ""));
-                        System.out.println("AdminDashboardController: User data loaded/refreshed.");
-                    }
-                });
-            } catch (Exception e) {
-                System.err.println("AdminDashboardController Error loading users: " + e.getMessage());
-                e.printStackTrace();
-                Platform.runLater(() -> {
-                    if (userTableDashboard != null) userTableDashboard.setPlaceholder(new Label("Lỗi tải người dùng."));
-                });
+            try {
+                users = UserDAO.getAllUsers(); // Tạm thời lấy tất cả
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
+            if (users == null) users = FXCollections.observableArrayList(); // Đảm bảo không null
+
+            // Lấy món ăn sắp hết hàng (ví dụ: status = 'Unavailable')
+            // Bạn cần tạo phương thức này trong FoodDAO
+            // foods = FoodDAO.getFoodsByStatus("Unavailable");
+            try {
+                foods = FoodDAO.getAllFoods(); // Tạm thời lấy tất cả
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            if (foods == null) foods = FXCollections.observableArrayList();
+
+            // Tính toán thống kê từ dữ liệu food đã lấy
+            ObservableList<Food> allFoodsForCount = null; // Lấy lại hoặc dùng list trên nếu đã lấy hết
+            try {
+                allFoodsForCount = FoodDAO.getAllFoods();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            if (allFoodsForCount != null) {
+                totalFoods = allFoodsForCount.size();
+                availableFoods = allFoodsForCount.stream()
+                        .filter(f -> "Available".equalsIgnoreCase(f.getAvailability_status()))
+                        .count();
+            }
+
+//            // Lọc lại danh sách food chỉ hiển thị món hết hàng (nếu cần)
+//            ObservableList<Food> unavailableFoods = foods.stream()
+//                    .filter(f -> "Unavailable".equalsIgnoreCase(f.getAvailability_status()))
+//                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+//            foods = unavailableFoods; // Gán lại để hiển thị món hết hàng
+
+            try {
+                // TODO: Gọi DAO để lấy doanh thu thực tế
+                // dailyRev = formatCurrency(StatisticsDAO.getTodayRevenue());
+                // monthlyRev = formatCurrency(StatisticsDAO.getCurrentMonthRevenue());
+                dailyRev = "5,500,000 VND"; // Dữ liệu giả
+                monthlyRev = "150,000,000 VND"; // Dữ liệu giả
+
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Background: Error loading revenue stats", e);
+                // Để giá trị là "[Lỗi]"
+            }
+
+
+            // Chuẩn bị dữ liệu cuối cùng để cập nhật UI
+            final ObservableList<User> finalUsers = users;
+            final ObservableList<Food> finalFoods = foods; // List đã lọc (nếu có)
+            final boolean finalUserError = userError;
+            final boolean finalFoodError = foodError;
+            final String finalDailyRev = dailyRev;
+            final String finalMonthlyRev = monthlyRev;
+            final long finalTotalFoods = totalFoods;
+            final long finalAvailableFoods = availableFoods;
+
+            // Cập nhật UI trên luồng chính
+            Platform.runLater(() -> {
+                updateDashboardUI(finalUsers, finalFoods, finalUserError, finalFoodError,
+                        finalDailyRev, finalMonthlyRev, finalTotalFoods, finalAvailableFoods);
+            });
+
         }).start();
     }
 
-    // Tải dữ liệu Food cho bảng dashboard
-    private void loadFoodDashboardData() {
-        if (foodTableDashboard == null) return;
-        foodTableDashboard.setPlaceholder(new Label("Đang tải món ăn..."));
-        // TODO: Triển khai FoodDAO và logic lấy món sắp hết hàng
-        System.out.println("AdminDashboardController: loadFoodDashboardData() - Placeholder");
-        Platform.runLater(()->{
-            foodTableDashboard.setPlaceholder(new Label("Chức năng đang phát triển."));
-            foodTableDashboard.setItems(FXCollections.emptyObservableList()); // Xóa dữ liệu cũ
-        });
+    /**
+     * Cập nhật các thành phần UI của Dashboard với dữ liệu đã tải.
+     */
+    private void updateDashboardUI(ObservableList<User> users, ObservableList<Food> foods,
+                                   boolean userError, boolean foodError,
+                                   String dailyRev, String monthlyRev, long totalFoods, long availableFoods) {
+        LOGGER.info("Updating Dashboard UI...");
+
+        // Cập nhật bảng User
+        if (userTableDashboard != null) {
+            if (!userError) {
+                userTableDashboard.setItems(users);
+                userTableDashboard.setPlaceholder(new Label(users.isEmpty() ? "Không có người dùng gần đây." : ""));
+            } else {
+                userTableDashboard.getItems().clear();
+                userTableDashboard.setPlaceholder(new Label("Lỗi tải dữ liệu người dùng."));
+            }
+        }
+
+        // Cập nhật bảng Food
+        if (foodTableDashboard != null) {
+            if (!foodError) {
+                foodTableDashboard.setItems(foods); // Hiển thị list food (đã lọc nếu cần)
+                foodTableDashboard.setPlaceholder(new Label(foods.isEmpty() ? "Không có món ăn sắp hết hàng." : ""));
+            } else {
+                foodTableDashboard.getItems().clear();
+                foodTableDashboard.setPlaceholder(new Label("Lỗi tải dữ liệu món ăn."));
+            }
+        }
+
+        // Cập nhật các Label thống kê
+        setTextSafe(dailyRevenueLabel, dailyRev);
+        setTextSafe(monthlyRevenueLabel, monthlyRev);
+        setTextSafe(totalFoodLabel, String.valueOf(totalFoods));
+        setTextSafe(availableFoodLabel, String.valueOf(availableFoods));
     }
 
-    // Tải dữ liệu thống kê
-    private void loadStatsData() {
-        // TODO: Triển khai DAO để lấy doanh thu, số lượng món...
-        System.out.println("AdminDashboardController: loadStatsData() - Placeholder");
-        Platform.runLater(()->{
-            // Gán giá trị mặc định hoặc "Đang tải..."
-            if(dailyRevenueLabel!=null) dailyRevenueLabel.setText("N/A");
-            if(monthlyRevenueLabel!=null) monthlyRevenueLabel.setText("N/A");
-            if(totalFoodLabel!=null) totalFoodLabel.setText("N/A");
-            if(availableFoodLabel!=null) availableFoodLabel.setText("N/A");
-        });
+
+    // --- Hàm helper setTextSafe và showAlert ---
+    private void setTextSafe(Label label, String text) {
+        if (label != null) {
+            label.setText(text != null ? text : "[N/A]");
+        }
     }
 
-    // Hàm tiện ích hiển thị Alert
     private void showAlert(Alert.AlertType alertType, String title, String content) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(content);
+            alert.showAndWait();
+        });
     }
+
+    // --- Các hàm xử lý sự kiện khác (ví dụ: nút chi tiết) ---
+    // @FXML private void handleUserDetailsAction(ActionEvent event) { ... }
+    // @FXML private void handleFoodDetailsAction(ActionEvent event) { ... }
+
 }

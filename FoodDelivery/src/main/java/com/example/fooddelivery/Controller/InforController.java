@@ -2,357 +2,311 @@ package com.example.fooddelivery.Controller;
 
 import com.example.fooddelivery.Dao.UserDAO;
 import com.example.fooddelivery.Model.User;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.ImageView; // Kept for FXML binding, but not actively used for image display
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox; // Thêm nếu cần
-import javafx.stage.FileChooser;
-import javafx.stage.Stage; // Thêm Stage
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class InforController implements Initializable { // Đổi tên lớp
+public class InforController implements Initializable {
 
-    @FXML private AnchorPane userInfoPaneRoot; // ID của root Pane
-
-    // --- Khai báo @FXML cho controls trong UserInfoView.fxml ---
+    @FXML private AnchorPane userInfoPaneRoot;
     @FXML private Label infoPaneTitleLabel;
-    @FXML private ImageView userImageViewInfo;
-    @FXML private Button changeImageButton;
-    @FXML private Label fullNameLabelInfo, dobLabelInfo, genderLabelInfo, emailLabelInfo, phoneLabelInfo, roleLabelInfo, addressLabelInfo;
-    @FXML private TextField fullNameFieldInfo, emailFieldInfo, phoneFieldInfo;
+    @FXML private ImageView userImageViewInfo; // FXML element, image display logic removed
+    // @FXML private Button changeImageButton; // FXML element, logic removed
+
+    // Labels for displaying info (View Mode)
+    @FXML private Label fullNameLabelInfo;
+    @FXML private Label dobLabelInfo;
+    @FXML private Label genderLabelInfo;
+    @FXML private Label emailLabelInfo;
+    @FXML private Label phoneLabelInfo;
+    @FXML private Label roleLabelInfo;
+    @FXML private Label addressLabelInfo;
+
+    // Fields for editing info (Edit Mode)
+    @FXML private TextField fullNameFieldInfo;
     @FXML private DatePicker dobPickerInfo;
-    @FXML private ComboBox<String> genderComboBoxInfo, roleComboBoxInfo;
+    @FXML private ComboBox<String> genderComboBoxInfo;
+    @FXML private TextField emailFieldInfo; // Email is non-editable as per FXML
+    @FXML private TextField phoneFieldInfo;
+    @FXML private ComboBox<String> roleComboBoxInfo;
     @FXML private TextArea addressAreaInfo;
-    @FXML private Button editAdminInfoButton; // Nút để admin tự sửa TT
+
+    // Action Buttons
+    @FXML private Button editAdminInfoButton;
+    @FXML private Button closeInfoButton;
     @FXML private Button saveInfoButton;
     @FXML private Button cancelInfoButton;
 
-    private AdminContainerController adminContainerController; // Tham chiếu controller cha
-    private User currentUserDisplayed; // User đang được hiển thị/sửa
-    private User currentAdminUser;     // Admin đang đăng nhập
-    private boolean isEditMode = false; // Trạng thái hiện tại
-    private String pendingImageFilePath = null;
+    private User currentUser;
+    private User loggedInAdmin;
+    private String originalRole;
 
-    // --- Constants và Formatters ---
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private final List<String> GENDER_OPTIONS = Arrays.asList("Nam", "Nữ", "Khác");
-    private final List<String> ROLE_OPTIONS = Arrays.asList("Customer", "Shipper", "Admin");
+    private AdminContainerController adminContainerController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("InforController initialized."); // Đổi tên lớp trong log
-        // Khởi tạo ComboBoxes
-        if (genderComboBoxInfo != null) genderComboBoxInfo.setItems(FXCollections.observableArrayList(GENDER_OPTIONS));
-        if (roleComboBoxInfo != null) roleComboBoxInfo.setItems(FXCollections.observableArrayList(ROLE_OPTIONS));
-        // Đặt pane về chế độ xem mặc định ban đầu
-        configurePaneForMode(false);
+        genderComboBoxInfo.setItems(FXCollections.observableArrayList("Male", "Female", "Other"));
+        // Simplified roles based on requirement: "User" (or "Customer") and "Admin"
+        // IMPORTANT: Ensure "User" or "Customer" matches what UserDAO.updateUserRole expects for a non-admin role.
+        // If UserDAO.updateUserRole strictly expects "Customer", change "User" to "Customer" here.
+        roleComboBoxInfo.setItems(FXCollections.observableArrayList("Customer", "Admin"));
+
+        // Image related buttons/logic are removed.
+        // If changeImageButton is still in FXML, ensure it's set to managed="false" visible="false" or remove its FXML fx:id
     }
 
-    // --- Setters ---
-    public void setAdminContainerController(AdminContainerController controller) { this.adminContainerController = controller; }
+    public void setAdminContainerController(AdminContainerController controller) {
+        this.adminContainerController = controller;
+    }
+
     public void setCurrentAdminUser(User adminUser) {
-        this.currentAdminUser = adminUser;
-        updateEditAdminButtonVisibility(); // Cập nhật nút khi biết admin là ai
+        this.loggedInAdmin = adminUser;
     }
 
-    // --- Hiển thị / Chỉnh sửa ---
-    public void displayUserInfo(User user, boolean editMode) {
-        System.out.println("InforController: Displaying user " + (user != null ? user.getEmail() : "null") + " in " + (editMode ? "EDIT" : "VIEW") + " mode.");
-        this.currentUserDisplayed = user;
-        //this.isEditMode = editMode; // Sẽ được set trong configurePaneForMode
-        this.pendingImageFilePath = null;
-        configurePaneForMode(editMode);
-        if (user == null) {
-            clearPaneContents();
-            if(infoPaneTitleLabel!=null) infoPaneTitleLabel.setText("Không có thông tin");
+    public void displayUserInfo(User user, boolean isEditMode) {
+        this.currentUser = user;
+
+        if (currentUser == null) {
+            handleNoUser();
             return;
         }
-        if(infoPaneTitleLabel!=null) infoPaneTitleLabel.setText(editMode ? "Chỉnh Sửa: " + user.getEmail() : "Thông Tin: " + user.getEmail());
-        populateData(user);
-        updateEditAdminButtonVisibility();
+        this.originalRole = currentUser.getRole();
+        populateDataFromCurrentUser();
+        setUIMode(isEditMode);
     }
 
-    // --- Cấu hình và điền dữ liệu ---
-    private void configurePaneForMode(boolean editMode) {
-        this.isEditMode = editMode;
-
-        // Logic ẩn/hiện controls và nút (giữ nguyên từ trước)
-        setControlsVisibility(!editMode, fullNameLabelInfo, dobLabelInfo, genderLabelInfo, emailLabelInfo, phoneLabelInfo, roleLabelInfo, addressLabelInfo);
-        setControlsVisibility(editMode, fullNameFieldInfo, dobPickerInfo, genderComboBoxInfo, emailFieldInfo, phoneFieldInfo, roleComboBoxInfo, addressAreaInfo, changeImageButton);
-        if (emailFieldInfo != null) emailFieldInfo.setEditable(false);
-        updateEditAdminButtonVisibility(); // Cập nhật nút sửa admin
-        setControlsVisibility(editMode, saveInfoButton, cancelInfoButton);
+    private void handleNoUser() {
+        clearAllFields();
+        infoPaneTitleLabel.setText("Không có dữ liệu người dùng");
+        setButtonsDisabled(true);
     }
 
-    private void updateEditAdminButtonVisibility() {
-        boolean isAdminViewingSelf = !isEditMode && currentUserDisplayed != null && currentAdminUser != null && currentUserDisplayed.getUser_id() == currentAdminUser.getUser_id();
-        setControlsVisibility(isAdminViewingSelf, editAdminInfoButton);
+    private void setButtonsDisabled(boolean disabled) {
+        // changeImageButton.setDisable(disabled); // Logic removed
+        saveInfoButton.setDisable(disabled);
+        editAdminInfoButton.setDisable(disabled);
     }
 
-    private void populateData(User user) {
-        // Logic điền dữ liệu vào controls (giữ nguyên từ trước)
-        if (user == null) { clearPaneContents(); return; } // An toàn hơn
-        if (isEditMode) {
-            if(fullNameFieldInfo!=null) fullNameFieldInfo.setText(user.getFull_name());
-            if(dobPickerInfo!=null) dobPickerInfo.setValue(user.getDate_of_birth());
-            if(genderComboBoxInfo!=null) genderComboBoxInfo.setValue(user.getGender());
-            if(emailFieldInfo!=null) emailFieldInfo.setText(user.getEmail());
-            if(phoneFieldInfo!=null) phoneFieldInfo.setText(user.getPhone_number());
-            if(roleComboBoxInfo!=null) roleComboBoxInfo.setValue(user.getRole());
-            if(addressAreaInfo!=null) addressAreaInfo.setText(user.getAddress());
-        } else {
-            if(fullNameLabelInfo!=null) fullNameLabelInfo.setText(getOrDefault(user.getFull_name()));
-            if(dobLabelInfo!=null) dobLabelInfo.setText(user.getDate_of_birth() != null ? user.getDate_of_birth().format(dateFormatter) : "N/A");
-            if(genderLabelInfo!=null) genderLabelInfo.setText(getOrDefault(user.getGender()));
-            if(emailLabelInfo!=null) emailLabelInfo.setText(getOrDefault(user.getEmail()));
-            if(phoneLabelInfo!=null) phoneLabelInfo.setText(getOrDefault(user.getPhone_number()));
-            if(roleLabelInfo!=null) roleLabelInfo.setText(getOrDefault(user.getRole()));
-            if(addressLabelInfo!=null) addressLabelInfo.setText(getOrDefault(user.getAddress(), "Chưa cập nhật"));
+    private void populateDataFromCurrentUser() {
+        if (currentUser == null) return;
+
+        fullNameLabelInfo.setText(getOrDefault(currentUser.getFull_name()));
+        dobLabelInfo.setText(getOrDefault(currentUser.getDate_of_birth()));
+        genderLabelInfo.setText(getOrDefault(currentUser.getGender()));
+        emailLabelInfo.setText(getOrDefault(currentUser.getEmail()));
+        phoneLabelInfo.setText(getOrDefault(currentUser.getPhone_number()));
+        roleLabelInfo.setText(getOrDefault(currentUser.getRole()));
+        addressLabelInfo.setText(getOrDefault(currentUser.getAddress()));
+
+        fullNameFieldInfo.setText(currentUser.getFull_name());
+        dobPickerInfo.setValue(currentUser.getDate_of_birth());
+        genderComboBoxInfo.setValue(currentUser.getGender());
+        emailFieldInfo.setText(currentUser.getEmail());
+        phoneFieldInfo.setText(currentUser.getPhone_number());
+        roleComboBoxInfo.setValue(currentUser.getRole());
+        addressAreaInfo.setText(currentUser.getAddress());
+
+        // userImageViewInfo.setImage(null); // Or display existing image if path is valid and you want to show it
+        // Image display logic based on profile_picture_url can be added back here if needed (view-only)
+    }
+
+    private String getOrDefault(Object value) {
+        return value != null && !value.toString().trim().isEmpty() ? value.toString() : "[Chưa có]";
+    }
+
+    private void setUIMode(boolean isEditing) {
+        infoPaneTitleLabel.setText(isEditing ? "Chỉnh Sửa Thông Tin Người Dùng" : "Thông Tin Chi Tiết Người Dùng");
+
+        setElementVisibility(fullNameLabelInfo, !isEditing);
+        setElementVisibility(fullNameFieldInfo, isEditing);
+        setElementVisibility(dobLabelInfo, !isEditing);
+        setElementVisibility(dobPickerInfo, isEditing);
+        setElementVisibility(genderLabelInfo, !isEditing);
+        setElementVisibility(genderComboBoxInfo, isEditing);
+        setElementVisibility(emailLabelInfo, !isEditing);
+        setElementVisibility(emailFieldInfo, isEditing);
+        setElementVisibility(phoneLabelInfo, !isEditing);
+        setElementVisibility(phoneFieldInfo, isEditing);
+        setElementVisibility(roleLabelInfo, !isEditing);
+        setElementVisibility(roleComboBoxInfo, isEditing);
+        setElementVisibility(addressLabelInfo, !isEditing);
+        setElementVisibility(addressAreaInfo, isEditing);
+
+        // setElementVisibility(changeImageButton, false); // Image change logic removed
+        setElementVisibility(saveInfoButton, isEditing);
+        setElementVisibility(cancelInfoButton, isEditing);
+        setElementVisibility(closeInfoButton, !isEditing);
+
+        boolean isAdminViewingSelf = loggedInAdmin != null && currentUser != null && loggedInAdmin.getUser_id() == currentUser.getUser_id();
+        setElementVisibility(editAdminInfoButton, !isEditing && isAdminViewingSelf);
+
+        if (currentUser != null) {
+            setButtonsDisabled(false);
         }
-        if (userImageViewInfo!=null) loadProfileImage(user.getProfile_picture_url());
     }
 
-    private void clearPaneContents() {
-        // Logic xóa nội dung (giữ nguyên từ trước)
-        populateData(new User(0, "", "", "", null, "", "", "", "","")); // Điền giá trị rỗng/null
-        if(userImageViewInfo!=null) userImageViewInfo.setImage(null);
-        pendingImageFilePath = null;
+    private void setElementVisibility(Node node, boolean isVisible) {
+        node.setVisible(isVisible);
+        node.setManaged(isVisible);
     }
 
-    private void setControlsVisibility(boolean isVisible, Control... controls) {
-        // Logic ẩn/hiện (giữ nguyên)
-        for (Control control : controls) {
-            if (control != null) {
-                control.setVisible(isVisible);
-                control.setManaged(isVisible);
-            }
-        }
-    }
-
-    // --- Xử lý sự kiện nút ---
-    @FXML
-    void onEditAdminInfoButtonClick(ActionEvent event) {
-        // Logic chuyển sang chế độ sửa cho admin (giữ nguyên)
-        if (currentUserDisplayed != null && currentAdminUser != null && currentUserDisplayed.getUser_id() == currentAdminUser.getUser_id()) {
-            System.out.println("InforController: Switching to edit mode for current admin.");
-            configurePaneForMode(true);
-            populateData(currentUserDisplayed);
-        } else { System.err.println("InforController Error: EditAdminInfo button clicked but conditions not met."); }
-    }
+    // onChangeImageButtonClick method removed
 
     @FXML
     void onSaveInfoButtonClick(ActionEvent event) {
-        // Logic đọc, validate, tạo User, xử lý ảnh, gọi saveUserChangesAsync (giữ nguyên)
-        if (currentUserDisplayed == null || !isEditMode) { /*...*/ return; }
-        System.out.println("InforController: Saving changes for user: " + currentUserDisplayed.getEmail());
-        String fullName = fullNameFieldInfo.getText().trim();
-        LocalDate dob = dobPickerInfo.getValue();
-        String gender = genderComboBoxInfo.getValue();
-        String phone = phoneFieldInfo.getText().trim();
-        String role = roleComboBoxInfo.getValue();
-        String address = addressAreaInfo.getText().trim();
-        if (!validateUserData(fullName, dob, gender, phone, role)) return;
-        User updatedUser = new User(currentUserDisplayed.getUser_id(), fullName, currentUserDisplayed.getEmail(), currentUserDisplayed.getPassword_hash(), dob, phone, gender, currentUserDisplayed.getProfile_picture_url(), role, address);
-        handleImageUpdate(updatedUser);
-//        saveUserChangesAsync(updatedUser);
+        if (currentUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không có dữ liệu người dùng để lưu.");
+            return;
+        }
+
+        if (fullNameFieldInfo.getText() == null || fullNameFieldInfo.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Họ và tên không được để trống.");
+            fullNameFieldInfo.requestFocus(); return;
+        }
+        if (dobPickerInfo.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Ngày sinh không được để trống.");
+            dobPickerInfo.requestFocus(); return;
+        }
+        if (dobPickerInfo.getValue().isAfter(LocalDate.now())) {
+            showAlert(Alert.AlertType.WARNING, "Ngày sinh không hợp lệ", "Ngày sinh không thể ở tương lai.");
+            dobPickerInfo.requestFocus(); return;
+        }
+        String selectedRole = roleComboBoxInfo.getValue();
+        if (selectedRole == null || selectedRole.trim().isEmpty()){
+            showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Vai trò không được để trống.");
+            roleComboBoxInfo.requestFocus(); return;
+        }
+        // Validate role selection against allowed values ("User" or "Admin")
+        if (!"User".equals(selectedRole) && !"Admin".equals(selectedRole) && !"Customer".equals(selectedRole) /* If Customer is also valid for DAO */) {
+            showAlert(Alert.AlertType.WARNING, "Vai trò không hợp lệ", "Vui lòng chọn 'User' hoặc 'Admin'.");
+            roleComboBoxInfo.requestFocus(); return;
+        }
+
+
+        currentUser.setFull_name(fullNameFieldInfo.getText().trim());
+        currentUser.setDate_of_birth(dobPickerInfo.getValue());
+        currentUser.setGender(genderComboBoxInfo.getValue());
+        currentUser.setPhone_number(phoneFieldInfo.getText().trim());
+        currentUser.setAddress(addressAreaInfo.getText().trim());
+        // currentUser.setProfile_picture_url(...); // Image logic removed
+
+        String newRole = roleComboBoxInfo.getValue();
+        // IMPORTANT: If your UserDAO.updateUserRole expects "Customer" for a non-admin,
+        // and your ComboBox shows "User", you might need a mapping here.
+        // e.g., if (newRole.equals("User")) newRoleForDAO = "Customer";
+        // For simplicity, I'm assuming the ComboBox value ("User" or "Admin") is directly usable.
+
+        try {
+            // 1. Update general user information (excluding role and image)
+            // UserDAO.updateUserGeneralInfo still needed for these fields
+            boolean generalInfoUpdated = UserDAO.updateUserGeneralInfo(currentUser);
+
+            // 2. Update role if it has changed
+            boolean roleUpdated = false;
+            boolean roleUpdateAttempted = false;
+            if (!originalRole.equals(newRole)) {
+                roleUpdateAttempted = true;
+                // UserDAO.updateUserRole expects "Admin" or "Customer"
+                String roleForDAO = newRole;
+                if ("User".equals(newRole) && !"Customer".equals(originalRole) && !"Admin".equals(originalRole) ) {
+                    // This logic might need adjustment based on how UserDAO.updateUserRole handles "User" vs "Customer"
+                    // If "User" in UI should map to "Customer" in DB for non-admins:
+                    // roleForDAO = "Customer";
+                    // But if your DAO handles "User" correctly, this isn't needed.
+                    // Given UserDAO only accepts "Admin" or "Customer", this might be an issue.
+                    // Forcing "User" to become "Customer" if it's not already an admin:
+                    if(!newRole.equals("Admin")) roleForDAO = "Customer"; else roleForDAO = "Admin";
+                }
+
+
+                roleUpdated = UserDAO.updateUserRole(currentUser.getUser_id(), roleForDAO);
+                if (roleUpdated) {
+                    currentUser.setRole(newRole); // Update role in current object if DB succeeded
+                } else {
+                    showAlert(Alert.AlertType.WARNING, "Cập nhật Vai trò Thất bại",
+                            "Không thể cập nhật vai trò. Vai trò '" + roleForDAO + "' có thể không hợp lệ hoặc có lỗi.");
+                    roleComboBoxInfo.setValue(originalRole); // Revert UI
+                }
+            }
+
+            if (generalInfoUpdated || (roleUpdateAttempted && roleUpdated) || (!roleUpdateAttempted && generalInfoUpdated) ) {
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thông tin người dùng đã được cập nhật.");
+                if (adminContainerController != null) {
+                    adminContainerController.finishedUserInfoAction();
+                }
+            } else if (roleUpdateAttempted && !roleUpdated && !generalInfoUpdated) {
+                showAlert(Alert.AlertType.ERROR, "Lỗi Cập Nhật", "Cập nhật vai trò thất bại và không có thông tin khác được thay đổi.");
+            }
+            else if (!generalInfoUpdated && !roleUpdateAttempted) {
+                showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Không có thay đổi nào được thực hiện.");
+            }
+
+
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi Cơ Sở Dữ Liệu", "Lỗi khi cập nhật thông tin: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void onCancelInfoButtonClick(ActionEvent event) {
-        // Logic gọi container để quay lại (giữ nguyên)
-        System.out.println("InforController: Edit cancelled.");
         if (adminContainerController != null) {
             adminContainerController.finishedUserInfoAction();
-        } else { handleMissingContainerError(); }
+        }
     }
 
     @FXML
-    void onChangeImageButtonClick(ActionEvent event) {
-        // Logic mở FileChooser (giữ nguyên)
-        FileChooser fileChooser = new FileChooser(); /*...*/
-        Stage stage = (Stage) (changeImageButton != null ? changeImageButton.getScene().getWindow() : null);
-        if(stage == null) { /*...*/ return;}
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-            try {
-                String imagePath = selectedFile.toURI().toString();
-                if (isValidURL(imagePath)) {
-                    Image previewImage = new Image(imagePath);
-                    if (!previewImage.isError()) {
-                        if(userImageViewInfo!=null) userImageViewInfo.setImage(previewImage);
-                        this.pendingImageFilePath = selectedFile.getAbsolutePath();
-                        System.out.println("INFO: New profile image selected: " + pendingImageFilePath);
-                    } else { showAlert(Alert.AlertType.ERROR, "Lỗi Ảnh", "File ảnh không hợp lệ."); this.pendingImageFilePath = null; }
-                } else { showAlert(Alert.AlertType.ERROR, "Lỗi Ảnh", "Đường dẫn file ảnh không hợp lệ."); this.pendingImageFilePath = null; }
-            } catch (Exception e) { showAlert(Alert.AlertType.ERROR, "Lỗi Ảnh", "Không thể tải ảnh xem trước: " + e.getMessage()); this.pendingImageFilePath = null; e.printStackTrace(); }
-        } else { System.out.println("INFO: No new image selected."); }
-    }
-
-    // --- Các hàm helper (validate, handleImage, saveAsync, loadProfileImage, etc.) ---
-    // Chuyển từ AdminController cũ vào đây
-    private boolean validateUserData(String fullName, LocalDate dob, String gender, String phone, String role) {
-        if (fullName.isEmpty()) { showAlert(Alert.AlertType.ERROR, "Lỗi", "Họ tên không được để trống."); return false; }
-        if (dob == null) { showAlert(Alert.AlertType.ERROR, "Lỗi", "Ngày sinh không được để trống."); return false; }
-        if (dob.isAfter(LocalDate.now())) { showAlert(Alert.AlertType.ERROR, "Lỗi", "Ngày sinh không hợp lệ."); return false; }
-        if (gender == null || gender.isEmpty()) { showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng chọn giới tính."); return false; }
-        if (phone.isEmpty()) { showAlert(Alert.AlertType.ERROR, "Lỗi", "Số điện thoại không được để trống."); return false; }
-        // Thêm validate định dạng SĐT nếu cần: if (!phone.matches("\\d{10,11}")) { ... }
-        if (role == null || role.isEmpty()) { showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng chọn vai trò."); return false; }
-        return true;
-    }
-
-    private void handleImageUpdate(User userToUpdate) {
-        if (pendingImageFilePath != null && !pendingImageFilePath.isEmpty()) {
-            System.out.println("INFO: Processing selected image: " + pendingImageFilePath);
-            String newImageUrl = uploadImageAndGetUrl(pendingImageFilePath); // Hàm upload thực tế
-            if (newImageUrl != null) {
-                userToUpdate.setProfile_picture_url(newImageUrl);
-                System.out.println("INFO: Profile picture URL updated to: " + newImageUrl);
-            } else {
-                showAlert(Alert.AlertType.WARNING, "Lỗi Upload Ảnh", "Không thể tải ảnh lên, ảnh đại diện chưa được cập nhật.");
-            }
-            pendingImageFilePath = null; // Reset
+    void handleCloseInfoAction(ActionEvent event) {
+        if (adminContainerController != null) {
+            adminContainerController.finishedUserInfoAction();
         }
     }
 
-    // --- Placeholder cho hàm upload ảnh (CẦN CÀI ĐẶT THỰC TẾ) ---
-    private String uploadImageAndGetUrl(String localFilePath) {
-        System.out.println("WARN (InforController): Image upload function not implemented. Simulating upload for: " + localFilePath);
-        try { return new File(localFilePath).toURI().toString(); } catch (Exception e) { return null; } // Chỉ để test
-        // return null; // Trả về null nếu upload thất bại
-    }
-
-//    private void saveUserChangesAsync(User userToSave) {
-//        ProgressIndicator savingIndicator = new ProgressIndicator(-1);
-//        // Tạm thời thêm indicator vào HBox nút (cần làm đẹp hơn)
-//        if (saveInfoButton!= null && saveInfoButton.getParent() instanceof HBox) ((HBox)saveInfoButton.getParent()).getChildren().add(savingIndicator);
-//        setInfoPaneButtonsDisabled(true);
-//
-//        new Thread(() -> {
-//            boolean success = false;
-//            String message = "Lỗi không xác định khi cập nhật.";
-//            try {
-//                success = UserDAO.updateUser(userToSave);
-//                message = success ? "Cập nhật thông tin thành công." : "Cập nhật thất bại.";
-//                // Cập nhật lại currentAdminUser trong AdminContainer nếu admin tự sửa
-//                if (success && currentAdminUser != null && userToSave.getUser_id() == currentAdminUser.getUser_id()) {
-//                    Platform.runLater(() -> { if(adminContainerController!=null) adminContainerController.setCurrentAdminUser(userToSave); });
-//                }
-//            } catch (SQLException e) { message = "Lỗi SQL: " + e.getMessage(); success = false; e.printStackTrace(); }
-//            catch (Exception e) { message = "Lỗi: " + e.getMessage(); success = false; e.printStackTrace(); }
-//
-//            final boolean finalSuccess = success; final String finalMessage = message;
-//
-//            Platform.runLater(() -> {
-//                if (saveInfoButton!= null && saveInfoButton.getParent() instanceof HBox) ((HBox)saveInfoButton.getParent()).getChildren().remove(savingIndicator);
-//                setInfoPaneButtonsDisabled(false);
-//                showAlert(finalSuccess ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR, finalSuccess ? "Thành công" : "Thất bại", finalMessage);
-//                if(finalSuccess) {
-//                    // Không cần reset isEditMode hay currentUserDisplayed ở đây nữa
-//                    if(adminContainerController!=null) adminContainerController.finishedUserInfoAction(); // Thông báo cho cha
-//                }
-//            });
-//        }).start();
-//    }
-
-    /** Helper disable/enable nút khi đang lưu */
-    private void setInfoPaneButtonsDisabled(boolean disabled) {
-        if(saveInfoButton != null) saveInfoButton.setDisable(disabled);
-        if(cancelInfoButton != null) cancelInfoButton.setDisable(disabled);
-        if(changeImageButton != null) changeImageButton.setDisable(disabled);
-        if(editAdminInfoButton != null) editAdminInfoButton.setDisable(disabled);
-    }
-
-    // --- Load ảnh ---
-    private void loadProfileImage(String imageUrl) {
-        // Logic load ảnh (giữ nguyên)
-        if (userImageViewInfo == null) return;
-        if (imageUrl != null && !imageUrl.trim().isEmpty() && isValidURL(imageUrl)) {
-            try {
-                Image profileImage = new Image(imageUrl, true); // true để tải nền
-                profileImage.errorProperty().addListener((obs, oldVal, newVal) -> {
-                    if (newVal) { Platform.runLater(this::setDefaultProfileImage); }
-                });
-                userImageViewInfo.setImage(profileImage);
-                if (profileImage.isBackgroundLoading() && !profileImage.isError()) { /* Optional: Show placeholder */ }
-                else if(profileImage.isError()){ setDefaultProfileImage(); }
-            } catch (Exception e) { setDefaultProfileImage(); }
-        } else { setDefaultProfileImage(); }
-    }
-
-    private void setDefaultProfileImage() {
-        // Logic đặt ảnh mặc định (giữ nguyên)
-        if (userImageViewInfo == null) return;
-        try {
-            String defaultImagePath = "/com/example/fooddelivery/images/default_avatar.png"; // Đảm bảo đường dẫn đúng
-            URL defaultImageURL = getClass().getResource(defaultImagePath);
-            if (defaultImageURL != null) { userImageViewInfo.setImage(new Image(defaultImageURL.toExternalForm())); }
-            else { System.err.println("WARN (InforController): Default profile image not found."); userImageViewInfo.setImage(null); }
-        } catch (Exception e) { System.err.println("ERROR (InforController): Could not load default profile image."); userImageViewInfo.setImage(null); }
-    }
-
-    // --- Helpers khác ---
-    private String getOrDefault(String value) { return getOrDefault(value, "N/A"); }
-    private String getOrDefault(String value, String defaultValue) { return (value != null && !value.trim().isEmpty()) ? value : defaultValue; }
-
-    private void handleMissingContainerError() {
-        System.err.println("ERROR (InforController): AdminContainerController is null. Cannot perform action.");
-        showAlert(Alert.AlertType.ERROR, "Lỗi Hệ Thống", "Không thể thực hiện hành động này.");
-    }
-
-    private boolean isValidURL(String urlString) {
-        try {
-            new URL(urlString);
-            return true;
-        } catch (MalformedURLException e) {
-            // Kiểm tra xem có phải là đường dẫn file hợp lệ không (cho test local)
-            try {
-                File f = new File(new URL(urlString).toURI());
-                // Chỉ kiểm tra xem có tạo được File không, không cần exists()
-                return true;
-            } catch (Exception ex) {
-                // Thử tạo File trực tiếp nếu không phải URI
-                try {
-                    new File(urlString);
-                    return true; // Chấp nhận cả đường dẫn file local tuyệt đối/tương đối (cho test)
-                } catch (Exception finalEx) {
-                    System.err.println("WARN (InforController): Invalid URL or local file path: " + urlString);
-                    return false;
-                }
-            }
+    @FXML
+    void onEditAdminInfoButtonClick(ActionEvent event) {
+        if (currentUser != null && loggedInAdmin != null && currentUser.getUser_id() == loggedInAdmin.getUser_id()) {
+            setUIMode(true);
         }
     }
 
-    // Hàm showAlert tiện ích
-    private void showAlert(Alert.AlertType alertType, String title, String content) {
-        // ... (Giống các controller khác)
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> showAlertInternal(alertType, title, content));
-        } else {
-            showAlertInternal(alertType, title, content);
-        }
+    private void clearAllFields() {
+        String na = "[N/A]";
+        fullNameLabelInfo.setText(na);
+        dobLabelInfo.setText(na);
+        genderLabelInfo.setText(na);
+        emailLabelInfo.setText(na);
+        phoneLabelInfo.setText(na);
+        roleLabelInfo.setText(na);
+        addressLabelInfo.setText(na);
+
+        fullNameFieldInfo.clear();
+        dobPickerInfo.setValue(null);
+        genderComboBoxInfo.getSelectionModel().clearSelection();
+        emailFieldInfo.clear();
+        phoneFieldInfo.clear();
+        roleComboBoxInfo.getSelectionModel().clearSelection();
+        addressAreaInfo.clear();
+        // userImageViewInfo.setImage(null); // Image display removed
     }
-    private void showAlertInternal(Alert.AlertType alertType, String title, String content) {
+
+    // getStage() method can be removed if not used by other parts after image removal.
+    // For now, keeping it as showAlert might theoretically need it, though unlikely for modal alerts.
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(content);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 }
