@@ -1,5 +1,7 @@
 package com.example.fooddelivery;
 
+import com.example.fooddelivery.Controller.AdminContainerController;
+import com.example.fooddelivery.Model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,6 +13,8 @@ public class Main extends Application {
 
     // Giữ tham chiếu stage chính để chuyển đổi giữa các giao diện
     private static Stage primaryStage;
+
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -65,10 +69,20 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
-    }public static void showAdminContainerView() {
+    }public static void showAdminContainerView(User adminUser) {
+
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/Admin/AdminContainer.fxml"));
             Scene scene = new Scene(loader.load());
+            AdminContainerController adminContainerController = loader.getController();
+            if (adminContainerController != null) {
+                adminContainerController.setCurrentAdminUser(adminUser); // <<<< TRUYỀN User VÀO CONTAINER
+            } else {
+                System.err.println("Main: Không thể lấy AdminContainerController từ FXMLLoader.");
+                // Xử lý lỗi, có thể hiển thị một thông báo
+                return;
+            }
+
             primaryStage.setTitle("Food Delivery - Admin");
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -78,6 +92,9 @@ public class Main extends Application {
         }
     }
 
+    public static void showAdminManageUser() {
+        showAdminManageUser();
+    }
     public static void main(String[] args) {
         launch(args);
     }

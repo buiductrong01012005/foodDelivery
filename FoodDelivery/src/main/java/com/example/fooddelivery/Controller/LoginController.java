@@ -2,6 +2,7 @@ package com.example.fooddelivery.Controller;
 
 import com.example.fooddelivery.Main;
 import com.example.fooddelivery.Database.DatabaseConnector;
+import com.example.fooddelivery.Model.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -54,14 +55,21 @@ public class LoginController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int userId = rs.getInt("user_id");
                 String fullName = rs.getString("full_name");
+                String emailForAdmin = rs.getString("email");
                 String userRole = rs.getString("role");
+                User loggedInAdmin = new User();
+                loggedInAdmin.setUser_id(userId);
+                loggedInAdmin.setFull_name(fullName);
+                loggedInAdmin.setEmail(emailForAdmin);
+                loggedInAdmin.setRole(userRole);
                 showAlert("Đăng nhập thành công", "Chào mừng, " + fullName + "!");
                 if ("Customer".equals(userRole)) {
                     // TODO: Chuyển đến trang chính hoặc dashboard
                     openHomePage(); // 👉 Mở giao diện UserHome.fxml
                 } else if ("Admin".equals(userRole)) {
-                    Main.showAdminContainerView();
+                    Main.showAdminContainerView(loggedInAdmin);
                 }
 
 

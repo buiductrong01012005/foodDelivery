@@ -1,5 +1,4 @@
 package com.example.fooddelivery.Controller;
-
 import com.example.fooddelivery.Dao.UserDAO;
 import com.example.fooddelivery.Model.User;
 import javafx.collections.FXCollections;
@@ -8,22 +7,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView; // Kept for FXML binding, but not actively used for image display
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-
 public class InforController implements Initializable {
-
     @FXML private AnchorPane userInfoPaneRoot;
     @FXML private Label infoPaneTitleLabel;
     @FXML private ImageView userImageViewInfo; // FXML element, image display logic removed
-    // @FXML private Button changeImageButton; // FXML element, logic removed
 
-    // Labels for displaying info (View Mode)
+
     @FXML private Label fullNameLabelInfo;
     @FXML private Label dobLabelInfo;
     @FXML private Label genderLabelInfo;
@@ -32,16 +27,15 @@ public class InforController implements Initializable {
     @FXML private Label roleLabelInfo;
     @FXML private Label addressLabelInfo;
 
-    // Fields for editing info (Edit Mode)
+
     @FXML private TextField fullNameFieldInfo;
     @FXML private DatePicker dobPickerInfo;
     @FXML private ComboBox<String> genderComboBoxInfo;
-    @FXML private TextField emailFieldInfo; // Email is non-editable as per FXML
+    @FXML private TextField emailFieldInfo;
     @FXML private TextField phoneFieldInfo;
     @FXML private ComboBox<String> roleComboBoxInfo;
     @FXML private TextArea addressAreaInfo;
 
-    // Action Buttons
     @FXML private Button editAdminInfoButton;
     @FXML private Button closeInfoButton;
     @FXML private Button saveInfoButton;
@@ -50,19 +44,18 @@ public class InforController implements Initializable {
     private User currentUser;
     private User loggedInAdmin;
     private String originalRole;
+    private int currentAdminId;
 
     private AdminContainerController adminContainerController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         genderComboBoxInfo.setItems(FXCollections.observableArrayList("Male", "Female", "Other"));
-        // Simplified roles based on requirement: "User" (or "Customer") and "Admin"
-        // IMPORTANT: Ensure "User" or "Customer" matches what UserDAO.updateUserRole expects for a non-admin role.
-        // If UserDAO.updateUserRole strictly expects "Customer", change "User" to "Customer" here.
         roleComboBoxInfo.setItems(FXCollections.observableArrayList("Customer", "Admin"));
+    }
 
-        // Image related buttons/logic are removed.
-        // If changeImageButton is still in FXML, ensure it's set to managed="false" visible="false" or remove its FXML fx:id
+    public void setCurrentAdminId(int adminId) {
+        this.currentAdminId = adminId;
     }
 
     public void setAdminContainerController(AdminContainerController controller) {
@@ -72,6 +65,7 @@ public class InforController implements Initializable {
     public void setCurrentAdminUser(User adminUser) {
         this.loggedInAdmin = adminUser;
     }
+
 
     public void displayUserInfo(User user, boolean isEditMode) {
         this.currentUser = user;
@@ -92,7 +86,6 @@ public class InforController implements Initializable {
     }
 
     private void setButtonsDisabled(boolean disabled) {
-        // changeImageButton.setDisable(disabled); // Logic removed
         saveInfoButton.setDisable(disabled);
         editAdminInfoButton.setDisable(disabled);
     }
@@ -116,8 +109,6 @@ public class InforController implements Initializable {
         roleComboBoxInfo.setValue(currentUser.getRole());
         addressAreaInfo.setText(currentUser.getAddress());
 
-        // userImageViewInfo.setImage(null); // Or display existing image if path is valid and you want to show it
-        // Image display logic based on profile_picture_url can be added back here if needed (view-only)
     }
 
     private String getOrDefault(Object value) {
@@ -141,8 +132,6 @@ public class InforController implements Initializable {
         setElementVisibility(roleComboBoxInfo, isEditing);
         setElementVisibility(addressLabelInfo, !isEditing);
         setElementVisibility(addressAreaInfo, isEditing);
-
-        // setElementVisibility(changeImageButton, false); // Image change logic removed
         setElementVisibility(saveInfoButton, isEditing);
         setElementVisibility(cancelInfoButton, isEditing);
         setElementVisibility(closeInfoButton, !isEditing);
@@ -160,7 +149,6 @@ public class InforController implements Initializable {
         node.setManaged(isVisible);
     }
 
-    // onChangeImageButtonClick method removed
 
     @FXML
     void onSaveInfoButtonClick(ActionEvent event) {
@@ -186,7 +174,6 @@ public class InforController implements Initializable {
             showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Vai trò không được để trống.");
             roleComboBoxInfo.requestFocus(); return;
         }
-        // Validate role selection against allowed values ("User" or "Admin")
         if (!"User".equals(selectedRole) && !"Admin".equals(selectedRole) && !"Customer".equals(selectedRole) /* If Customer is also valid for DAO */) {
             showAlert(Alert.AlertType.WARNING, "Vai trò không hợp lệ", "Vui lòng chọn 'User' hoặc 'Admin'.");
             roleComboBoxInfo.requestFocus(); return;
@@ -198,33 +185,17 @@ public class InforController implements Initializable {
         currentUser.setGender(genderComboBoxInfo.getValue());
         currentUser.setPhone_number(phoneFieldInfo.getText().trim());
         currentUser.setAddress(addressAreaInfo.getText().trim());
-        // currentUser.setProfile_picture_url(...); // Image logic removed
-
         String newRole = roleComboBoxInfo.getValue();
-        // IMPORTANT: If your UserDAO.updateUserRole expects "Customer" for a non-admin,
-        // and your ComboBox shows "User", you might need a mapping here.
-        // e.g., if (newRole.equals("User")) newRoleForDAO = "Customer";
-        // For simplicity, I'm assuming the ComboBox value ("User" or "Admin") is directly usable.
 
         try {
-            // 1. Update general user information (excluding role and image)
-            // UserDAO.updateUserGeneralInfo still needed for these fields
             boolean generalInfoUpdated = UserDAO.updateUserGeneralInfo(currentUser);
 
-            // 2. Update role if it has changed
             boolean roleUpdated = false;
             boolean roleUpdateAttempted = false;
             if (!originalRole.equals(newRole)) {
                 roleUpdateAttempted = true;
-                // UserDAO.updateUserRole expects "Admin" or "Customer"
                 String roleForDAO = newRole;
                 if ("User".equals(newRole) && !"Customer".equals(originalRole) && !"Admin".equals(originalRole) ) {
-                    // This logic might need adjustment based on how UserDAO.updateUserRole handles "User" vs "Customer"
-                    // If "User" in UI should map to "Customer" in DB for non-admins:
-                    // roleForDAO = "Customer";
-                    // But if your DAO handles "User" correctly, this isn't needed.
-                    // Given UserDAO only accepts "Admin" or "Customer", this might be an issue.
-                    // Forcing "User" to become "Customer" if it's not already an admin:
                     if(!newRole.equals("Admin")) roleForDAO = "Customer"; else roleForDAO = "Admin";
                 }
 
@@ -296,11 +267,7 @@ public class InforController implements Initializable {
         phoneFieldInfo.clear();
         roleComboBoxInfo.getSelectionModel().clearSelection();
         addressAreaInfo.clear();
-        // userImageViewInfo.setImage(null); // Image display removed
     }
-
-    // getStage() method can be removed if not used by other parts after image removal.
-    // For now, keeping it as showAlert might theoretically need it, though unlikely for modal alerts.
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);

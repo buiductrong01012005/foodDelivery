@@ -95,7 +95,7 @@ public class AdminManageUsersController implements Initializable {
     }
 
     // --- Load và hiển thị dữ liệu ---
-    private void loadAndDisplayUserData() {
+    void loadAndDisplayUserData() {
         if (userTableManage == null) return;
         userTableManage.setPlaceholder(new Label("Đang tải dữ liệu..."));
 
@@ -126,7 +126,6 @@ public class AdminManageUsersController implements Initializable {
     }
 
     private void filterUserData(String keyword) {
-        // Logic lọc giữ nguyên từ controller cũ
         if (userTableManage == null) return;
         if (allUsersList.isEmpty() && (keyword == null || keyword.isEmpty())) {
             userTableManage.setItems(allUsersList);
@@ -147,7 +146,6 @@ public class AdminManageUsersController implements Initializable {
     }
 
     private boolean userMatchesKeyword(User user, String lowerCaseKeyword) {
-        // Logic kiểm tra khớp từ khóa giữ nguyên
         if (user == null) return false;
         return String.valueOf(user.getUser_id()).contains(lowerCaseKeyword) ||
                 (user.getFull_name() != null && user.getFull_name().toLowerCase().contains(lowerCaseKeyword)) ||
@@ -200,7 +198,6 @@ public class AdminManageUsersController implements Initializable {
     }
 
     // --- Các hàm helper (getSelectedUser, confirmAndUpdateRole, etc.) ---
-    // Chuyển từ AdminController cũ vào đây
     private User getSelectedUser() {
         if (userTableManage == null || userTableManage.getSelectionModel() == null) {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Bảng người dùng không khả dụng.");

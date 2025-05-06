@@ -53,6 +53,7 @@
                 <fx:include fx:id="manageUsersView" managed="false" source="AdminManageUser.fxml" visible="false" />
                 <fx:include fx:id="manageFoodView" managed="false" source="AdminManageFood.fxml" visible="false" />
                 <fx:include fx:id="userInfoView" managed="false" source="AdminInformation.fxml" visible="false" />
+                <fx:include fx:id="foodInfoView" source="AdminFoodInformation.fxml" visible="false" managed="false"/>
             </children>
         </StackPane>
     </center>

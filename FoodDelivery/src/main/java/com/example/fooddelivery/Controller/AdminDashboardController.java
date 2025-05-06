@@ -110,24 +110,21 @@ public class AdminDashboardController implements Initializable {
             boolean foodError = false;
 
             try {
-                users = UserDAO.getAllUsers(); // Tạm thời lấy tất cả
+                users = UserDAO.getAllUsers();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            if (users == null) users = FXCollections.observableArrayList(); // Đảm bảo không null
+            if (users == null) users = FXCollections.observableArrayList();
 
-            // Lấy món ăn sắp hết hàng (ví dụ: status = 'Unavailable')
-            // Bạn cần tạo phương thức này trong FoodDAO
-            // foods = FoodDAO.getFoodsByStatus("Unavailable");
             try {
-                foods = FoodDAO.getAllFoods(); // Tạm thời lấy tất cả
+                foods = FoodDAO.getAllFoods();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
             if (foods == null) foods = FXCollections.observableArrayList();
 
-            // Tính toán thống kê từ dữ liệu food đã lấy
-            ObservableList<Food> allFoodsForCount = null; // Lấy lại hoặc dùng list trên nếu đã lấy hết
+
+            ObservableList<Food> allFoodsForCount = null;
             try {
                 allFoodsForCount = FoodDAO.getAllFoods();
             } catch (SQLException e) {
@@ -148,14 +145,14 @@ public class AdminDashboardController implements Initializable {
 
             try {
                 // TODO: Gọi DAO để lấy doanh thu thực tế
-                // dailyRev = formatCurrency(StatisticsDAO.getTodayRevenue());
-                // monthlyRev = formatCurrency(StatisticsDAO.getCurrentMonthRevenue());
+//                 dailyRev = formatCurrency(StatisticsDAO.getTodayRevenue());
+//                 monthlyRev = formatCurrency(StatisticsDAO.getCurrentMonthRevenue());
                 dailyRev = "5,500,000 VND"; // Dữ liệu giả
                 monthlyRev = "150,000,000 VND"; // Dữ liệu giả
 
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Background: Error loading revenue stats", e);
-                // Để giá trị là "[Lỗi]"
+
             }
 
 
@@ -200,7 +197,7 @@ public class AdminDashboardController implements Initializable {
         // Cập nhật bảng Food
         if (foodTableDashboard != null) {
             if (!foodError) {
-                foodTableDashboard.setItems(foods); // Hiển thị list food (đã lọc nếu cần)
+                foodTableDashboard.setItems(foods);
                 foodTableDashboard.setPlaceholder(new Label(foods.isEmpty() ? "Không có món ăn sắp hết hàng." : ""));
             } else {
                 foodTableDashboard.getItems().clear();
@@ -232,9 +229,5 @@ public class AdminDashboardController implements Initializable {
             alert.showAndWait();
         });
     }
-
-    // --- Các hàm xử lý sự kiện khác (ví dụ: nút chi tiết) ---
-    // @FXML private void handleUserDetailsAction(ActionEvent event) { ... }
-    // @FXML private void handleFoodDetailsAction(ActionEvent event) { ... }
 
 }
