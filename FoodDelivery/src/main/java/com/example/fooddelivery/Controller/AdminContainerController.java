@@ -1,6 +1,6 @@
 package com.example.fooddelivery.Controller;
 import com.example.fooddelivery.Main;
-import com.example.fooddelivery.Model.Food; // <<<< THÊM IMPORT NẾU CHƯA CÓ
+import com.example.fooddelivery.Model.Food;
 import com.example.fooddelivery.Model.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,6 +28,8 @@ public class AdminContainerController implements Initializable {
     private AnchorPane userInfoView;
     @FXML
     private AnchorPane foodInfoView;
+    @FXML
+    private AnchorPane manageOrderView;
 
     // --- Child Controllers ---
     @FXML
@@ -40,6 +42,8 @@ public class AdminContainerController implements Initializable {
     private InforController userInfoViewController;
     @FXML
     private FoodInforController foodInfoViewController;
+    @FXML
+    private AdminManageOrderController manageOrderViewController;
 
     @FXML
     private Button dashboardBtn, foodBtn, orderBtn, userBtn, logOutBtn;
@@ -103,6 +107,8 @@ public class AdminContainerController implements Initializable {
                 case "manageFoodView":
                     if (manageFoodViewController != null) manageFoodViewController.loadAndDisplayFoodData();
                     break;
+                case "manageOrderView":
+                    if (manageOrderViewController != null) manageOrderViewController.loadOrderData();
             }
         }
     }
@@ -118,7 +124,9 @@ public class AdminContainerController implements Initializable {
     }
 
     @FXML
-    void showManageOrders(ActionEvent event) { /* ... */ }
+    void showManageOrders(ActionEvent event) {
+        showPane(manageOrderView);
+    }
 
     @FXML
     void showManageUsers(ActionEvent event) {

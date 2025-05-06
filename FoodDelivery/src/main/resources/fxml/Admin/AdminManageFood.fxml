@@ -28,7 +28,7 @@
                 <!-- Search elements -->
                 <HBox alignment="CENTER_LEFT" spacing="10.0" AnchorPane.leftAnchor="0.0">
                     <children>
-                        <TextField fx:id="searchFoodField" onAction="#onSearchFoodKeywordInput" prefWidth="300.0" promptText="Nhập tên món ăn...">
+                        <TextField fx:id="searchFoodField" onAction="#onSearchFoodKeywordInput" prefWidth="313.0" promptText="Nhập tên món ăn...">
                      <HBox.margin>
                         <Insets left="73.0" />
                      </HBox.margin></TextField>
