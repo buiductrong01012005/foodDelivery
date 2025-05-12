@@ -144,4 +144,8 @@ public class Food {
     public void setCategory_name(String category_name) {
         this.category_name = category_name;
     }
+
+    public String getImagePath() {
+        return image_url;
+    }
 }

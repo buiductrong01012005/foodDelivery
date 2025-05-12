@@ -1,4 +1,5 @@
 package com.example.fooddelivery.Controller;
+
 import com.example.fooddelivery.Dao.UserDAO;
 import com.example.fooddelivery.Model.User;
 import javafx.collections.FXCollections;
@@ -7,17 +8,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+
+import java.io.InputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+
 public class InforController implements Initializable {
     @FXML private AnchorPane userInfoPaneRoot;
     @FXML private Label infoPaneTitleLabel;
-    @FXML private ImageView userImageViewInfo; // FXML element, image display logic removed
-
+    @FXML private ImageView userImageViewInfo;
 
     @FXML private Label fullNameLabelInfo;
     @FXML private Label dobLabelInfo;
@@ -26,7 +30,6 @@ public class InforController implements Initializable {
     @FXML private Label phoneLabelInfo;
     @FXML private Label roleLabelInfo;
     @FXML private Label addressLabelInfo;
-
 
     @FXML private TextField fullNameFieldInfo;
     @FXML private DatePicker dobPickerInfo;
@@ -48,10 +51,32 @@ public class InforController implements Initializable {
 
     private AdminContainerController adminContainerController;
 
+
+    private Image defaultProfileImage = null;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        defaultProfileImage = loadDefaultImage();
+        userImageViewInfo.setImage(defaultProfileImage);
+
         genderComboBoxInfo.setItems(FXCollections.observableArrayList("Male", "Female", "Other"));
         roleComboBoxInfo.setItems(FXCollections.observableArrayList("Customer", "Admin"));
+    }
+
+    private Image loadDefaultImage() {
+        String imagePath = "/images/profile_icon.png";
+        try {
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream != null) {
+                return new Image(imageStream);
+            } else {
+                System.err.println("Không tìm thấy ảnh mặc định tại resource: " + imagePath);
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi khi tải ảnh mặc định từ resource: " + imagePath + " - " + e.getMessage());
+            return null;
+        }
     }
 
     public void setCurrentAdminId(int adminId) {
@@ -72,9 +97,13 @@ public class InforController implements Initializable {
 
         if (currentUser == null) {
             handleNoUser();
+            // Đảm bảo ảnh mặc định vẫn hiển thị khi không có user
+            userImageViewInfo.setImage(defaultProfileImage);
             return;
         }
         this.originalRole = currentUser.getRole();
+
+        userImageViewInfo.setImage(defaultProfileImage);
         populateDataFromCurrentUser();
         setUIMode(isEditMode);
     }
@@ -83,11 +112,15 @@ public class InforController implements Initializable {
         clearAllFields();
         infoPaneTitleLabel.setText("Không có dữ liệu người dùng");
         setButtonsDisabled(true);
+        userImageViewInfo.setImage(defaultProfileImage);
     }
 
     private void setButtonsDisabled(boolean disabled) {
         saveInfoButton.setDisable(disabled);
         editAdminInfoButton.setDisable(disabled);
+        // Các nút khác có thể cần disable/enable tùy logic
+        // closeInfoButton.setDisable(disabled);
+        // cancelInfoButton.setDisable(disabled);
     }
 
     private void populateDataFromCurrentUser() {
@@ -102,7 +135,11 @@ public class InforController implements Initializable {
         addressLabelInfo.setText(getOrDefault(currentUser.getAddress()));
 
         fullNameFieldInfo.setText(currentUser.getFull_name());
-        dobPickerInfo.setValue(currentUser.getDate_of_birth());
+        if (currentUser.getDate_of_birth() != null) {
+            dobPickerInfo.setValue(currentUser.getDate_of_birth());
+        } else {
+            dobPickerInfo.setValue(null);
+        }
         genderComboBoxInfo.setValue(currentUser.getGender());
         emailFieldInfo.setText(currentUser.getEmail());
         phoneFieldInfo.setText(currentUser.getPhone_number());
@@ -132,15 +169,28 @@ public class InforController implements Initializable {
         setElementVisibility(roleComboBoxInfo, isEditing);
         setElementVisibility(addressLabelInfo, !isEditing);
         setElementVisibility(addressAreaInfo, isEditing);
+
         setElementVisibility(saveInfoButton, isEditing);
         setElementVisibility(cancelInfoButton, isEditing);
         setElementVisibility(closeInfoButton, !isEditing);
 
+
         boolean isAdminViewingSelf = loggedInAdmin != null && currentUser != null && loggedInAdmin.getUser_id() == currentUser.getUser_id();
         setElementVisibility(editAdminInfoButton, !isEditing && isAdminViewingSelf);
 
+        boolean canEditRole = loggedInAdmin != null && currentUser != null; //
+        roleComboBoxInfo.setDisable(!isEditing || !canEditRole);
+
+
         if (currentUser != null) {
             setButtonsDisabled(false);
+            saveInfoButton.setDisable(!isEditing);
+            cancelInfoButton.setDisable(!isEditing);
+            closeInfoButton.setDisable(isEditing);
+            editAdminInfoButton.setDisable(isEditing || !isAdminViewingSelf);
+
+        } else {
+            setButtonsDisabled(true);
         }
     }
 
@@ -157,6 +207,7 @@ public class InforController implements Initializable {
             return;
         }
 
+        // --- VALIDATION (Thêm/Cải thiện) ---
         if (fullNameFieldInfo.getText() == null || fullNameFieldInfo.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Họ và tên không được để trống.");
             fullNameFieldInfo.requestFocus(); return;
@@ -169,68 +220,99 @@ public class InforController implements Initializable {
             showAlert(Alert.AlertType.WARNING, "Ngày sinh không hợp lệ", "Ngày sinh không thể ở tương lai.");
             dobPickerInfo.requestFocus(); return;
         }
+        if (genderComboBoxInfo.getValue() == null || genderComboBoxInfo.getValue().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Giới tính không được để trống.");
+            genderComboBoxInfo.requestFocus(); return;
+        }
+
+        String email = emailFieldInfo.getText().trim();
+        if (email.isEmpty() || !email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            showAlert(Alert.AlertType.WARNING, "Email không hợp lệ", "Vui lòng nhập địa chỉ email hợp lệ.");
+            emailFieldInfo.requestFocus(); return;
+        }
+
+        String phone = phoneFieldInfo.getText().trim();
+        if (!phone.isEmpty() && !phone.matches("\\d+")) { // Chỉ cho phép số
+            showAlert(Alert.AlertType.WARNING, "Số điện thoại không hợp lệ", "Số điện thoại chỉ được chứa chữ số.");
+            phoneFieldInfo.requestFocus(); return;
+        }
+
+
         String selectedRole = roleComboBoxInfo.getValue();
         if (selectedRole == null || selectedRole.trim().isEmpty()){
             showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Vai trò không được để trống.");
             roleComboBoxInfo.requestFocus(); return;
         }
-        if (!"User".equals(selectedRole) && !"Admin".equals(selectedRole) && !"Customer".equals(selectedRole) /* If Customer is also valid for DAO */) {
-            showAlert(Alert.AlertType.WARNING, "Vai trò không hợp lệ", "Vui lòng chọn 'User' hoặc 'Admin'.");
+
+        if (!"Customer".equals(selectedRole) && !"Admin".equals(selectedRole)) {
+            showAlert(Alert.AlertType.WARNING, "Vai trò không hợp lệ", "Vui lòng chọn 'Customer' hoặc 'Admin'.");
             roleComboBoxInfo.requestFocus(); return;
         }
+        // --- END VALIDATION ---
 
 
+        // --- UPDATE USER OBJECT ---
         currentUser.setFull_name(fullNameFieldInfo.getText().trim());
         currentUser.setDate_of_birth(dobPickerInfo.getValue());
         currentUser.setGender(genderComboBoxInfo.getValue());
-        currentUser.setPhone_number(phoneFieldInfo.getText().trim());
+        currentUser.setEmail(email);
+        currentUser.setPhone_number(phone);
         currentUser.setAddress(addressAreaInfo.getText().trim());
         String newRole = roleComboBoxInfo.getValue();
+        // --- END UPDATE USER OBJECT ---
+
 
         try {
+
             boolean generalInfoUpdated = UserDAO.updateUserGeneralInfo(currentUser);
 
             boolean roleUpdated = false;
             boolean roleUpdateAttempted = false;
+            // Chỉ cập nhật role nếu nó thực sự thay đổi VÀ người dùng có quyền (kiểm tra lại quyền nếu cần)
             if (!originalRole.equals(newRole)) {
+
                 roleUpdateAttempted = true;
-                String roleForDAO = newRole;
-                if ("User".equals(newRole) && !"Customer".equals(originalRole) && !"Admin".equals(originalRole) ) {
-                    if(!newRole.equals("Admin")) roleForDAO = "Customer"; else roleForDAO = "Admin";
-                }
-
-
-                roleUpdated = UserDAO.updateUserRole(currentUser.getUser_id(), roleForDAO);
+                roleUpdated = UserDAO.updateUserRole(currentUser.getUser_id(), newRole);
                 if (roleUpdated) {
-                    currentUser.setRole(newRole); // Update role in current object if DB succeeded
+                    currentUser.setRole(newRole);
+                    originalRole = newRole;
                 } else {
                     showAlert(Alert.AlertType.WARNING, "Cập nhật Vai trò Thất bại",
-                            "Không thể cập nhật vai trò. Vai trò '" + roleForDAO + "' có thể không hợp lệ hoặc có lỗi.");
-                    roleComboBoxInfo.setValue(originalRole); // Revert UI
+                            "Không thể cập nhật vai trò thành '" + newRole + "'. Vui lòng thử lại hoặc liên hệ quản trị viên.");
+                    roleComboBoxInfo.setValue(originalRole);
                 }
             }
 
-            if (generalInfoUpdated || (roleUpdateAttempted && roleUpdated) || (!roleUpdateAttempted && generalInfoUpdated) ) {
-                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thông tin người dùng đã được cập nhật.");
+            // Thông báo kết quả
+            if (generalInfoUpdated || (roleUpdateAttempted && roleUpdated)) {
+                String message = "Thông tin người dùng đã được cập nhật.";
+                if (roleUpdateAttempted && !roleUpdated) {
+                    message += "\nTuy nhiên, cập nhật vai trò không thành công.";
+                }
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", message);
                 if (adminContainerController != null) {
                     adminContainerController.finishedUserInfoAction();
                 }
+
             } else if (roleUpdateAttempted && !roleUpdated && !generalInfoUpdated) {
-                showAlert(Alert.AlertType.ERROR, "Lỗi Cập Nhật", "Cập nhật vai trò thất bại và không có thông tin khác được thay đổi.");
+                showAlert(Alert.AlertType.ERROR, "Lỗi Cập Nhật", "Cập nhật vai trò thất bại và không có thông tin nào khác được thay đổi.");
             }
             else if (!generalInfoUpdated && !roleUpdateAttempted) {
-                showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Không có thay đổi nào được thực hiện.");
+                showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Không có thay đổi nào được lưu.");
+                if (adminContainerController != null) {
+                    adminContainerController.finishedUserInfoAction();
+                }
             }
-
-
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Lỗi Cơ Sở Dữ Liệu", "Lỗi khi cập nhật thông tin: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+
     @FXML
     void onCancelInfoButtonClick(ActionEvent event) {
+
         if (adminContainerController != null) {
             adminContainerController.finishedUserInfoAction();
         }
@@ -260,13 +342,20 @@ public class InforController implements Initializable {
         roleLabelInfo.setText(na);
         addressLabelInfo.setText(na);
 
+        userImageViewInfo.setImage(defaultProfileImage);
+
         fullNameFieldInfo.clear();
         dobPickerInfo.setValue(null);
         genderComboBoxInfo.getSelectionModel().clearSelection();
+
         emailFieldInfo.clear();
         phoneFieldInfo.clear();
         roleComboBoxInfo.getSelectionModel().clearSelection();
         addressAreaInfo.clear();
+
+        emailFieldInfo.setEditable(true);
+        roleComboBoxInfo.setDisable(false);
+
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
