@@ -51,7 +51,10 @@ public class FoodDetailController {
         txtQuantity.setText("1");
 
         try {
-            imgFood.setImage(new Image(food.getImage_url(), true));
+            String imagePath = "/"+ food.getImage_url();
+            Image image = new Image(getClass().getResource(imagePath).toExternalForm());
+            imgFood.setImage(image);
+
         } catch (Exception e) {
             System.out.println("Không thể load ảnh: " + e.getMessage());
         }
