@@ -169,7 +169,7 @@ public class FoodInforController implements Initializable {
         if (filename == null || filename.trim().isEmpty()) {
             return null;
         }
-        String resourcePath = "../images/" + filename.trim();
+        String resourcePath = "..resources/images/" + filename.trim();
         try {
             InputStream imageStream = getClass().getResourceAsStream(resourcePath);
             if (imageStream != null) {
