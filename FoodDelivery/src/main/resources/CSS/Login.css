@@ -1,0 +1,12 @@
+.lamMo {
+    -fx-opacity: 0.75;
+}
+.login-form{
+    -fx-background-color:linear-gradient(to bottom right, #00CCCC, #0066FF, #66CCFF);
+}
+.login-btn{
+    -fx-background-color:#FF0000;
+    -fx-background-radius:15px;
+    -fx-text-fill:#fff;
+    -fx-font-size:15px;
+}
