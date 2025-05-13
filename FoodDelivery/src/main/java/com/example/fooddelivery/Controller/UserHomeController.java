@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,20 +33,24 @@ public class UserHomeController {
     @FXML private TextField searchField;
     @FXML private GridPane gridPane;
 
-    public void initialize() {
+    public void initialize() throws SQLException {
         // Gán sự kiện tìm kiếm
         searchField.textProperty().addListener((obs, oldText, newText) -> {
             if (!newText.isEmpty()) {
                 searchMeal(newText.trim());
             } else {
-                loadLocalFoods(); // Reset lại danh sách nếu bỏ tìm
+                try {
+                    loadLocalFoods(); // Reset lại danh sách nếu bỏ tìm
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
         loadLocalFoods(); // Mặc định load tất cả món từ DB
     }
 
-    private void loadLocalFoods() {
+    private void loadLocalFoods() throws SQLException {
         gridPane.getChildren().clear();
         List<Food> foods = FoodDAO.getAllFoods();
 
