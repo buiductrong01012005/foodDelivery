@@ -134,7 +134,9 @@ public class AdminContainerController implements Initializable {
     }
 
     @FXML
-    void handleLogout(ActionEvent event) { /* ... */ }
+    void handleLogout(ActionEvent event) {
+        Main.showLoginView();
+    }
 
     // --- User Information Coordination
     public void requestUserView(User userToView) {

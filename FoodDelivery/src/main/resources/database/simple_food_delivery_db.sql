@@ -218,33 +218,54 @@ INSERT INTO `users` (`user_id`, `full_name`, `email`, `password_hash`, `date_of_
 -- Bảng: food_categories
 
 INSERT INTO `food_categories` (`category_id`, `name`, `description`, `image_url`, `is_active`) VALUES
-(1, 'Cơm Phần', 'Cơm trắng ăn kèm các món mặn, xào, canh', 'https://example.com/cat/comphan.jpg', 1),
-(2, 'Bún/Phở/Mì', 'Các món nước hoặc trộn phổ biến', 'https://example.com/cat/bunphomi.jpg', 1),
-(3, 'Bánh Mì', 'Bánh mì kẹp thịt, pate, chả các loại', 'https://example.com/cat/banhmi.jpg', 1),
-(4, 'Món Cuốn/Gỏi', 'Các món cuốn và gỏi thanh mát', 'https://example.com/cat/goicuon.jpg', 1),
-(5, 'Đồ Ăn Vặt', 'Xiên que, bánh tráng, đồ chiên...', 'https://example.com/cat/anvat.jpg', 1),
-(6, 'Món Chay', 'Các món ăn dành cho người ăn chay', 'https://example.com/cat/monchay.jpg', 1),
-(7, 'Tráng Miệng', 'Chè, bánh ngọt, trái cây', 'https://example.com/cat/trangmieng.jpg', 1),
-(8, 'Đồ Uống', 'Trà sữa, cà phê, nước ép, sinh tố', 'https://example.com/cat/douong.jpg', 1),
+(1, 'Cơm Phần', 'Cơm trắng ăn kèm các món mặn, xào, canh', 'images/comphan.jpg', 1),
+(2, 'Bún/Phở/Mì', 'Các món nước hoặc trộn phổ biến', 'images/bunphomi.jpg', 1),
+(3, 'Bánh Mì', 'Bánh mì kẹp thịt, pate, chả các loại', 'images/banhmi.jpg', 1),
+(4, 'Món Cuốn/Gỏi', 'Các món cuốn và gỏi thanh mát', 'images/goicuon.jpg', 1),
+(5, 'Đồ Ăn Vặt', 'Xiên que, bánh tráng, đồ chiên...', 'images/anvat.jpg', 1),
+(6, 'Món Chay', 'Các món ăn dành cho người ăn chay', 'images/monchay.jpg', 1),
+(7, 'Tráng Miệng', 'Chè, bánh ngọt, trái cây', 'images/trangmieng.jpg', 1),
+(8, 'Đồ Uống', 'Trà sữa, cà phê, nước ép, sinh tố', 'images/douong.jpg', 1),
 (9, 'Món Nhậu', 'Các món phù hợp lai rai', NULL, 1),
-(10, 'Healthy Food', 'Đồ ăn lành mạnh, salad, eat clean', 'https://example.com/cat/healthy.jpg', 1);
+(10, 'Healthy Food', 'Đồ ăn lành mạnh, salad, eat clean', 'images/healthy.jpg', 1);
 
 
 -- Bảng: foods (Do Admin quản lý)
 
 INSERT INTO `foods` (`food_id`, `category_id`, `name`, `description`, `price`, `availability_status`, `image_url`, `created_by`, `updated_by`) VALUES
-(1, 1, 'Cơm Sườn Bì Chả', 'Cơm tấm nóng hổi với sườn cốt lết nướng, bì heo và chả trứng', 45000.00, 'Available', 'https://example.com/food/comsuonbicha.jpg', 11, 11),
-(2, 1, 'Cơm Gà Rôti', 'Đùi gà được rôti vàng óng, da giòn, thịt mềm, ăn kèm cơm trắng', 50000.00, 'Available', 'https://example.com/food/comgaroti.jpg', 11, 12),
-(3, 2, 'Bún Chả Hà Nội', 'Bún tươi, chả nướng than hoa thơm lừng, nem rán (tùy chọn), rau sống và nước chấm chua ngọt', 55000.00, 'Available', 'https://example.com/food/buncha.jpg', 12, 12),
-(4, 2, 'Phở Bò Đặc Biệt', 'Tô phở đầy đặn với tái, nạm, gân, gầu, nước dùng đậm đà', 65000.00, 'Available', 'https://example.com/food/phobodb.jpg', 11, 11),
-(5, 3, 'Bánh Mì Thịt Nướng', 'Bánh mì giòn kẹp thịt nướng tẩm ướp đậm đà, đồ chua, rau thơm', 25000.00, 'Available', 'https://example.com/food/banhmithitnuong.jpg', 12, 12),
-(6, 4, 'Gỏi Cuốn Tôm Thịt', 'Bánh tráng cuốn bún, tôm luộc, thịt ba chỉ luộc, rau sống, chấm mắm nêm hoặc tương đen', 10000.00, 'Available', 'https://example.com/food/goicuon.jpg', 11, 11),
-(7, 5, 'Bánh Tráng Trộn Đặc Biệt', 'Bánh tráng cắt sợi trộn xoài xanh, khô bò, trứng cút, rau răm, đậu phộng, nước sốt me', 25000.00, 'Unavailable', 'https://example.com/food/banhtrangtron.jpg', 11, 12),
-(8, 8, 'Trà Sữa Trân Châu Đường Đen', 'Trà sữa béo ngậy kết hợp trân châu đường đen dai ngon', 40000.00, 'Available', 'https://example.com/food/trasuadd.jpg', 12, 12),
-(9, 7, 'Chè Khúc Bạch', 'Thạch khúc bạch mềm mịn, phô mai, nhãn lồng, hạnh nhân lát trong nước đường phèn thanh mát', 30000.00, 'Available', 'https://example.com/food/chekhucbach.jpg', 11, 11),
-(10, 6, 'Cơm Chay Thập Cẩm', 'Cơm trắng ăn kèm nhiều loại rau củ xào, đậu hũ chiên, nấm kho', 35000.00, 'Available', 'https://example.com/food/comchay.jpg', 11, 11),
-(11, 2, 'Mì Ý Sốt Bò Bằm', 'Mì Ý với sốt cà chua và thịt bò bằm đậm đà', 60000.00, 'Available', 'https://example.com/food/miy.jpg', 12, 12),
-(12, 8, 'Nước Ép Cam Tươi', '100% cam tươi vắt nguyên chất', 30000.00, 'Available', 'https://example.com/food/camep.jpg', 11, 11);
+(1, 1, 'Cơm Sườn Bì Chả', 'Cơm tấm nóng hổi với sườn cốt lết nướng, bì heo và chả trứng', 45000.00, 'Available', 'images/comsuonbicha.jpg', 11, 11),
+(2, 1, 'Cơm Gà Rôti', 'Đùi gà được rôti vàng óng, da giòn, thịt mềm, ăn kèm cơm trắng', 50000.00, 'Available', 'images/comgaroti.jpg', 11, 12),
+(3, 2, 'Bún Chả Hà Nội', 'Bún tươi, chả nướng than hoa thơm lừng, nem rán (tùy chọn), rau sống và nước chấm chua ngọt', 55000.00, 'Available', 'images/buncha.jpg', 12, 12),
+(4, 2, 'Phở Bò Đặc Biệt', 'Tô phở đầy đặn với tái, nạm, gân, gầu, nước dùng đậm đà', 65000.00, 'Available', 'images/phobodb.jpg', 11, 11),
+(5, 3, 'Bánh Mì Thịt Nướng', 'Bánh mì giòn kẹp thịt nướng tẩm ướp đậm đà, đồ chua, rau thơm', 25000.00, 'Available', 'images/banhmithitnuong.jpg', 12, 12),
+(6, 4, 'Gỏi Cuốn Tôm Thịt', 'Bánh tráng cuốn bún, tôm luộc, thịt ba chỉ luộc, rau sống, chấm mắm nêm hoặc tương đen', 10000.00, 'Available', 'images/goicuon.jpg', 11, 11),
+(7, 5, 'Bánh Tráng Trộn Đặc Biệt', 'Bánh tráng cắt sợi trộn xoài xanh, khô bò, trứng cút, rau răm, đậu phộng, nước sốt me', 25000.00, 'Unavailable', 'images/banhtrangtron.jpg', 11, 12),
+(8, 8, 'Trà Sữa Trân Châu Đường Đen', 'Trà sữa béo ngậy kết hợp trân châu đường đen dai ngon', 40000.00, 'Available', 'images/trasuadd.jpg', 12, 12),
+(9, 7, 'Chè Khúc Bạch', 'Thạch khúc bạch mềm mịn, phô mai, nhãn lồng, hạnh nhân lát trong nước đường phèn thanh mát', 30000.00, 'Available', 'images/chekhucbach.jpg', 11, 11),
+(10, 6, 'Cơm Chay Thập Cẩm', 'Cơm trắng ăn kèm nhiều loại rau củ xào, đậu hũ chiên, nấm kho', 35000.00, 'Available', 'images/comchay.jpg', 11, 11),
+(11, 2, 'Mì Ý Sốt Bò Bằm', 'Mì Ý với sốt cà chua và thịt bò bằm đậm đà', 60000.00, 'Available', 'images/miy.jpg', 12, 12),
+(12, 8, 'Nước Ép Cam Tươi', '100% cam tươi vắt nguyên chất', 30000.00, 'Available', 'images/camep.jpg', 11, 11),
+(13, 1, 'Phở Bò', 'Phở với nước dùng đậm đà, thịt bò thái mỏng, hành tây và rau thơm', 50000.00, 'Available', 'images/phobo.jpg', 12, 12),
+(14, 3, 'Bánh Mì Xíu Mại', 'Bánh mì giòn, xíu mại thơm ngon, nước sốt đặc biệt, ăn kèm rau sống', 20000.00, 'Available', 'images/banhmixiumai.jpg', 12, 12),
+(15, 4, 'Bún Thịt Nướng', 'Bún tươi, thịt nướng, chả giò, đồ chua, rau sống và nước mắm pha', 30000.00, 'Available', 'images/bunthitnuong.jpg', 11, 11),
+(16, 5, 'Bánh Xèo', 'Bánh xèo giòn rụm, ăn kèm với rau sống, thịt heo, tôm và nước mắm chua ngọt', 35000.00, 'Unavailable', 'images/banhxeo.jpg', 12, 12),
+(17, 6, 'Cháo Lòng', 'Cháo trắng, lòng heo, huyết, hành lá và tiêu, ăn kèm dưa chua', 25000.00, 'Available', 'images/chaolong.jpg', 11, 11),
+(18, 7, 'Sushi Tôm Cua', 'Sushi với tôm tươi, cua, và cơm cuộn rong biển, ăn kèm wasabi và nước tương', 70000.00, 'Available', 'images/sushitomcua.jpg', 12, 12),
+(19, 8, 'Hủ Tiếu Nam Vang', 'Mì hủ tiếu nước, thịt heo, tôm, chả lụa, giá, hành ngò', 40000.00, 'Available', 'images/hutieunamvang.jpg', 12, 12),
+(20, 1, 'Bánh Canh Cua', 'Bánh canh với cua tươi, nước dùng đậm đà và rau thơm', 45000.00, 'Available', 'images/banhcanhcua.jpg', 11, 11),
+(21, 2, 'Gà Nướng Mật Ong', 'Gà nướng thơm ngon, thịt mềm, phủ mật ong ngọt ngào', 55000.00, 'Unavailable', 'images/ganuongmatong.jpg', 11, 12),
+(22, 3, 'Bánh Mì Pate', 'Bánh mì giòn, pate thơm béo, dưa leo, rau thơm và nước sốt đặc biệt', 15000.00, 'Available', 'images/banhmipate.jpg', 12, 12),
+(23, 4, 'Bánh Mì Kẹp Xúc Xích', 'Bánh mì giòn kẹp xúc xích, rau sống và nước sốt mayonnaise', 22000.00, 'Available', 'images/banhmikepxucxich.jpg', 12, 12),
+(24, 5, 'Chè Sầu Riêng', 'Chè sầu riêng ngọt bùi, ăn kèm thạch, đậu xanh và dừa tươi', 35000.00, 'Available', 'images/chesaurieng.jpg', 12, 12),
+(25, 6, 'Cơm Gà Xối Mỡ', 'Cơm trắng ăn kèm gà xối mỡ, rau xào và nước mắm chua ngọt', 38000.00, 'Available', 'images/comgaxoimo.jpg', 11, 11),
+(26, 7, 'Pizza Hải Sản', 'Pizza với các loại hải sản tươi ngon, phô mai và sốt cà chua', 85000.00, 'Available', 'images/pizzahaisan.jpg', 12, 12),
+(27, 8, 'Bánh Bao Dim Sum', 'Bánh bao hấp với nhân tôm thịt, nấm và nước sốt đặc biệt', 20000.00, 'Available', 'images/banhbaodimsum.jpg', 12, 12),
+(28, 1, 'Mì Quảng', 'Mì Quảng với tôm, thịt heo, bánh tráng và rau sống', 45000.00, 'Available', 'images/miquang.jpg', 12, 12),
+(29, 2, 'Bánh Khọt', 'Bánh khọt giòn rụm, ăn kèm rau sống và nước mắm chua ngọt', 25000.00, 'Available', 'images/banhkhot.jpg', 11, 12),
+(30, 3, 'Bánh Pía', 'Bánh pía nhân sầu riêng, đậu xanh, và mỡ đường, vỏ mềm dẻo', 18000.00, 'Available', 'images/banhpia.jpg', 12, 12);
+
+
+
 
 
 -- Bảng: addresses (Địa chỉ của Khách hàng)
@@ -329,7 +350,7 @@ INSERT INTO `food_reviews` (`food_review_id`, `order_id`, `user_id`, `food_id`, 
 (3, 6, 1, 11, 5, 'Mì Ý sốt ngon, vừa miệng.'); -- User Lan Anh review Mì Ý
 
 
--- Bảng: order_status_history 
+-- Bảng: order_status_history
 
 -- Order 1 History
 INSERT INTO `order_status_history` (`history_id`, `order_id`, `status`, `changed_at`, `notes`) VALUES
@@ -359,19 +380,6 @@ INSERT INTO `order_status_history` (`history_id`, `order_id`, `status`, `changed
 (14, 6, 'Processing', '2024-05-18 12:35:00', 'Admin 11 xử lý'),
 (15, 6, 'Shipped', '2024-05-18 12:55:00', NULL),
 (16, 6, 'Delivered', '2024-05-18 13:30:00', 'Đã giao thành công');
-
-
-USE simple_food_delivery_db;
-show tables;
-SELECT * FROM carts;
-SELECT * FROM food_categories;
-SELECT * FROM food_reviews;
-SELECT * FROM foods;
-SELECT * FROM order_items;
-SELECT * FROM order_status_history;
-select * FROM orders;
-select * from password_resets;
-select * from users;
 
 
 -- Bảng: password_resets (Ví dụ 1 yêu cầu reset)

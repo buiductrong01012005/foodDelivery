@@ -133,13 +133,13 @@ public class PasswordResetOtpService {
             System.err.println("Lỗi: Mật khẩu mới phải có ít nhất 6 ký tự.");
             return false;
         }
-        String hashedPassword = hashPassword(newPassword);
+
         Connection conn = null;
         boolean success = false;
         try {
             conn = dbConnector.connectDB();
             conn.setAutoCommit(false);
-            boolean userUpdated = updateUserPasswordInternal(conn, email, hashedPassword);
+            boolean userUpdated = updateUserPasswordInternal(conn, email, newPassword);
             if (!userUpdated) {
                 throw new SQLException("Không tìm thấy user với email " + email + " để cập nhật.");
             }
@@ -270,12 +270,12 @@ public class PasswordResetOtpService {
     }
 
 
-    /** Băm mật khẩu */
-    private String hashPassword(String plainPassword) {
-        // (Giữ nguyên)
-        if (plainPassword == null) throw new IllegalArgumentException("Mật khẩu không được null.");
-        return BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
-    }
+//    /** Băm mật khẩu */
+//    private String hashPassword(String plainPassword) {
+//        // (Giữ nguyên)
+//        if (plainPassword == null) throw new IllegalArgumentException("Mật khẩu không được null.");
+//        return BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
+//    }
 
     /** Xóa OTP khỏi DB (Hàm nội bộ) */
     private void deleteOtpRecordInternal(Connection conn, String otp) throws SQLException {
