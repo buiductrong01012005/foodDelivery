@@ -10,22 +10,34 @@ module org.example.fooddelivery {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+
     requires java.sql;
     requires jbcrypt;
     requires com.mailjet.api;
     requires org.json;
 
-    // ✅ Thêm dòng này để sử dụng thư viện Gson
+    // ✅ Thư viện tạo QR code
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
+
+    // ✅ JavaFX Swing + AWT dùng để hiển thị ảnh QR code
+    requires java.desktop;
+    requires javafx.swing;
+
+    // ✅ Thư viện xử lý JSON nếu dùng Gson
     requires com.google.gson;
 
-    // ✅ Mở package chứa Model để Gson có thể truy cập bằng reflection
+    // ✅ Mở model cho Gson và JavaFX table/view binding
     opens com.example.fooddelivery.Model to com.google.gson, javafx.base;
 
-    // Mở package chứa Controller cho JavaFX FXML
+    // ✅ Mở các gói cho JavaFX để load FXML
     opens com.example.fooddelivery to javafx.fxml;
     opens com.example.fooddelivery.Controller to javafx.fxml;
+    opens com.example.fooddelivery.Utils to javafx.fxml;
 
-
+    // ✅ Export để các module khác có thể sử dụng nếu cần
     exports com.example.fooddelivery;
     exports com.example.fooddelivery.Controller;
+    exports com.example.fooddelivery.Model;
+    exports com.example.fooddelivery.Utils;
 }

@@ -21,8 +21,8 @@ public class SidebarController {
     @FXML
     private void initialize() {
         homeBtn1.setOnAction(e -> loadView("/fxml/User/UserHome.fxml"));
-        personalBtn.setOnAction(e -> loadView("/fxml/User/UserFood.fxml"));
-        historyBtn.setOnAction(e -> loadView("/fxml/User/UserShoppingCart.fxml"));
+        personalBtn.setOnAction(e -> loadView("/fxml/User/UserShoppingCart.fxml"));
+        historyBtn.setOnAction(e -> loadView("/fxml/User/UserInformation.fxml"));
         logoutBtn.setOnAction(e -> loadView("/fxml/Login.fxml"));
         //homeBtn1.setOnAction(e -> loadView("/fxml/User/UserInformation.fxml")); // hoặc một view khác nếu có
         //homeBtn11.setOnAction(e -> logoutToLogin()); // Đăng xuất

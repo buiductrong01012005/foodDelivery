@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import com.example.fooddelivery.Utils.QrCodeUtil;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -244,6 +245,7 @@ public class CartController {
 
             conn.commit();
             showAlert("Đặt hàng thành công!\nMã đơn: " + orderCode);
+            QrCodeUtil.showQrCode(orderCode);
             loadCartItems();
 
         } catch (Exception e) {

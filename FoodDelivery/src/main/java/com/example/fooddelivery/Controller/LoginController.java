@@ -3,6 +3,7 @@ package com.example.fooddelivery.Controller;
 import com.example.fooddelivery.Main;
 import com.example.fooddelivery.Database.DatabaseConnector;
 import com.example.fooddelivery.Model.User;
+import com.example.fooddelivery.Utils.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -64,6 +65,8 @@ public class LoginController {
                 loggedInAdmin.setFull_name(fullName);
                 loggedInAdmin.setEmail(emailForAdmin);
                 loggedInAdmin.setRole(userRole);
+                // 👉 Lưu vào phiên toàn cục
+                Session.setCurrentUser(loggedInAdmin);
                 showAlert("Đăng nhập thành công", "Chào mừng, " + fullName + "!");
                 if ("Customer".equals(userRole)) {
                     // TODO: Chuyển đến trang chính hoặc dashboard
