@@ -2,11 +2,11 @@ package com.example.fooddelivery.Controller;
 
 import com.example.fooddelivery.Database.DatabaseConnector;
 import com.example.fooddelivery.Model.Food;
+import com.example.fooddelivery.Utils.QrCodeUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import com.example.fooddelivery.Utils.QrCodeUtil;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -224,6 +224,7 @@ public class CartController {
                 VALUES (?, ?, ?, ?, ?)
             """;
             PreparedStatement itemStmt = conn.prepareStatement(insertItem);
+            List<String> productDetails = new ArrayList<>();
             for (CartItem item : items) {
                 double itemSubtotal = item.quantity * item.food.getPrice();
                 itemStmt.setInt(1, orderId);
@@ -232,6 +233,7 @@ public class CartController {
                 itemStmt.setDouble(4, item.food.getPrice());
                 itemStmt.setDouble(5, itemSubtotal);
                 itemStmt.addBatch();
+                productDetails.add(item.food.getName() + " x" + item.quantity);
             }
             itemStmt.executeBatch();
 
@@ -245,7 +247,7 @@ public class CartController {
 
             conn.commit();
             showAlert("Đặt hàng thành công!\nMã đơn: " + orderCode);
-            QrCodeUtil.showQrCode(orderCode);
+            QrCodeUtil.showQrCode(orderCode, totalAmount, productDetails);
             loadCartItems();
 
         } catch (Exception e) {
