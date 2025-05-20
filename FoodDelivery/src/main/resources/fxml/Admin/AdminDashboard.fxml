@@ -57,7 +57,7 @@
         </GridPane>
 
         <!-- Recent Users Table -->
-        <Label layoutX="23.0" layoutY="180.0" text="Người dùng gần đây">
+        <Label layoutX="23.0" layoutY="180.0" text="Danh sách người dùng">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Label>
@@ -74,7 +74,7 @@
         </TableView>
 
         <!-- Low Stock Food Table -->
-        <Label layoutX="23.0" layoutY="475.0" text="Món ăn sắp hết hàng">
+        <Label layoutX="23.0" layoutY="475.0" text="Danh sách món ăn">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Label>
