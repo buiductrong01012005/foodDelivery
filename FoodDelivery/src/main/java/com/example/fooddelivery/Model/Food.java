@@ -148,4 +148,8 @@ public class Food {
     public String getImagePath() {
         return image_url;
     }
+
+    public void setImagePath(String image_url) {
+        this.image_url = image_url;
+    }
 }

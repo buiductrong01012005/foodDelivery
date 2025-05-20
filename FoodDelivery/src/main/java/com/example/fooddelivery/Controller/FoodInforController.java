@@ -1,9 +1,15 @@
 package com.example.fooddelivery.Controller;
+
 import com.example.fooddelivery.Dao.FoodDAO;
 import com.example.fooddelivery.Model.Food;
 import com.example.fooddelivery.Model.ReviewDisplay;
+import com.example.fooddelivery.Utils.NameConvertUtil;
+import com.example.fooddelivery.Service.ImageRenService;
+import com.example.fooddelivery.Service.ImageSearchService;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,37 +20,39 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+
 public class FoodInforController implements Initializable {
+
     public enum FormMode { VIEW, EDIT, ADD }
 
-    private static final String DEFAULT_FOOD_IMAGE_PATH = "/images/default_food.png"; // *** Đường dẫn ảnh mặc định
+    private static final String DEFAULT_FOOD_IMAGE_PATH = "/images/default_food.png";
 
     private FormMode currentMode;
     private Food currentFood;
-    private int currentAdminId = 1; // Sẽ được AdminContainerController set
+    private int currentAdminId = 1;
     private Consumer<Boolean> onCompleteCallback;
     private ObservableList<String> categoryNamesList = FXCollections.observableArrayList();
     private Image defaultFoodImage;
+    // Bỏ currentLoadedImageName vì logic giờ đây sẽ dựa vào currentFood.getImagePath()
+    // hoặc tải mới khi ADD.
 
     @FXML private AnchorPane rootFoodInfoPane;
     @FXML private Label formTitleLabel;
-
     @FXML private ImageView foodImageView;
     @FXML private Label foodNameLabel, categoryNameLabel, priceLabel, statusLabel, descriptionLabel;
-
     @FXML private TextField foodNameField, priceField;
     @FXML private ComboBox<String> categoryComboBox, statusComboBox;
     @FXML private TextArea descriptionArea;
-
     @FXML private Button saveButton, addItemButton, cancelButton, closeButton;
-
     @FXML private TableView<ReviewDisplay> reviewsTableView;
     @FXML private TableColumn<ReviewDisplay, Integer> idColumn;
     @FXML private TableColumn<ReviewDisplay, String> userNameColumnReview;
@@ -59,7 +67,6 @@ public class FoodInforController implements Initializable {
         if (foodImageView != null) {
             foodImageView.setImage(defaultFoodImage);
         }
-
         setupReviewTableColumns();
         loadCategoryNamesToComboBox();
         if (statusComboBox != null) {
@@ -68,7 +75,6 @@ public class FoodInforController implements Initializable {
         setupPriceFieldListener();
     }
 
-    // *** Hàm tải ảnh mặc định ***
     private void loadDefaultFoodImage() {
         try {
             InputStream defaultImageStream = getClass().getResourceAsStream(DEFAULT_FOOD_IMAGE_PATH);
@@ -76,12 +82,12 @@ public class FoodInforController implements Initializable {
                 this.defaultFoodImage = new Image(defaultImageStream);
             } else {
                 System.err.println("Không tìm thấy ảnh mặc định món ăn: " + DEFAULT_FOOD_IMAGE_PATH);
-                this.defaultFoodImage = null;
+                // Không gán null ở đây nữa, để defaultFoodImage có thể vẫn giữ giá trị cũ nếu có
             }
         } catch (Exception e) {
             System.err.println("Lỗi khi tải ảnh mặc định món ăn: " + e.getMessage());
-            this.defaultFoodImage = null;
         }
+        // Nếu defaultFoodImage vẫn là null, loadImageByName sẽ xử lý
     }
 
     private void setupReviewTableColumns() {
@@ -90,51 +96,35 @@ public class FoodInforController implements Initializable {
         emailColumnReview.setCellValueFactory(new PropertyValueFactory<>("userEmail"));
         phoneNumberColumnReview.setCellValueFactory(new PropertyValueFactory<>("userPhoneNumber"));
         reviewColumn.setCellValueFactory(new PropertyValueFactory<>("reviewComment"));
+        reviewsTableView.setPlaceholder(new Label("Chưa có đánh giá cho món ăn này."));
 
         if (statusColumnReview != null) {
-            // Sử dụng PropertyValueFactory. JavaFX sẽ tìm getter có tên getStatus()
             statusColumnReview.setCellValueFactory(new PropertyValueFactory<>("status"));
-
             ObservableList<String> reviewStatusOptions = FXCollections.observableArrayList("Show", "Hide");
             statusColumnReview.setCellFactory(ComboBoxTableCell.forTableColumn(reviewStatusOptions));
-
             statusColumnReview.setOnEditCommit(event -> {
                 ReviewDisplay selectedReview = event.getRowValue();
                 String newStatus = event.getNewValue();
-                String oldStatus = selectedReview.getStatus(); // Lưu lại giá trị cũ để hoàn tác nếu cần
-
+                String oldStatus = selectedReview.getStatus();
                 if (selectedReview != null && newStatus != null && !oldStatus.equals(newStatus)) {
                     try {
-                        // Cập nhật giá trị trong đối tượng Model trước (optimistic update)
                         selectedReview.setStatus(newStatus);
-                        // Cập nhật vào DB
                         boolean success = FoodDAO.updateReviewStatus(selectedReview.getReviewId(), newStatus);
-
                         if (success) {
-                            // Không cần làm gì thêm với selectedReview vì nó đã được cập nhật
-                            // Chỉ cần refresh bảng để đảm bảo UI đồng bộ (mặc dù có thể không cần thiết nếu chỉ 1 dòng thay đổi)
-                            // reviewsTableView.refresh(); // Có thể bỏ qua nếu chỉ có 1 dòng thay đổi và TableView không quá phức tạp
                             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã cập nhật trạng thái bình luận ID: " + selectedReview.getReviewId());
                         } else {
-                            showAlert(Alert.AlertType.ERROR, "Lỗi cập nhật", "Không thể cập nhật trạng thái bình luận vào DB.");
-                            // Hoàn tác thay đổi trên đối tượng Model
                             selectedReview.setStatus(oldStatus);
-                            // Refresh bảng để hiển thị lại giá trị cũ
                             reviewsTableView.refresh();
+                            showAlert(Alert.AlertType.ERROR, "Lỗi cập nhật", "Không thể cập nhật trạng thái bình luận vào DB.");
                         }
                     } catch (SQLException e) {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi DB", "Lỗi khi cập nhật trạng thái bình luận: " + e.getMessage());
-                        e.printStackTrace();
-                        // Hoàn tác thay đổi trên đối tượng Model
                         selectedReview.setStatus(oldStatus);
-                        // Refresh bảng để hiển thị lại giá trị cũ
                         reviewsTableView.refresh();
+                        handleSqlException(e, "cập nhật trạng thái bình luận");
                     }
                 }
             });
         }
-
-        reviewsTableView.setPlaceholder(new Label("Chưa có đánh giá cho món ăn này."));
     }
 
     private void loadCategoryNamesToComboBox() {
@@ -160,35 +150,45 @@ public class FoodInforController implements Initializable {
     public void setCurrentAdminId(int adminId) { this.currentAdminId = adminId; }
 
     public void loadFoodInformation(Food food, FormMode mode, Consumer<Boolean> callback) {
-        this.currentFood = (mode == FormMode.ADD) ? new Food() : food;
         this.currentMode = mode;
         this.onCompleteCallback = callback;
+        if (mode == FormMode.ADD) {
+            this.currentFood = new Food(); // Tạo đối tượng Food mới cho chế độ ADD
+            // Đảm bảo imagePath là null cho món mới
+            this.currentFood.setImagePath(null);
+        } else {
+            this.currentFood = food;
+        }
 
         if (this.currentFood == null && (mode == FormMode.VIEW || mode == FormMode.EDIT)) {
-            handleFormError("Không có dữ liệu món ăn để hiển thị/chỉnh sửa.");
-            if (foodImageView != null) {
-                foodImageView.setImage(defaultFoodImage);
-            }
+            handleFormError("Không có dữ liệu món ăn.");
+            if (foodImageView != null) foodImageView.setImage(defaultFoodImage);
             if (this.onCompleteCallback != null) this.onCompleteCallback.accept(false);
             return;
         }
 
-        if (foodImageView != null) {
-            foodImageView.setImage(defaultFoodImage);
-        }
+        if (foodImageView != null) foodImageView.setImage(defaultFoodImage);
 
         populateDataToControls();
         setUIMode(mode == FormMode.EDIT || mode == FormMode.ADD);
-        loadReviewsForFood( (mode != FormMode.ADD && this.currentFood != null) ? this.currentFood.getFood_id() : -1 );
+        loadReviewsForFood((mode != FormMode.ADD && this.currentFood != null && this.currentFood.getFood_id() > 0) ? this.currentFood.getFood_id() : -1);
     }
 
     private void populateDataToControls() {
-        if (currentFood == null) return;
+        if (currentFood == null) {
+            if (foodImageView != null) foodImageView.setImage(defaultFoodImage);
+            foodNameLabel.setText("[N/A]"); categoryNameLabel.setText("[N/A]"); priceLabel.setText("[N/A]");
+            statusLabel.setText("[N/A]"); descriptionLabel.setText("[N/A]");
+            foodNameField.clear(); categoryComboBox.setValue(null); priceField.clear();
+            statusComboBox.setValue(null); descriptionArea.clear();
+            return;
+        }
 
         if (foodImageView != null) {
-            String imageFilename = currentFood.getImagePath();
-            Image specificFoodImage = loadImageByName(imageFilename);
-            foodImageView.setImage(specificFoodImage != null ? specificFoodImage : defaultFoodImage);
+            // currentFood.getImagePath() trả về TÊN FILE ĐƠN GIẢN (ví dụ: "com-suon.jpg")
+            String imageFilenameFromDB = currentFood.getImagePath();
+            Image specificFoodImage = loadImageByName(imageFilenameFromDB); // loadImageByName tự thêm "/images/"
+            foodImageView.setImage(specificFoodImage); // specificFoodImage sẽ là defaultFoodImage nếu có lỗi
         }
 
         foodNameLabel.setText(getOrDefaultString(currentFood.getName()));
@@ -200,64 +200,76 @@ public class FoodInforController implements Initializable {
 
         foodNameField.setText(currentFood.getName());
         if (categoryComboBox != null) categoryComboBox.setValue(currentFood.getCategory_name());
-        priceField.setText(currentFood.getPrice() > 0 ? String.valueOf((int)currentFood.getPrice()) : "");
+        priceField.setText(currentFood.getPrice() > 0 ? String.valueOf((int) currentFood.getPrice()) : "");
         if (statusComboBox != null) statusComboBox.setValue(currentFood.getAvailability_status());
         descriptionArea.setText(currentFood.getDescription());
         descriptionArea.setWrapText(true);
     }
 
-    // *** Hàm helper để tải ảnh theo tên file từ resources/images ***
-    private Image loadImageByName(String filename) {
-        if (filename == null || filename.trim().isEmpty()) {
-            return null;
+    private Image loadImageByName(String simpleImageFileName) {
+        if (this.defaultFoodImage == null) {
+            loadDefaultFoodImage();
+            if (this.defaultFoodImage == null) {
+                System.err.println("loadImageByName: Ảnh mặc định không thể tải, trả về null.");
+                return null;
+            }
         }
-        String resourcePath = "/" + filename.trim();
+        if (simpleImageFileName == null || simpleImageFileName.trim().isEmpty()) {
+            return defaultFoodImage;
+        }
+        String resourcePath = "/" + simpleImageFileName.trim();
         try {
             InputStream imageStream = getClass().getResourceAsStream(resourcePath);
             if (imageStream != null) {
                 return new Image(imageStream);
             } else {
                 System.err.println("Không tìm thấy resource ảnh: " + resourcePath);
-                return null;
+                return defaultFoodImage;
             }
         } catch (Exception e) {
             System.err.println("Lỗi khi tải resource ảnh: " + resourcePath + " - " + e.getMessage());
-            return null;
+            return defaultFoodImage;
         }
     }
 
+    private void setUIMode(boolean editingFood) {
+        toggleDisplayAndInput(foodNameLabel, foodNameField, !editingFood);
+        toggleDisplayAndInput(categoryNameLabel, categoryComboBox, !editingFood);
+        toggleDisplayAndInput(priceLabel, priceField, !editingFood);
+        toggleDisplayAndInput(statusLabel, statusComboBox, !editingFood);
+        toggleDisplayAndInput(descriptionLabel, descriptionArea, !editingFood);
 
-    private void setUIMode(boolean editing) {
-        toggleDisplayAndInput(foodNameLabel, foodNameField, !editing);
-        toggleDisplayAndInput(categoryNameLabel, categoryComboBox, !editing);
-        toggleDisplayAndInput(priceLabel, priceField, !editing);
-        toggleDisplayAndInput(statusLabel, statusComboBox, !editing);
-        toggleDisplayAndInput(descriptionLabel, descriptionArea, !editing);
+        setNodeVisibility(saveButton, editingFood && currentMode == FormMode.EDIT);
+        setNodeVisibility(addItemButton, editingFood && currentMode == FormMode.ADD);
+        setNodeVisibility(cancelButton, editingFood);
+        setNodeVisibility(closeButton, !editingFood);
 
-        setNodeVisibility(saveButton, editing && currentMode == FormMode.EDIT);
-        setNodeVisibility(addItemButton, editing && currentMode == FormMode.ADD);
-        setNodeVisibility(cancelButton, editing);
-        setNodeVisibility(closeButton, !editing);
-
-        if (currentMode == FormMode.VIEW) formTitleLabel.setText("Chi Tiết Món Ăn");
-        else if (currentMode == FormMode.EDIT) formTitleLabel.setText("Chỉnh Sửa Món Ăn");
-        else formTitleLabel.setText("Thêm Món Ăn Mới");
-
-        if(currentMode == FormMode.ADD) {
-            reviewsTableView.getItems().clear();
-            reviewsTableView.setPlaceholder(new Label("Món mới chưa có đánh giá."));
+        if (currentMode == FormMode.VIEW) {
+            formTitleLabel.setText("Chi Tiết Món Ăn");
+        } else if (currentMode == FormMode.EDIT) {
+            formTitleLabel.setText("Chỉnh Sửa Món Ăn");
+        } else { // ADD Mode
+            formTitleLabel.setText("Thêm Món Ăn Mới");
+            if (foodImageView != null) foodImageView.setImage(defaultFoodImage);
+            foodNameField.clear();
+            if(categoryComboBox != null) categoryComboBox.getSelectionModel().clearSelection();
+            priceField.clear();
+            if(statusComboBox != null) statusComboBox.getSelectionModel().clearSelection();
+            descriptionArea.clear();
+            if (currentFood != null) currentFood.setImagePath(null); // Đảm bảo món mới không có ảnh ban đầu
         }
 
-        // Xử lý bảng review
         if (reviewsTableView != null) {
             boolean canEditReviews = (currentMode == FormMode.EDIT);
             reviewsTableView.setEditable(canEditReviews);
             if (statusColumnReview != null) {
                 statusColumnReview.setEditable(canEditReviews);
-                // statusColumnReview.setVisible(canEditReviews); // Tùy chọn ẩn/hiện cột
+            }
+            if(currentMode == FormMode.ADD) {
+                reviewsTableView.getItems().clear();
+                reviewsTableView.setPlaceholder(new Label("Món mới chưa có đánh giá."));
             }
         }
-
         setNodeVisibility(foodImageView, true);
     }
 
@@ -266,13 +278,12 @@ public class FoodInforController implements Initializable {
         setNodeVisibility(inputField, !showDisplay);
         if (displayLabel != null) displayLabel.setWrapText(true);
         if (inputField instanceof TextArea) ((TextArea) inputField).setWrapText(true);
-
     }
 
     private void loadReviewsForFood(int foodId) {
         if (reviewsTableView == null) return;
         reviewsTableView.getItems().clear();
-        if (foodId <= 0 || currentMode == FormMode.ADD) {
+        if (foodId <= 0) { // Đã bao gồm currentMode == FormMode.ADD vì foodId sẽ <=0
             reviewsTableView.setPlaceholder(new Label(currentMode == FormMode.ADD ? "Món mới chưa có đánh giá." : "Chọn món ăn hợp lệ để xem đánh giá."));
             return;
         }
@@ -311,39 +322,89 @@ public class FoodInforController implements Initializable {
         currentFood.setAvailability_status(statusComboBox.getValue());
         currentFood.setUpdated_by(currentAdminId);
 
-        // *** Xử lý lưu ảnh (Nếu có chức năng upload) ***
-        // TODO: Nếu có chức năng upload ảnh mới, bạn cần:
-        // 1. Lấy đường dẫn file ảnh mới đã upload.
-        // 2. Lưu tên file mới vào currentFood.setImagePath("ten_file_moi.jpg");
-        // 3. Có thể cần copy file ảnh vào thư mục /images nếu chưa có.
-
-        // Thực hiện lưu hoặc thêm vào DB
-        if (currentMode == FormMode.EDIT) {
-            try {
-                if (FoodDAO.updateFood(currentFood)) {
-                    showAlert(Alert.AlertType.INFORMATION, "Thành công", "Món ăn đã được cập nhật.");
-                    finishAction(true); // Báo thành công và dữ liệu đã thay đổi
-                } else {
-                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể cập nhật món ăn. Có thể không có thay đổi nào được thực hiện.");
-                    // Không gọi finishAction(true) nếu không thành công
-                }
-            } catch (SQLException e) { handleSqlException(e, "cập nhật món ăn"); }
-        } else if (currentMode == FormMode.ADD) {
+        if (currentMode == FormMode.ADD) {
             currentFood.setCreated_by(currentAdminId);
-            try {
+            // Luôn cố gắng tìm ảnh tự động cho món mới
+            String foodNameForSearch = currentFood.getName();
+            // Optional: final ProgressIndicator progressIndicator = new ProgressIndicator(); ...
+
+            Task<String> autoFetchTask = new Task<String>() {
+                @Override
+                protected String call() throws Exception {
+                    System.out.println("Đang tìm ảnh cho: " + foodNameForSearch);
+                    List<String> imageUrls = ImageSearchService.searchImageUrls(foodNameForSearch, 1);
+                    if (!imageUrls.isEmpty()) {
+                        String imageUrl = imageUrls.get(0);
+                        String baseFileName = NameConvertUtil.toSlug(foodNameForSearch);
+                        return ImageRenService.downloadAndSaveImage(imageUrl, baseFileName);
+                    }
+                    return null; // Không tìm thấy URL
+                }
+            };
+
+            autoFetchTask.setOnSucceeded(workerStateEvent -> {
+                // Optional: remove progressIndicator
+                String downloadedSimpleFileName = autoFetchTask.getValue();
+                if (downloadedSimpleFileName != null) {
+                    currentFood.setImagePath("images/" + downloadedSimpleFileName); // Lưu TÊN FILE đơn giản
+                    Image newImage = loadImageByName(downloadedSimpleFileName);
+                    if (foodImageView != null) foodImageView.setImage(newImage);
+                    System.out.println("Đã tự động tải và đặt ảnh: " + downloadedSimpleFileName);
+                } else {
+                    System.out.println("Không tìm thấy hoặc lỗi tải ảnh tự động. Món ăn sẽ không có ảnh.");
+                    currentFood.setImagePath(null); // Đảm bảo imagePath là null nếu không có ảnh
+                    if (foodImageView != null) foodImageView.setImage(defaultFoodImage);
+                }
+                saveFoodDataToDB(); // Gọi lưu DB sau khi Task hoàn tất
+            });
+
+            autoFetchTask.setOnFailed(workerStateEvent -> {
+                // Optional: remove progressIndicator
+                System.err.println("Lỗi khi tự động tải ảnh: " + autoFetchTask.getException().getMessage());
+                currentFood.setImagePath(null); // Lỗi thì không có ảnh
+                if (foodImageView != null) foodImageView.setImage(defaultFoodImage);
+                saveFoodDataToDB(); // Vẫn lưu thông tin món ăn dù ảnh lỗi
+            });
+
+            new Thread(autoFetchTask).start();
+            // KHÔNG GỌI saveFoodDataToDB() TRỰC TIẾP Ở ĐÂY
+
+        } else if (currentMode == FormMode.EDIT) {
+            // Trong chế độ EDIT, không tự động thay đổi ảnh.
+            // imagePath của currentFood đã được load từ DB và sẽ được gửi đi khi update.
+            saveFoodDataToDB();
+        }
+    }
+
+    private void saveFoodDataToDB() {
+        try {
+            if (currentMode == FormMode.ADD) {
                 Food addedFood = FoodDAO.addFood(currentFood);
                 if (addedFood != null && addedFood.getFood_id() > 0) {
                     showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã thêm món ăn mới: " + addedFood.getName());
-                    finishAction(true);// Báo thành công và dữ liệu đã thay đổi
+                    finishAction(true);
                 } else {
                     showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm món ăn mới vào cơ sở dữ liệu.");
+                    finishAction(false);
                 }
-            } catch (SQLException e) { handleSqlException(e, "thêm món ăn"); }
+            } else if (currentMode == FormMode.EDIT) {
+                if (FoodDAO.updateFood(currentFood)) {
+                    showAlert(Alert.AlertType.INFORMATION, "Thành công", "Món ăn đã được cập nhật.");
+                    finishAction(true);
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể cập nhật món ăn.");
+                    finishAction(false);
+                }
+            }
+        } catch (SQLException e) {
+            handleSqlException(e, (currentMode == FormMode.ADD ? "thêm món ăn" : "cập nhật món ăn"));
+            finishAction(false);
         }
     }
 
     @FXML
     void handleCancelOrClose(ActionEvent event) {
+        // Không còn currentLoadedImageName để reset
         finishAction(false);
     }
 
@@ -352,7 +413,6 @@ public class FoodInforController implements Initializable {
             onCompleteCallback.accept(dataChanged);
         }
     }
-
 
     private boolean validateInputs() {
         if (foodNameField.getText().trim().isEmpty()) return validationFail("Tên món không được trống.", foodNameField);
@@ -369,33 +429,25 @@ public class FoodInforController implements Initializable {
         } catch (NumberFormatException e) {
             return validationFail("Giá phải là một số hợp lệ.", priceField);
         }
-
         return true;
     }
 
-    // --- Các hàm helper ---
     private boolean validationFail(String message, Control fieldToFocus) {
         showAlert(Alert.AlertType.WARNING, "Dữ liệu không hợp lệ", message);
         if (fieldToFocus != null) fieldToFocus.requestFocus();
-        return false; // Trả về false để dừng xử lý
+        return false;
     }
     private void setNodeVisibility(Node node, boolean isVisible) {
-        if (node != null) {
-            node.setVisible(isVisible);
-            node.setManaged(isVisible);
-        }
+        if (node != null) { node.setVisible(isVisible); node.setManaged(isVisible); }
     }
     private String getOrDefaultString(String val) { return (val != null && !val.trim().isEmpty()) ? val : "[N/A]"; }
     private String formatPrice(double price) {
         DecimalFormat formatter = new DecimalFormat("#,### VNĐ");
-        return formatter.format((long)price); // Ép kiểu về long để bỏ phần thập phân
+        return formatter.format((long)price);
     }
     private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        Alert alert = new Alert(type); alert.setTitle(title);
+        alert.setHeaderText(null); alert.setContentText(content); alert.showAndWait();
     }
     private void handleFormError(String message) {
         showAlert(Alert.AlertType.ERROR, "Lỗi Form", message);
