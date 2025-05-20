@@ -1,5 +1,7 @@
 package com.example.fooddelivery.Model;
 
+import javafx.beans.property.StringProperty;
+
 import java.time.LocalDateTime;
 
 public class ReviewDisplay {
@@ -11,8 +13,9 @@ public class ReviewDisplay {
     private String reviewComment;
     private int rating;
     private LocalDateTime reviewDate;
+    private String status;
 
-    public ReviewDisplay(int reviewId, int userId, String userName, String userEmail, String userPhoneNumber, String reviewComment, int rating, LocalDateTime reviewDate) {
+    public ReviewDisplay(int reviewId, int userId, String userName, String userEmail, String userPhoneNumber, String reviewComment, int rating, LocalDateTime reviewDate, String status) {
         this.reviewId = reviewId;
         this.userId = userId;
         this.userName = userName;
@@ -21,6 +24,7 @@ public class ReviewDisplay {
         this.reviewComment = reviewComment;
         this.rating = rating;
         this.reviewDate = reviewDate;
+        this.status = status;
     }
 
     // Getters (matching PropertyValueFactory strings)
@@ -32,4 +36,12 @@ public class ReviewDisplay {
     public String getReviewComment() { return reviewComment; }
     public int getRating() { return rating; }
     public LocalDateTime getReviewDate() { return reviewDate; }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

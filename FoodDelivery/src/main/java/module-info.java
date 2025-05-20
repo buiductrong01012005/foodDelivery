@@ -11,7 +11,6 @@ module org.example.fooddelivery {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    requires java.sql;
     requires jbcrypt;
     requires com.mailjet.api;
     requires org.json;
@@ -21,11 +20,12 @@ module org.example.fooddelivery {
     requires com.google.zxing.javase;
 
     // ✅ JavaFX Swing + AWT dùng để hiển thị ảnh QR code
-    requires java.desktop;
     requires javafx.swing;
 
     // ✅ Thư viện xử lý JSON nếu dùng Gson
     requires com.google.gson;
+    requires com.fasterxml.jackson.databind;
+    requires java.sql;
 
     // ✅ Mở model cho Gson và JavaFX table/view binding
     opens com.example.fooddelivery.Model to com.google.gson, javafx.base;
