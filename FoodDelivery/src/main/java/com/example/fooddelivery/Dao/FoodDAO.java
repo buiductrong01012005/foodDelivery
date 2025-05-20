@@ -186,7 +186,7 @@ public class FoodDAO {
 
     public static ObservableList<ReviewDisplay> getReviewsForFood(int foodId) throws SQLException {
         ObservableList<ReviewDisplay> reviews = FXCollections.observableArrayList();
-        String sql = "SELECT fr.food_review_id, fr.user_id, u.full_name, u.email, u.phone_number, fr.comment, fr.rating, fr.created_at AS review_date " +
+        String sql = "SELECT fr.food_review_id, fr.user_id, u.full_name, u.email, u.phone_number, fr.comment, fr.rating, fr.created_at AS review_date, fr.status " +
                 "FROM food_reviews fr " +
                 "JOIN users u ON fr.user_id = u.user_id " +
                 "WHERE fr.food_id = ? " +
@@ -207,7 +207,8 @@ public class FoodDAO {
                     int rating = rs.getInt("rating");
                     Timestamp reviewDateTS = rs.getTimestamp("review_date");
                     LocalDateTime reviewDate = (reviewDateTS != null) ? reviewDateTS.toLocalDateTime() : null;
-                    reviews.add(new ReviewDisplay(reviewId, userId, userName, userEmail, userPhoneNumber, comment, rating, reviewDate));
+                    String reviewStatus = rs.getString("status");
+                    reviews.add(new ReviewDisplay(reviewId, userId, userName, userEmail, userPhoneNumber, comment, rating, reviewDate, reviewStatus));
                 }
             }
         } catch (SQLException e) {
@@ -216,5 +217,16 @@ public class FoodDAO {
         }
         System.out.println("INFO: DAO Found " + reviews.size() + " reviews for food ID: " + foodId);
         return reviews;
+    }
+
+    public static boolean updateReviewStatus(int reviewId, String newStatus) throws SQLException {
+        String sql = "UPDATE food_reviews SET status = ? WHERE food_review_id = ?";
+        try (Connection conn = DatabaseConnector.connectDB();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newStatus);
+            pstmt.setInt(2, reviewId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        }
     }
 }

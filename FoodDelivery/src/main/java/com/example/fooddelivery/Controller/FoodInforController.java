@@ -1,5 +1,4 @@
 package com.example.fooddelivery.Controller;
-
 import com.example.fooddelivery.Dao.FoodDAO;
 import com.example.fooddelivery.Model.Food;
 import com.example.fooddelivery.Model.ReviewDisplay;
@@ -10,21 +9,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
 public class FoodInforController implements Initializable {
-
     public enum FormMode { VIEW, EDIT, ADD }
 
     private static final String DEFAULT_FOOD_IMAGE_PATH = "/images/default_food.png"; // *** Đường dẫn ảnh mặc định
@@ -54,6 +51,7 @@ public class FoodInforController implements Initializable {
     @FXML private TableColumn<ReviewDisplay, String> emailColumnReview;
     @FXML private TableColumn<ReviewDisplay, String> phoneNumberColumnReview;
     @FXML private TableColumn<ReviewDisplay, String> reviewColumn;
+    @FXML private TableColumn<ReviewDisplay, String> statusColumnReview;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -92,6 +90,50 @@ public class FoodInforController implements Initializable {
         emailColumnReview.setCellValueFactory(new PropertyValueFactory<>("userEmail"));
         phoneNumberColumnReview.setCellValueFactory(new PropertyValueFactory<>("userPhoneNumber"));
         reviewColumn.setCellValueFactory(new PropertyValueFactory<>("reviewComment"));
+
+        if (statusColumnReview != null) {
+            // Sử dụng PropertyValueFactory. JavaFX sẽ tìm getter có tên getStatus()
+            statusColumnReview.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+            ObservableList<String> reviewStatusOptions = FXCollections.observableArrayList("Show", "Hide");
+            statusColumnReview.setCellFactory(ComboBoxTableCell.forTableColumn(reviewStatusOptions));
+
+            statusColumnReview.setOnEditCommit(event -> {
+                ReviewDisplay selectedReview = event.getRowValue();
+                String newStatus = event.getNewValue();
+                String oldStatus = selectedReview.getStatus(); // Lưu lại giá trị cũ để hoàn tác nếu cần
+
+                if (selectedReview != null && newStatus != null && !oldStatus.equals(newStatus)) {
+                    try {
+                        // Cập nhật giá trị trong đối tượng Model trước (optimistic update)
+                        selectedReview.setStatus(newStatus);
+                        // Cập nhật vào DB
+                        boolean success = FoodDAO.updateReviewStatus(selectedReview.getReviewId(), newStatus);
+
+                        if (success) {
+                            // Không cần làm gì thêm với selectedReview vì nó đã được cập nhật
+                            // Chỉ cần refresh bảng để đảm bảo UI đồng bộ (mặc dù có thể không cần thiết nếu chỉ 1 dòng thay đổi)
+                            // reviewsTableView.refresh(); // Có thể bỏ qua nếu chỉ có 1 dòng thay đổi và TableView không quá phức tạp
+                            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã cập nhật trạng thái bình luận ID: " + selectedReview.getReviewId());
+                        } else {
+                            showAlert(Alert.AlertType.ERROR, "Lỗi cập nhật", "Không thể cập nhật trạng thái bình luận vào DB.");
+                            // Hoàn tác thay đổi trên đối tượng Model
+                            selectedReview.setStatus(oldStatus);
+                            // Refresh bảng để hiển thị lại giá trị cũ
+                            reviewsTableView.refresh();
+                        }
+                    } catch (SQLException e) {
+                        showAlert(Alert.AlertType.ERROR, "Lỗi DB", "Lỗi khi cập nhật trạng thái bình luận: " + e.getMessage());
+                        e.printStackTrace();
+                        // Hoàn tác thay đổi trên đối tượng Model
+                        selectedReview.setStatus(oldStatus);
+                        // Refresh bảng để hiển thị lại giá trị cũ
+                        reviewsTableView.refresh();
+                    }
+                }
+            });
+        }
+
         reviewsTableView.setPlaceholder(new Label("Chưa có đánh giá cho món ăn này."));
     }
 
@@ -169,7 +211,7 @@ public class FoodInforController implements Initializable {
         if (filename == null || filename.trim().isEmpty()) {
             return null;
         }
-        String resourcePath = "/images/" + filename.trim();
+        String resourcePath = "/" + filename.trim();
         try {
             InputStream imageStream = getClass().getResourceAsStream(resourcePath);
             if (imageStream != null) {
@@ -204,6 +246,16 @@ public class FoodInforController implements Initializable {
         if(currentMode == FormMode.ADD) {
             reviewsTableView.getItems().clear();
             reviewsTableView.setPlaceholder(new Label("Món mới chưa có đánh giá."));
+        }
+
+        // Xử lý bảng review
+        if (reviewsTableView != null) {
+            boolean canEditReviews = (currentMode == FormMode.EDIT);
+            reviewsTableView.setEditable(canEditReviews);
+            if (statusColumnReview != null) {
+                statusColumnReview.setEditable(canEditReviews);
+                // statusColumnReview.setVisible(canEditReviews); // Tùy chọn ẩn/hiện cột
+            }
         }
 
         setNodeVisibility(foodImageView, true);
